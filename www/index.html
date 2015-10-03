@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+<head>
+    <title>Save Our Shores Marine Debris Tally</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+    <!-- see http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="./css/style.css">
+    <style>
+        /* following two viewport lines are equivalent to the meta viewport statement above, needed for Windows */
+        /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ */
+        @-ms-viewport { width: 100vw ; zoom: 100% ; }  @viewport { width: 100vw ; zoom: 100% ; }
+        @-ms-viewport { user-zoom: fixed ; }           @viewport { user-zoom: fixed ; }
+    </style>
+
+    <script src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
+    <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
+
+</head>
+
+<body>
+
+<div data-role="page" id="dataCard" class="ui-responsive-panel">
+	<div data-role="header">
+        <h1>Cleanup Data Card</h1>
+        <a href="#help" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon">Help</a>
+    </div>
+	<div role="main" class="ui-content">
+        <form id="trashform" method="post" action="index.html">
+        <div class="ui-field-contain">
+            <label for "butts-in">
+            <input type="number" class="right25" id="butts-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Cigarette Butts</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "plast-in">
+            <input type="number" class="right25" id="class-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Pieces</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "food-in">
+            <input type="number" class="right25" id="food-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Food Wrappers</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "paper-in">
+            <input type="number" class="right25" id="paper-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Paper Pieces</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "glass-in">
+            <input type="number" class="right25" id="glass-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Glass Pieces</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "mcaps-in">
+            <input type="number" class="right25" id="mcaps-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Metal Caps / Pulls</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "pcaps-in">
+            <input type="number" class="right25" id="pcaps-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Caps / Rings</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "gbots-in">
+            <input type="number" class="right25" id="gbots-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Glass Bottles</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "pcups-in">
+            <input type="number" class="right25" id="pcups-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic cups, plates etc.</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "pbots-in">
+            <input type="number" class="right25" id="pbots-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Bottles</label>
+        </div>
+        <div class="ui-field-contain">
+            <label for "mcans-in">
+            <input type="number" class="right25" id="mcans-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Metal Cans</label>
+        </div>
+            
+        <input type="submit" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit">
+        </form>
+		<p><a href="#splashOver" data-prefetch="true">Splash Screen</a></p>
+    </div>
+    <!-- Start of right panel -->
+    <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a">
+		<img width="100%" height="80%" src="images/SOSlogo.png">
+		<p>Swipe to begin.</p>
+	</div><!-- /panel -->
+
+    <!-- Start of left help panel -->
+    <div data-role="panel" id="help" data-display="overlay" data-theme="a">
+		Help info goes here.
+	</div><!-- /panel -->
+
+</div><!-- /page -->
+
+
+</body>
+</html>

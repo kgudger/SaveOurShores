@@ -28,6 +28,11 @@
 		width: 20% !important;
 	}
 
+	.right50 {
+		float: right !important;
+		width: 50% !important;
+	}
+
 	.left75 {
 		float: left !important;
 		width: 75% !important;
@@ -39,4 +44,13 @@
 	box-sizing:border-box;
     float: right !important;
     width: 28% !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0 !important; /* <-- Apparently some margin are still there even though it's hidden */
 }

@@ -48,3 +48,21 @@ document.addEventListener("app.Ready", onAppReady, false) ;
 
 // NOTE: change "dev.LOG" in "init-dev.js" to "true" to enable some console.log
 // messages that can help you debug Cordova app initialization issues.
+	/**
+	 *	onclick function for "minus" button
+	 */
+	function minus_one(elt) {
+        var val = document.getElementById(elt);
+        if (val.value > 0) val.value--;
+    }
+
+	/**
+	 *	onclick function for "minus" button
+	 */
+	function plus_one(elt) {
+        var val = document.getElementById(elt);
+        val.value++;
+    }
+
+$(document).on('pagebeforeshow', '#dataCard', function(){       
+$( "#splashOver" ).panel( "open"); });

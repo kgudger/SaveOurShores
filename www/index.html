@@ -31,76 +31,89 @@
 
 <div data-role="page" id="dataCard" class="ui-responsive-panel">
 	<div data-role="header">
-        <h1>Cleanup Data Card</h1>
         <a href="#help" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon">Help</a>
+        <h2>Cleanup</br>Data Card</h2>
     </div>
 	<div role="main" class="ui-content">
         <form id="trashform" method="post" action="index.html">
+        <div id="cardhead" class="ui-field-contain">
+            <label for "name-field">
+            <input type=text class="right50" id="name-field">
+                Group / Your Name</label>
+            <label for "recycle">
+            <input type=number class="right25" id="recycle">
+                Pounds of Recycling Collected:
+            </label>
+            <label for "trash">
+            <input type=number class="right25" id="trash">
+                Pounds of Trash Collected:
+            </label>
+        </div>
         <div class="ui-field-contain">
             <label for "butts-in">
             <input type="number" class="right25" id="butts-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Cigarette Butts</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('butts-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('butts-in')"></a>Cigarette Butts</label>
         </div>
         <div class="ui-field-contain">
             <label for "plast-in">
-            <input type="number" class="right25" id="class-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Pieces</label>
+            <input type="number" class="right25" id="plast-in" value="0">
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('plast-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('plast-in')"></a>Plastic Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "food-in">
             <input type="number" class="right25" id="food-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Food Wrappers</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('food-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('food-in')"></a>Food Wrappers</label>
         </div>
         <div class="ui-field-contain">
             <label for "paper-in">
             <input type="number" class="right25" id="paper-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Paper Pieces</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('paper-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('paper-in')"></a>Paper Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "glass-in">
             <input type="number" class="right25" id="glass-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Glass Pieces</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('glass-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('glass-in')"></a>Glass Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "mcaps-in">
             <input type="number" class="right25" id="mcaps-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Metal Caps / Pulls</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('mcaps-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('mcaps-in')"></a>Metal Caps / Pulls</label>
         </div>
         <div class="ui-field-contain">
             <label for "pcaps-in">
             <input type="number" class="right25" id="pcaps-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Caps / Rings</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pcaps-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pcaps-in')"></a>Plastic Caps / Rings</label>
         </div>
         <div class="ui-field-contain">
             <label for "gbots-in">
             <input type="number" class="right25" id="gbots-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Glass Bottles</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('gbots-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('gbots-in')"></a>Glass Bottles</label>
         </div>
         <div class="ui-field-contain">
             <label for "pcups-in">
             <input type="number" class="right25" id="pcups-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic cups, plates etc.</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pcups-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pcups-in')"></a>Plastic cups, plates etc.</label>
         </div>
         <div class="ui-field-contain">
             <label for "pbots-in">
             <input type="number" class="right25" id="pbots-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Plastic Bottles</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pbots-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pbots-in')"></a>Plastic Bottles</label>
         </div>
         <div class="ui-field-contain">
             <label for "mcans-in">
             <input type="number" class="right25" id="mcans-in" value="0">
-            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini"></a>
-                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini"></a>Metal Cans</label>
+            <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('mcans-in')"></a>
+                <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('mcans-in')"></a>Metal Cans</label>
         </div>
             
         <input type="submit" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit">

@@ -5,7 +5,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "jsapp/template-blank-cordova-project-lite/sample.zip",
       "projectGuid": "61df19ff-2112-4199-9681-bd29c28d4b63",
-      "lastModifiedDate": 1443883682479,
+      "lastModifiedDate": 1443995964281,
       "creationDate": 1443883665004
     },
     "XDK-app-designer": "false",
@@ -197,7 +197,7 @@
         "runtime_": "W3C",
         "name_": "WebApp",
         "preferences_": {},
-        "isActive_": false,
+        "isActive_": true,
         "appName_": "SOS",
         "appID_": "not.yet.specified",
         "appAccess_": {

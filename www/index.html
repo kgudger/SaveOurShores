@@ -23,6 +23,8 @@
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
 	<script src="./js/jquery.min.js"></script>
 	<script src="./js/jquery.mobile-1.4.5.min.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBL_Mp0VJY5mOM1uGc-jT41FCN2z3XP5Z0">
+    </script>
     <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
 
 </head>
@@ -35,10 +37,9 @@
         <h2>Cleanup</br>Data Card</h2>
     </div>
 	<div role="main" class="ui-content">
-        <form id="trashform" method="post" action="index.html">
         <div id="cardhead" class="ui-field-contain">
             <label for "name-field">
-            <input type=text class="right50" id="name-field">
+            <input type=text class="right50" id="name-field" onblur="fillName(this.id);">
                 Group / Your Name</label>
             <label for "recycle">
             <input type=number class="right25" id="recycle">
@@ -49,76 +50,79 @@
                 Pounds of Trash Collected:
             </label>
         </div>
+        <form id="trashform">
+			<input id="latin" type="hidden" name="lat" value="">
+			<input id="lonin" type="hidden" name="lon"  value="">
+			<input id="name-in" type="hidden" name="namein" value="">
         <div class="ui-field-contain">
             <label for "butts-in">
-            <input type="number" class="right25" id="butts-in" value="0">
+            <input type="number" class="right25" id="butts-in" value="0" name="butts-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('butts-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('butts-in')"></a>Cigarette Butts</label>
         </div>
         <div class="ui-field-contain">
             <label for "plast-in">
-            <input type="number" class="right25" id="plast-in" value="0">
+            <input type="number" class="right25" id="plast-in" value="0" name="plast-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('plast-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('plast-in')"></a>Plastic Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "food-in">
-            <input type="number" class="right25" id="food-in" value="0">
+            <input type="number" class="right25" id="food-in" value="0" name="food-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('food-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('food-in')"></a>Food Wrappers</label>
         </div>
         <div class="ui-field-contain">
             <label for "paper-in">
-            <input type="number" class="right25" id="paper-in" value="0">
+            <input type="number" class="right25" id="paper-in" value="0" name="paper-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('paper-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('paper-in')"></a>Paper Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "glass-in">
-            <input type="number" class="right25" id="glass-in" value="0">
+            <input type="number" class="right25" id="glass-in" name="glass-in" value="0">
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('glass-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('glass-in')"></a>Glass Pieces</label>
         </div>
         <div class="ui-field-contain">
             <label for "mcaps-in">
-            <input type="number" class="right25" id="mcaps-in" value="0">
+            <input type="number" class="right25" id="mcaps-in" name="mcaps-in"  value="0">
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('mcaps-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('mcaps-in')"></a>Metal Caps / Pulls</label>
         </div>
         <div class="ui-field-contain">
             <label for "pcaps-in">
-            <input type="number" class="right25" id="pcaps-in" value="0">
+            <input type="number" class="right25" id="pcaps-in" value="0" name="pcaps-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pcaps-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pcaps-in')"></a>Plastic Caps / Rings</label>
         </div>
         <div class="ui-field-contain">
             <label for "gbots-in">
-            <input type="number" class="right25" id="gbots-in" value="0">
+            <input type="number" class="right25" id="gbots-in" value="0" name="gbots-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('gbots-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('gbots-in')"></a>Glass Bottles</label>
         </div>
         <div class="ui-field-contain">
             <label for "pcups-in">
-            <input type="number" class="right25" id="pcups-in" value="0">
+            <input type="number" class="right25" id="pcups-in" value="0" name="pcups-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pcups-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pcups-in')"></a>Plastic cups, plates etc.</label>
         </div>
         <div class="ui-field-contain">
             <label for "pbots-in">
-            <input type="number" class="right25" id="pbots-in" value="0">
+            <input type="number" class="right25" id="pbots-in" value="0" name="pbots-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('pbots-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('pbots-in')"></a>Plastic Bottles</label>
         </div>
         <div class="ui-field-contain">
             <label for "mcans-in">
-            <input type="number" class="right25" id="mcans-in" value="0">
+            <input type="number" class="right25" id="mcans-in" value="0" name="mcans-in" >
             <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one('mcans-in')"></a>
                 <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one('mcans-in')"></a>Metal Cans</label>
         </div>
             
-        <input type="submit" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit">
+        <input type="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit" onclick="sendData()">
         </form>
-		<p><a href="#splashOver" data-prefetch="true">Splash Screen</a></p>
     </div>
     <!-- Start of right panel -->
     <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a">

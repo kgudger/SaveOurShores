@@ -1,27 +1,23 @@
 /*
  * Please see the included README.md file for license terms and conditions.
  */
-
-
-// This file is a suggested starting place for your code.
-// It is completely optional and not required.
-// Note the reference that includes it in the index.html file.
-
-
-/*jslint browser:true, devel:true, white:true, vars:true */
-/*global $:false, intel:false app:false, dev:false, cordova:false */
-
-
-// For improved debugging and maintenance of your app, it is highly
-// recommended that you separate your JavaScript from your HTML files.
-// Use the addEventListener() method to associate events with DOM elements.
-
-// For example:
-
-// var el ;
-// el = document.getElementById("id_myButton") ;
-// el.addEventListener("click", myEventHandler, false) ;
-
+/** @file app.js
+ *	Purpose:  contains all of the javascript for the index file
+ *
+ * @author Keith Gudger
+ * @copyright  (c) 2015, Keith Gudger, all rights reserved
+ * @license    http://opensource.org/licenses/BSD-2-Clause
+ * @version    Release: 1.0
+ * @package    SaveOurShores
+ *
+ */
+	var currentLatitude = "";
+	var currentLongitude = "";
+	var options = {			// Intel GPS options
+        timeout: 10000,
+        maximumAge: 11000,
+        enableHighAccuracy: true
+	};
 
 
 // The function below is an example of the best way to "start" your app.
@@ -33,8 +29,34 @@ function onAppReady() {
     if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
         navigator.splashscreen.hide() ;
     }
+    fillName("name-field");
 }
+
 document.addEventListener("app.Ready", onAppReady, false) ;
+
+if(typeof intel === 'undefined') {
+    document.addEventListener( "DOMContentLoaded", ready, false );
+} else {
+	document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
+}
+//Success callback
+/**
+ *	function to set current latitude and longitude from GPS
+ *	@param p is passed from intel library function
+ */
+var suc = function(p) {
+//  console.log("geolocation success", 4);
+//Draws the map initially
+	currentLatitude = p.coords.latitude;
+	currentLongitude = p.coords.longitude;
+};
+/**
+ *	fail function for intel gps routine - does nothing 
+ */    
+var fail = function() {
+ console.log("Geolocation failed. \nPlease enable GPS in Settings.", 1);
+};
+
 // document.addEventListener("deviceready", onAppReady, false) ;
 // document.addEventListener("onload", onAppReady, false) ;
 
@@ -48,7 +70,47 @@ document.addEventListener("app.Ready", onAppReady, false) ;
 
 // NOTE: change "dev.LOG" in "init-dev.js" to "true" to enable some console.log
 // messages that can help you debug Cordova app initialization issues.
-	/**
+
+/** 
+*	Fires when intel code says device is ready
+*/
+var onDeviceReady=function(){
+	try {
+        if (intel.xdk.geolocation !== null) {
+            intel.xdk.geolocation.watchPosition(suc, fail, options);
+//  console.log("geolocation !== null", 4);
+        }
+    } catch(e) { 
+        alert(e.message);
+        console.log("geo watch failed",1);
+    }
+};
+
+/**
+ *	Fires when DOM page loaded
+ */
+function ready() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+}
+
+/** 
+ *	sets current latitude and longitude from ready() function
+ */
+function showPosition(position) {
+    currentLatitude = position.coords.latitude;
+	currentLongitude = position.coords.longitude;
+    var latid = document.getElementById("latin");
+    var lonid = document.getElementById("lonin");
+    latid.value = currentLatitude;
+    lonid.value = currentLongitude;
+//    alert("Lat is " + latid.value + " Lon is " + lonid.value);
+};
+
+
+
+/**
 	 *	onclick function for "minus" button
 	 */
 	function minus_one(elt) {
@@ -57,12 +119,32 @@ document.addEventListener("app.Ready", onAppReady, false) ;
     }
 
 	/**
-	 *	onclick function for "minus" button
+	 *	onclick function for "plus" button
 	 */
 	function plus_one(elt) {
         var val = document.getElementById(elt);
         val.value++;
     }
 
+	/**
+	 *	onblur function for name field
+	 */
+	function fillName(elt) {
+        var val = document.getElementById(elt).value;
+        var out = document.getElementById("name-in");
+        out.value = val;
+ //       alert("Name is " + out.value);
+    }
+
 $(document).on('pagebeforeshow', '#dataCard', function(){       
 $( "#splashOver" ).panel( "open"); });
+
+/**
+ *	onblur function for name field
+ */
+function sendData() {
+    var queryString = $('#trashform').serialize();
+    alert(queryString);
+    document.getElementById("trashform").reset()
+}
+

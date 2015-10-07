@@ -134,6 +134,8 @@ function showPosition(position) {
         var out = document.getElementById("name-in");
         out.value = val;
  //       alert("Name is " + out.value);
+        var queryString = "command=getTally" + "&namein=" + val ;
+        sendfunc(queryString);
     }
 
 $(document).on('pagebeforeshow', '#dataCard', function(){       
@@ -144,7 +146,44 @@ $( "#splashOver" ).panel( "open"); });
  */
 function sendData() {
     var queryString = $('#trashform').serialize();
+    queryString = "command=send&" + queryString;
+    sendfunc(queryString);
     alert(queryString);
     document.getElementById("trashform").reset()
 }
+
+/**
+ *	"Ajax" function that sends and processes xmlhttp request
+ *	@param params is GET request string
+ *	@param natnl is category for list
+ *	@makelist is whether list or map
+ */
+function sendfunc(params) {
+    var xmlhttp;
+	try {
+	   xmlhttp=new XMLHttpRequest();
+    } catch(e) {
+        xmlhttp = false;
+        console.log(e);
+    }
+	if (xmlhttp) {
+        xmlhttp.onreadystatechange=function()
+		{
+		  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+          {
+              returnedList = (xmlhttp.responseText);
+              if ( returnedList != "Collector Entered" ) {
+                  returnedList = JSON.parse(xmlhttp.responseText);
+//                  alert(returnedList);
+                  var val = document.getElementById("trash")
+                  val.value = returnedList["trash"];
+                  val = document.getElementById("recycle")
+                  val.value = returnedList["recycle"];
+              }
+          }
+	}
+	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
+	xmlhttp.send(null);
+    }
+}; // sendfunc
 

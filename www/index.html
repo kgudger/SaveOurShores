@@ -26,18 +26,22 @@
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBL_Mp0VJY5mOM1uGc-jT41FCN2z3XP5Z0">
     </script>
     <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
+<script src="http://debug-software.intel.com/target/target-script-min.js#nWXf1EtofKpuaSYvwkVM9XLQ1WBgQW3hzCvkT6aDq7M"></script>
     <script type="text/javascript">
-		function splashclick() {
-            if (typeof (intel.xdk.device) === 'undefined') 
-				window.open('http://www.saveourshores.org','_system');
-			else
-				intel.xdk.device.launchExternal('http://www.saveourshores.org');
-		};
 	</script>
 
 </head>
 
 <body>
+
+<!-- Start of splash page -->
+<!-- <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a"> -->
+<div data-role="page" id="splashscreen" data-theme="b">
+	<div role="main" class="ui-content" id="splashbox">
+        <img class="displaycenter setwidth" src="images/SOSlogo.png" onclick="hideSplash();">
+        <p class="splashtext">Touch image to begin.</p>
+    </div>
+</div><!-- /page -->
 
 <div data-role="page" id="dataCard" class="ui-responsive-panel">
 	<div data-role="header">
@@ -382,11 +386,6 @@
         <input type="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit" onclick="sendData()">
         </form>
     </div>
-    <!-- Start of right panel -->
-    <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a">
-		<img width="80%" height="80%" src="images/SOSlogo.png">
-		<p>Swipe to begin.</p>
-	</div><!-- /panel -->
 
     <!-- Start of left help panel -->
     <div data-role="panel" id="help" data-display="overlay" data-theme="a">
@@ -398,7 +397,7 @@
         <div class="header-field">Important</div>
         <p>Please remember to click the <b>Submit</b> button when you are through.</p>
         <p>Your total pounds of trash and recyclables collected will update with each submit.</p>
-        <div><b>Save Our Shores</b> is a 501(c)3 nonprofit marine conservation organization in Santa Cruz, California. Our mission is caring for the marine environment through ocean awareness, advocacy, and citizen action.  Visit our <a href="#" onclick="splashclick()"><b>website</b></a> or call us at <a href="tel:+1-831-462-5660"><b>831-462-5660</b></a></br>
+        <div><b>Save Our Shores</b> is a 501(c)3 nonprofit marine conservation organization in Santa Cruz, California. Our mission is caring for the marine environment through ocean awareness, advocacy, and citizen action.  Visit our <a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>website, saveourshores.org</b></a></br>
         </div>
 	</div><!-- /panel -->
 

@@ -137,10 +137,10 @@ function showPosition(position) {
         var queryString = "command=getTally" + "&namein=" + val ;
         sendfunc(queryString);
     }
-
+/*
 $(document).on('pagebeforeshow', '#dataCard', function(){       
-$( "#splashOver" ).panel( "open"); });
-
+$( "#splashscreen" ).panel( "open"); });
+*/
 /**
  *	onblur function for name field
  */
@@ -148,7 +148,7 @@ function sendData() {
     var queryString = $('#trashform').serialize();
     queryString = "command=send&" + queryString;
     sendfunc(queryString);
-    alert(queryString);
+//    alert(queryString);
     document.getElementById("trashform").reset()
 }
 
@@ -187,3 +187,19 @@ function sendfunc(params) {
     }
 }; // sendfunc
 
+	/**
+	 *	onclick function for web addresses
+	 */
+		function splashclick(url) {
+//            alert("Typeof is " + typeof(intel));
+            if (typeof (intel) === 'undefined') 
+				window.open(url,'_system');
+			else
+				intel.xdk.device.launchExternal(url);
+		};
+/**
+ * Function to change from splash page to main page.
+ */
+function hideSplash() {
+  $.mobile.changePage("#dataCard", "fade");
+}

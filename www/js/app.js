@@ -145,11 +145,16 @@ $( "#splashscreen" ).panel( "open"); });
  *	onblur function for name field
  */
 function sendData() {
-    var queryString = $('#trashform').serialize();
-    queryString = "command=send&" + queryString;
-    sendfunc(queryString);
+    var out = document.getElementById("name-in").value;
+    if ( out == "" ) {
+        alert("Please enter your name before submitting, thanks.");
+    } else {
+        var queryString = $('#trashform').serialize();
+        queryString = "command=send&" + queryString;
+        sendfunc(queryString);
 //    alert(queryString);
-    document.getElementById("trashform").reset()
+        document.getElementById("trashform").reset()
+    }
 }
 
 /**

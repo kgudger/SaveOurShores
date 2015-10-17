@@ -30,6 +30,9 @@ function onAppReady() {
         navigator.splashscreen.hide() ;
     }
     fillName("name-field");
+
+    queryString = "command=getCats";
+    sendfunc(queryString);
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
@@ -39,6 +42,7 @@ if(typeof intel === 'undefined') {
 } else {
 	document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
 }
+
 //Success callback
 /**
  *	function to set current latitude and longitude from GPS
@@ -179,11 +183,16 @@ function sendfunc(params) {
               returnedList = (xmlhttp.responseText);
               if ( returnedList != "Collector Entered" ) {
                   returnedList = JSON.parse(xmlhttp.responseText);
-//                  alert(returnedList);
-                  var val = document.getElementById("trash")
-                  val.value = returnedList["trash"];
-                  val = document.getElementById("recycle")
-                  val.value = returnedList["recycle"];
+                  if (typeof (returnedList["trash"]) !== 'undefined') {
+                    var val = document.getElementById("trash")
+                    val.value = returnedList["trash"];
+                    val = document.getElementById("recycle")
+                    val.value = returnedList["recycle"];
+                  }
+                  else {
+//                      alert(returnedList["Top Items"]);
+                      fillForm(returnedList);
+                  }
               }
           }
 	}
@@ -191,6 +200,25 @@ function sendfunc(params) {
 	xmlhttp.send(null);
     }
 }; // sendfunc
+
+/**
+ *	Function to fill form with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function fillForm(rList) {
+    var myHTML = "" ;
+    for (var topKey in rList) {
+        myHTML = '<div class="header-field">' + topKey + '</div>';
+        $('#trashform').append(myHTML);
+        for (var innerKey in rList[topKey]) {
+            myHTML = '<div class="ui-field-contain"> <label for "' + rList[topKey][innerKey] + '"> <input type="number" class="right25" id="' + rList[topKey][innerKey] + '" value="0" name="' + rList[topKey][innerKey] + '" > <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + rList[topKey][innerKey] + "'" + ')"></a> <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + rList[topKey][innerKey] + "'" + ')"></a>' + innerKey + '</label></div>';
+            $('#trashform').append(myHTML);
+        }
+    }
+    $('#trashform').append('<input type="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit" onclick="sendData()">');
+}
+// fillForm
 
 	/**
 	 *	onclick function for web addresses

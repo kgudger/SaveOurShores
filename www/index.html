@@ -44,9 +44,10 @@
 </div><!-- /page -->
 
 <div data-role="page" id="dataCard" class="ui-responsive-panel">
-	<div data-role="header">
-        <a href="#help" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon">Help</a>
-        <h2>Cleanup</br>Data Card</h2>
+	<div data-role="header" class="kgheader">
+        <h2>CLEANUP</br>DATA CARD</h2>
+        <a href="#info"><img src="images/icons-png/bars-black.png"</a>
+        <a href="#help" class="ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon ui-btn-right ui-btn">Help</a>
     </div>
 	<div role="main" class="ui-content">
         <div id="cardhead" class="ui-field-contain">
@@ -66,21 +67,26 @@
 			<input id="latin" type="hidden" name="lat" value="">
 			<input id="lonin" type="hidden" name="lon"  value="">
 			<input id="name-in" type="hidden" name="namein" value="">
+            <div id="formData"></div>
+            <input type="button" class="blue_back blue_sub ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit" onclick="sendData()" style="color:red">
         </form>
     </div>
 
     <!-- Start of left help panel -->
     <div data-role="panel" id="help" data-display="overlay" data-theme="a">
-        <div class="header-field">How To Use This Form</div>
+        <div class="header-field">HOW TO USE THIS DATA CARD:</div>
         <p>Please enter your name, or your group's name at the top.</p>
-        <p>Click "+" or "-" to add (or subtract) each item as you find them.</p>
-        <p>You can also enter a number in the field next to the item's name.</p>
-        <p>The most found items are at the top.  If you don't find the item there, scroll down to the category to find the item.</p>
-        <div class="header-field">Important</div>
-        <p>Please remember to click the <b>Submit</b> button when you are through.</p>
-        <p>Your total pounds of trash and recyclables collected will update with each submit.</p>
-        <div><b>Save Our Shores</b> is a 501(c)3 nonprofit marine conservation organization in Santa Cruz, California. Our mission is caring for the marine environment through ocean awareness, advocacy, and citizen action.  Visit our <a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>website, saveourshores.org</b></a></br>
-        </div>
+        <p>Click "+" or "-" to add (or subtract) each trash item as you find them. You can also enter a total number in the field next to the item's name.</p>
+        <p>The most found items are at the top of the data card.  If you don't see a trash item there, scroll down to find it.</p>
+        <div class="header-field">IMPORTANT:</div>
+        <p>Please remember to click the <b>Submit</b> button once you have finished your cleanup.</p>
+        <p>Your total pounds of trash and recyclables collected will automatically update with each submit.</p>
+    </div>
+
+    <!-- Start of left info panel -->
+    <div data-role="panel" id="info" data-display="overlay" data-theme="a">
+        <div class="header-field">Save Our Shores</div>
+        <p>is a marine conservation nonprofit based in Santa Cruz, California. Our mission is caring for the Central Coast marine environment through ocean awareness, advocacy, and citizen action.  Visit our website at</p><a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>saveourshores.org</b></a></br>
 	</div><!-- /panel -->
 
 </div><!-- /page -->

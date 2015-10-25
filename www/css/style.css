@@ -27,6 +27,11 @@
 	.right25 {
 		float: right !important;
 		width: 20% !important;
+		border: 0 none;
+		border-radius: inherit;
+		margin: 0;
+		min-height: 2.2em;
+		text-align: left;
 	}
 
 	.right50 {
@@ -58,9 +63,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .header-field {
   color: white;
-  background-color: black;
+  background-color: #414141;
   font-size: 16px;
   margin-top: 12px;
+  text-align: center;
 }
 img.setwidth {
 	max-width: 300px;
@@ -77,4 +83,15 @@ img.displaycenter {
 }
 .splashtext {
 	text-align: center;
+}
+.kgheader {
+  color: white !important;
+  background-color: #15BDDE !important;
+}
+.blue_back {
+  background-color: #15BDDE !important;
+}
+.blue_sub {
+  opacity: 1.0 !important;
+  color: white !important;
 }

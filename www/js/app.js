@@ -210,13 +210,14 @@ function fillForm(rList) {
     var myHTML = "" ;
     for (var topKey in rList) {
         myHTML = '<div class="header-field">' + topKey + '</div>';
-        $('#trashform').append(myHTML);
+//        $('#formData').append(myHTML);
+        document.getElementById('formData').innerHTML+= myHTML;
         for (var innerKey in rList[topKey]) {
-            myHTML = '<div class="ui-field-contain"> <label for "' + rList[topKey][innerKey] + '"> <input type="number" class="right25" id="' + rList[topKey][innerKey] + '" value="0" name="' + rList[topKey][innerKey] + '" > <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + rList[topKey][innerKey] + "'" + ')"></a> <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + rList[topKey][innerKey] + "'" + ')"></a>' + innerKey + '</label></div>';
-            $('#trashform').append(myHTML);
+            var iVal = rList[topKey][innerKey] ;
+            myHTML = '<div class="ui-field-contain"> <label for "' + iVal + '"> <input type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
+        document.getElementById('formData').innerHTML+= myHTML;
         }
     }
-    $('#trashform').append('<input type="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-b ui-mini" value="Submit" onclick="sendData()">');
 }
 // fillForm
 

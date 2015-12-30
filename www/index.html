@@ -22,12 +22,17 @@
     <script src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
 	<script src="./js/jquery.min.js"></script>
+<script>
+$(document).bind('mobileinit',function(){
+    $.mobile.changePage.defaults.changeHash = false;
+    $.mobile.hashListeningEnabled = false;
+    $.mobile.pushStateEnabled = false;
+});</script>
 	<script src="./js/jquery.mobile-1.4.5.min.js"></script>
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBL_Mp0VJY5mOM1uGc-jT41FCN2z3XP5Z0">
     </script>
     <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
-<script src="http://debug-software.intel.com/target/target-script-min.js#nWXf1EtofKpuaSYvwkVM9XLQ1WBgQW3hzCvkT6aDq7M"></script>
-    <script type="text/javascript">
+<!-- <script src="http://debug-software.intel.com/target/target-script-min.js#nWXf1EtofKpuaSYvwkVM9XLQ1WBgQW3hzCvkT6aDq7M"></script> -->
 	</script>
 
 </head>
@@ -87,6 +92,10 @@
     <div data-role="panel" id="info" data-display="overlay" data-theme="a">
         <div class="header-field">ABOUT</div>
         <p>Save Our Shores is a marine conservation nonprofit based in Santa Cruz, California. Our mission is caring for the Central Coast marine environment through ocean awareness, advocacy, and citizen action.  Visit our website at</p><a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>saveourshores.org</b></a></br>
+<address>345 Lake Avenue, Suite A</br>
+Santa Cruz, CA 95062</br>
+<a href=mailto:info@saveourshores.org>info@saveourshores.org</a></br></address>
+<a href="#" onclick="splashclick('tel: +18314625660')">Phone: 831.462.5660</a></br>
 	</div><!-- /panel -->
 
 </div><!-- /page -->

@@ -7,10 +7,12 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-statusbar": {},
-        "cordova-plugin-device": {},
-        "cordova-plugin-splashscreen": {},
-        "cordova-plugin-geolocation": {}
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        }
     },
     "dependent_plugins": {}
 }

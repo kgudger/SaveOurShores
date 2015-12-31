@@ -22,6 +22,12 @@
     <script src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
 	<script src="./js/jquery.min.js"></script>
+<script>
+$(document).bind('mobileinit',function(){
+    $.mobile.changePage.defaults.changeHash = false;
+    $.mobile.hashListeningEnabled = false;
+    $.mobile.pushStateEnabled = false;
+});</script>
 	<script src="./js/jquery.mobile-1.4.5.min.js"></script>
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBL_Mp0VJY5mOM1uGc-jT41FCN2z3XP5Z0">
     </script>
@@ -53,6 +59,11 @@
             <label for "name-field">
             <input type=text class="right50" id="name-field" placeholder="your name" onblur="fillName(this.id);">
                 Group / Your Name</label>
+            <label for "place-field">
+			<select name="place-field" id="place-field" data-role="none" class="right50">
+				<option selected value="GPS">Automatic</option>
+				<!-- onblur="fillName(this.id);"> -->
+           </select>Your Location</label>
             <label for "recycle">
             <input type=number class="right25" id="recycle">
                 Pounds of Recycling Collected:

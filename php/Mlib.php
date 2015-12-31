@@ -55,7 +55,7 @@ class DB
 			}
 		}
 		$this->getTally($nam);
-        }
+    }
 
 	function getTally($name)
 	{
@@ -96,7 +96,7 @@ class DB
 		$output["recycle"] = 0;
 	  }
 	  echo json_encode($output) ;
-        }
+    }
 
 	function getCats()
 	{
@@ -118,6 +118,37 @@ class DB
 			$o2[$row[item]] = $row[aname];
 		}
 		$output[$cname] = $o2 ;
+		echo json_encode($output) ;
+        }
+
+	function getPlace($lat,$lon)
+	{
+        $sql = "SELECT pid,
+        ( 3959 * acos( cos( radians(lat) ) * cos( radians( ? ) ) * 
+		cos( radians( ? ) - radians(lon) ) + sin( radians(lat) ) * 
+		sin( radians( ? ) ) ) ) 
+		AS distance 
+		FROM `Places` HAVING distance < 0.5
+		ORDER BY distance
+		LIMIT 1";
+		 
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute(array($lat,$lon,$lat));
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$output = array();
+		if ( is_null($result[pid]) ) {
+			$output[place] = 0 ;
+		} else {
+			$output[place]=$result[pid];
+		}
+		$temp = array();
+		$sql = "SELECT pid, name, lat, lon
+			FROM `Places`";
+		$result = $this->db->query($sql);
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[$row[name]] = array(pid=>$row[pid],lat=>$row[lat],lon=>$row[lon]);
+		}
+		$output[places] = $temp ;
 		echo json_encode($output) ;
         }
 

@@ -22,6 +22,11 @@
   elseif ($command == "getCats") {
 	echo $db->getCats();
   }
+  elseif($command == "getPlace") {
+	$lat= $_REQUEST['latin'];
+	$lon= $_REQUEST['lonin'];
+	echo $db->getPlace($lat,$lon);
+  }
   else
     echo "command was not recognized";
 ?>

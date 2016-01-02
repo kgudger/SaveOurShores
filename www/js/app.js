@@ -11,11 +11,12 @@
  * @package    SaveOurShores
  *
  */
-	var currentLatitude = "";
-	var currentLongitude = "";
+	var currentLatitude = 0;
+	var currentLongitude = 0;
+	var location_timeout = "";
 	var options = {			// Intel GPS options
         timeout: 10000,
-        maximumAge: 11000,
+        maximumAge: 20000,
         enableHighAccuracy: true
 	};
 	var Places = [];
@@ -34,16 +35,17 @@ function onAppReady() {
 
     queryString = "command=getCats";
     sendfunc(queryString);
+    ready();
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
-
+/*
 if(typeof intel === 'undefined') {
     document.addEventListener( "DOMContentLoaded", ready, false );
 } else {
 	document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
 }
-
+*/
 //Success callback
 /**
  *	function to set current latitude and longitude from GPS
@@ -96,26 +98,47 @@ var onDeviceReady=function(){
  */
 function ready() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+		location_timeout = setTimeout("defaultPosition()", 10000);
+        navigator.geolocation.getCurrentPosition(showPosition,
+			function(error) {
+				clearTimeout(location_timeout);
+				console.warn('ERROR(' + err.code + '): ' + err.message);
+				defaultPosition()
+			}, options );
+//		console.log('In ready after getCurrentPosition');
     }
+    else {
+		console.warn("Geolocation failed. \nPlease enable GPS in Settings.", 1);
+		defaultPosition();
+	}
 }
 
 /** 
  *	sets current latitude and longitude from ready() function
  */
 function showPosition(position) {
+	clearTimeout(location_timeout);
+//	console.log('In showPosition');
     currentLatitude = position.coords.latitude;
 	currentLongitude = position.coords.longitude;
     var latid = document.getElementById("latin");
     var lonid = document.getElementById("lonin");
     latid.value = currentLatitude;
     lonid.value = currentLongitude;
-//    alert("Lat is " + latid.value + " Lon is " + lonid.value);
-    queryString = "command=getPlace";
+    alert("Lat is " + latid.value + " Lon is " + lonid.value);
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
     sendfunc(queryString);
 };
 
+/** 
+ *	on fail from ready, default position
+ */
+function defaultPosition() {
+//	console.warn('ERROR(' + err.code + '): ' + err.message);
+//	console.log('In defaultPosition');
+    var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
+	sendfunc(queryString);
+}
 
 
 /**
@@ -241,7 +264,11 @@ function fillPlace(rList) {
 //    alert("Place in fillPlace is " + place_no);
     if ( place_no == 0 ) { // no place found 
 		option = document.createElement('option');
-		option.value = option.text = "Automatic"
+		if ( ( currentLatitude == 0 ) || ( currentLongitude == 0 ) ) {
+			option.value = option.text = "Please Choose"
+		} else {
+			option.value = option.text = "Automatic"
+		}
 		select.add( option );
 		select.options[select.selectedIndex].value = option.value
 	}

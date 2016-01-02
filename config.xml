@@ -25,10 +25,10 @@
         <icon src="www/images/SOSlogo72.png" platform="android" qualifier="hdpi" />
         <icon src="www/images/SOSlogo48.png" platform="android" qualifier="mdpi" />
         <icon src="www/images/SOSlogo36.png" platform="android" qualifier="ldpi" />
-		<splash src="platforms/android/res/drawable-ldpi/screen.png" density="ldpi" />
-		<splash src="platforms/android/res/drawable-mdpi/screen.png" density="mdpi" />
-		<splash src="platforms/android/res/drawable-hdpi/screen.png" density="hdpi" />
-		<splash src="platforms/android/res/drawable-xhdpi/screen.png" density="xhdpi" />
+		<splash src="www/images/SOSlogo320426.png" density="ldpi" />
+		<splash src="www/images/SOSlogo320470.png" density="mdpi" />
+		<splash src="www/images/SOSlogo480640.png" density="hdpi" />
+		<splash src="www/images/SOSlogo720960.png" density="xhdpi" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

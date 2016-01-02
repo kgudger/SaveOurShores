@@ -11,13 +11,15 @@
  * @package    SaveOurShores
  *
  */
-	var currentLatitude = "";
-	var currentLongitude = "";
+	var currentLatitude = 0;
+	var currentLongitude = 0;
+	var location_timeout = "";
 	var options = {			// Intel GPS options
         timeout: 10000,
-        maximumAge: 11000,
+        maximumAge: 20000,
         enableHighAccuracy: true
 	};
+	var Places = [];
 
 
 // The function below is an example of the best way to "start" your app.
@@ -33,16 +35,17 @@ function onAppReady() {
 
     queryString = "command=getCats";
     sendfunc(queryString);
+    ready();
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
-
+/*
 if(typeof intel === 'undefined') {
     document.addEventListener( "DOMContentLoaded", ready, false );
 } else {
 	document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
 }
-
+*/
 //Success callback
 /**
  *	function to set current latitude and longitude from GPS
@@ -95,23 +98,47 @@ var onDeviceReady=function(){
  */
 function ready() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+		location_timeout = setTimeout("defaultPosition()", 10000);
+        navigator.geolocation.getCurrentPosition(showPosition,
+			function(error) {
+				clearTimeout(location_timeout);
+				console.warn('ERROR(' + err.code + '): ' + err.message);
+				defaultPosition()
+			}, options );
+//		console.log('In ready after getCurrentPosition');
     }
+    else {
+		console.warn("Geolocation failed. \nPlease enable GPS in Settings.", 1);
+		defaultPosition();
+	}
 }
 
 /** 
  *	sets current latitude and longitude from ready() function
  */
 function showPosition(position) {
+	clearTimeout(location_timeout);
+//	console.log('In showPosition');
     currentLatitude = position.coords.latitude;
 	currentLongitude = position.coords.longitude;
     var latid = document.getElementById("latin");
     var lonid = document.getElementById("lonin");
     latid.value = currentLatitude;
     lonid.value = currentLongitude;
-//    alert("Lat is " + latid.value + " Lon is " + lonid.value);
+    alert("Lat is " + latid.value + " Lon is " + lonid.value);
+    var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
+    sendfunc(queryString);
 };
 
+/** 
+ *	on fail from ready, default position
+ */
+function defaultPosition() {
+//	console.warn('ERROR(' + err.code + '): ' + err.message);
+//	console.log('In defaultPosition');
+    var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
+	sendfunc(queryString);
+}
 
 
 /**
@@ -189,6 +216,10 @@ function sendfunc(params) {
                     val = document.getElementById("recycle")
                     val.value = returnedList["recycle"];
                   }
+                  else if (typeof (returnedList["place"]) !== 'undefined') {
+//                      alert("place is " + returnedList["place"] );
+                      fillPlace(returnedList);
+				  }
                   else {
 //                      alert(returnedList["Top Items"]);
                       fillForm(returnedList);
@@ -221,6 +252,52 @@ function fillForm(rList) {
 }
 // fillForm
 
+/**
+ *	Function to create location list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function fillPlace(rList) {
+    var myHTML = "" ;
+    var select = document.getElementById('place-field');
+    var place_no = rList['place'];
+//    alert("Place in fillPlace is " + place_no);
+    if ( place_no == 0 ) { // no place found 
+		option = document.createElement('option');
+		if ( ( currentLatitude == 0 ) || ( currentLongitude == 0 ) ) {
+			option.value = option.text = "Please Choose"
+		} else {
+			option.value = option.text = "Automatic"
+		}
+		select.add( option );
+		select.options[select.selectedIndex].value = option.value
+	}
+    for (var topKey in rList['places']) {
+		option = document.createElement( 'option' );
+		option.value = option.text = topKey;
+		select.add( option );
+		Places.push({
+						name:  topKey,
+						lat:   rList['places'][topKey].lat,
+						lon:   rList['places'][topKey].lon
+					});
+//		alert("topKey pid is " + rList['places'][topKey].pid + " and value is " + option.value);
+		if ( rList['places'][topKey].pid == place_no ) {
+			select.value=option.value ;
+			var latid = document.getElementById("latin");
+			var lonid = document.getElementById("lonin");
+			latid.value = rList['places'][topKey].lat ;
+			lonid.value = rList['places'][topKey].lon ;
+			
+		}
+/*        for (var innerKey in rList[topKey]) {
+            var iVal = rList[topKey][innerKey] ;
+            myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
+        document.getElementById('formData').innerHTML+= myHTML;*/
+//        }
+    }
+}
+// fillForm
 	/**
 	 *	onclick function for web addresses
 	 */
@@ -237,3 +314,22 @@ function fillForm(rList) {
 function hideSplash() {
   $.mobile.changePage("#dataCard", "fade");
 }
+// 37.0067 -121.97
+	/**
+	 *	onclick function for location select
+	 */
+	function newPlace() {
+		var select = document.getElementById('place-field');
+		var value = select.value;
+//		alert ("Selected value is " + value );
+		for ( var i = 0; i < Places.length; i++ ) {
+			if ( Places[i].name == value ) {
+//				alert ("Place found is " + Places[i].name);
+				var latid = document.getElementById("latin");
+				var lonid = document.getElementById("lonin");
+				latid.value = Places[i].lat ;
+				lonid.value = Places[i].lon ;
+			}
+		}
+	}
+// newPlace

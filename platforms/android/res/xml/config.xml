@@ -11,10 +11,10 @@
     <icon platform="android" qualifier="hdpi" src="www/images/SOSlogo72.png" />
     <icon platform="android" qualifier="mdpi" src="www/images/SOSlogo48.png" />
     <icon platform="android" qualifier="ldpi" src="www/images/SOSlogo36.png" />
-    <splash density="ldpi" src="platforms/android/res/drawable-ldpi/screen.png" />
-    <splash density="mdpi" src="platforms/android/res/drawable-mdpi/screen.png" />
-    <splash density="hdpi" src="platforms/android/res/drawable-hdpi/screen.png" />
-    <splash density="xhdpi" src="platforms/android/res/drawable-xhdpi/screen.png" />
+    <splash density="ldpi" src="www/images/SOSlogo320426.png" />
+    <splash density="mdpi" src="www/images/SOSlogo320470.png" />
+    <splash density="hdpi" src="www/images/SOSlogo480640.png" />
+    <splash density="xhdpi" src="www/images/SOSlogo720960.png" />
     <name>Save Our Shores</name>
     <description>
         Marine Debris Collection Data Input Application.

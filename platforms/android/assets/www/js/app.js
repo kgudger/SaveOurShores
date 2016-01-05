@@ -272,7 +272,8 @@ function sendfunc(params) {
               }
           }
 	}
-	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
+//	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
+	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
 	xmlhttp.send(null);
     }
 }; // sendfunc

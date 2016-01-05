@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 26, 2015 at 01:22 PM
--- Server version: 5.5.44-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.13
+-- Generation Time: Jan 05, 2016 at 12:22 PM
+-- Server version: 5.5.46-0ubuntu0.14.04.2
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,9 +17,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `SOS`
+-- Database: `lauren`
 --
-
 -- --------------------------------------------------------
 
 --
@@ -62,25 +61,49 @@ CREATE TABLE IF NOT EXISTS `Collector` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lat` float NOT NULL,
   `lon` float NOT NULL,
+  `tdate` date NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=93 ;
 
 --
 -- Dumping data for table `Collector`
 --
 
-INSERT INTO `Collector` (`cid`, `name`, `date`, `lat`, `lon`) VALUES
-(2, 'GEORGE JETSON', '2015-10-06 04:39:19', 37.0067, -121.97),
-(30, 'GEORGE JETSON', '2015-10-07 23:04:46', 37.0177, -121.962),
-(32, 'KEITH GUDGER', '2015-10-08 04:33:40', 37.0177, -121.962),
-(36, 'RYAN', '2015-10-09 18:28:42', 36.9661, -122.001),
-(37, 'KEITH GUDGER', '2015-10-10 10:28:02', 0, 0),
-(39, 'KEITH GUDGER', '2015-10-17 21:39:32', 37.0067, -121.97),
-(40, 'KEITH GUDGER', '2015-10-19 14:39:56', 0, 0),
-(41, 'TEST', '2015-10-21 16:27:35', 36.966, -122.001),
-(42, 'TEST', '2015-10-21 16:27:37', 36.966, -122.001),
-(43, 'TEST', '2015-10-26 16:19:32', 36.9659, -122.036),
-(44, 'TEST', '2015-10-26 16:19:32', 36.9659, -122.036);
+INSERT INTO `Collector` (`cid`, `name`, `date`, `lat`, `lon`, `tdate`) VALUES
+(2, 'GEORGE JETSON', '2015-10-06 04:39:19', 37.0067, -121.97, '2015-10-05'),
+(30, 'GEORGE JETSON', '2015-10-07 23:04:46', 37.0177, -121.962, '2015-10-07'),
+(32, 'KEITH GUDGER', '2015-10-08 04:33:40', 37.0177, -121.962, '2015-10-07'),
+(36, 'RYAN', '2015-10-09 18:28:42', 36.9661, -122.001, '2015-10-09'),
+(37, 'KEITH GUDGER', '2015-10-10 10:28:02', 0, 0, '2015-10-10'),
+(39, 'KEITH GUDGER', '2015-10-17 21:39:32', 37.0067, -121.97, '2015-10-17'),
+(40, 'KEITH GUDGER', '2015-10-19 14:39:56', 0, 0, '2015-10-19'),
+(41, 'TEST', '2015-10-21 16:27:35', 36.966, -122.001, '2015-10-21'),
+(42, 'TEST', '2015-10-21 16:27:37', 36.966, -122.001, '2015-10-21'),
+(43, 'TEST', '2015-10-26 16:19:32', 36.9659, -122.036, '2015-10-26'),
+(44, 'TEST', '2015-10-26 16:19:32', 36.9659, -122.036, '2015-10-26'),
+(45, 'KEITH GUDGER', '2015-10-29 04:42:03', 0, 0, '2015-10-28'),
+(46, 'KEITH GUDGER', '2015-10-29 04:48:51', 37.0176, -121.962, '2015-10-28'),
+(47, 'KEITH GUDGER', '2015-10-29 04:48:58', 37.0176, -121.962, '2015-10-28'),
+(48, 'KEITH GUDGER', '2015-10-29 04:48:59', 37.0176, -121.962, '2015-10-28'),
+(49, 'KEITH GUDGER', '2015-10-29 04:48:59', 37.0176, -121.962, '2015-10-28'),
+(50, 'KEITH GUDGER', '2015-10-29 04:49:00', 37.0176, -121.962, '2015-10-28'),
+(51, 'KEITH GUDGER', '2015-10-29 04:49:00', 37.0176, -121.962, '2015-10-28'),
+(52, 'KEITH GUDGER', '2015-10-29 04:49:00', 37.0176, -121.962, '2015-10-28'),
+(53, 'KEITH GUDGER', '2015-10-29 04:49:00', 37.0176, -121.962, '2015-10-28'),
+(54, 'KEITH GUDGER', '2015-10-29 04:49:00', 37.0176, -121.962, '2015-10-28'),
+(55, 'KEITH GUDGER', '2015-10-29 04:49:01', 37.0176, -121.962, '2015-10-28'),
+(56, 'KEITH GUDGER', '2015-10-29 04:49:01', 37.0176, -121.962, '2015-10-28'),
+(57, 'KEITH GUDGER', '2015-10-29 04:49:06', 37.0176, -121.962, '2015-10-28'),
+(58, 'KEITH GUDGER', '2015-10-29 04:49:07', 37.0176, -121.962, '2015-10-28'),
+(59, 'KEITH GUDGER', '2015-10-29 04:49:07', 37.0176, -121.962, '2015-10-28'),
+(60, 'KEITH GUDGER', '2015-10-29 04:49:07', 37.0176, -121.962, '2015-10-28'),
+(61, 'KEITH GUDGER', '2015-10-29 04:49:11', 37.0176, -121.962, '2015-10-28'),
+(62, 'JOE MAIN', '2015-11-02 00:27:25', 36.9636, -122.024, '2015-11-01'),
+(63, 'TEST 2', '2015-11-05 19:45:37', 36.9663, -122.036, '2015-11-05'),
+(64, 'TEST 2', '2015-11-05 19:45:48', 36.9663, -122.036, '2015-11-05'),
+(68, 'KEITH GUDGER', '2015-11-10 03:47:37', 37.0177, -121.961, '2015-11-09'),
+(69, 'TEST', '2015-12-03 21:03:17', 36.9678, -121.987, '2015-12-03'),
+(70, 'TEST', '2015-12-03 21:03:20', 36.9678, -121.987, '2015-12-03');
 
 -- --------------------------------------------------------
 
@@ -97,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `weight` float NOT NULL,
   `category` int(11) DEFAULT NULL,
   PRIMARY KEY (`iid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=52 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
 
 --
 -- Dumping data for table `items`
@@ -122,7 +145,7 @@ INSERT INTO `items` (`iid`, `item`, `aname`, `recycle`, `weight`, `category`) VA
 (16, 'Aluminum foil', 'mfoil-in', 0, 0.0975, 6),
 (17, 'Plastic straws or stirrers', 'pstws-in', 0, 0.00091886, 2),
 (18, 'Cigarette box or wrappers', 'cboxs-in', 0, 0.0135347, 4),
-(19, 'Fireworks', 'firew-in', 0, 0, 7),
+(19, 'Fireworks, small', 'firws-in', 0, 0, 7),
 (20, 'Plastic bags, grocery or shopping', 'pbags-in', 0, 0.0121254, 2),
 (21, 'Nails', 'mnail-in', 0, 0.0198416, 6),
 (22, 'Plastic bags, ziplock or snack', 'pzips-in', 0, 0.00330693, 2),
@@ -133,11 +156,11 @@ INSERT INTO `items` (`iid`, `item`, `aname`, `recycle`, `weight`, `category`) VA
 (27, 'Balloons or ribbon', 'pbals-in', 0, 0.0015532, 2),
 (28, 'Paper bags', 'pabgs-in', 0, 0.14, 5),
 (29, 'Plastic motor oil bottles', 'pmobs-in', 0, 0.132277, 2),
-(30, 'Beach chairs, toys, umbrellas', 'chair-in', 0, 0, 7),
+(30, 'Beach toys', 'btoys-in', 0, 0, 7),
 (31, 'Styrofoam food containers', 'scons-in', 0, 0.0136, 3),
 (32, 'Disposable cigarette lighters', 'cltes-in', 0, 0.0206132, 4),
 (33, 'Shoes', 'shoes-in', 0, 0.70625, 7),
-(34, 'Plastic fishing line, nets, lures, floats', 'pfish-in', 0, 0, 2),
+(34, 'Plastic fishing line, lures, floats (non-commercial)', 'pfish-in', 0, 0, 2),
 (35, 'Styrofoam buoys or floats', 'sflos-in', 0, 4.2, 3),
 (36, 'Batteries', 'mbats-in', 0, 0.050625, 6),
 (37, 'Diapers', 'diaps-in', 0, 0.507063, 8),
@@ -149,12 +172,79 @@ INSERT INTO `items` (`iid`, `item`, `aname`, `recycle`, `weight`, `category`) VA
 (43, 'Syringes or needles', 'needl-in', 0, 0.0095, 8),
 (44, 'Shopping carts', 'scart-in', 0, 35, 9),
 (45, 'Tires', 'tires-in', 0, 10, 9),
-(46, 'Appliances', 'appls-in', 0, 0, 9),
-(47, 'Bikes or bike parts', 'bikes-in', 0, 0, 9),
-(48, 'Car parts', 'cprts-in', 0, 0, 9),
+(46, 'Appliances, small / handheld', 'appsm-in', 0, 0, 9),
+(47, 'Bike parts, small', 'bikes-in', 0, 0, 9),
+(48, 'Car parts, small', 'cprts-in', 0, 0, 9),
 (49, 'Car batteries', 'cbats-in', 1, 40, 9),
 (50, 'Plastic six-pack rings', 'prngs-in', 0, 0.00685638, 2),
-(51, 'Other, e.g. Rope', 'other-in', 0, 0, 10);
+(51, 'Other, small', 'othsm-in', 0, 0, 10),
+(52, 'Beach chairs, umbrellas', 'chair-in', 0, 0, 7),
+(53, 'Appliances, large', 'applg-in', 0, 0, 9),
+(54, 'Bikes / large bike parts', 'bikel-in', 0, 0, 9),
+(55, 'Car parts, large', 'cprtl-in', 0, 0, 9),
+(56, 'Other, large', 'othlg-in', 0, 0, 10),
+(57, 'Plastic fishing line, nets, lures, floats, commercial sized', 'pfisc-in', 0, 0, 2),
+(58, 'Fireworks, large', 'firwl-in', 0, 0, 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Places`
+--
+
+DROP TABLE IF EXISTS `Places`;
+CREATE TABLE IF NOT EXISTS `Places` (
+  `pid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `lat` float NOT NULL,
+  `lon` float NOT NULL,
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+
+--
+-- Dumping data for table `Places`
+--
+
+INSERT INTO `Places` (`pid`, `name`, `lat`, `lon`) VALUES
+(1, 'Seabright State Beach', 36.9624, -122.007),
+(3, 'Cowell and Main Beach', 36.9621, -122.023),
+(4, 'Lighthouse Field State Beach', 36.9534, -122.029),
+(5, 'Mitchell''s Cove Beach', 36.953, -122.043),
+(6, 'Sunny Cove Beach', 36.9609, -121.992),
+(7, 'Pleasure Point Park', 36.9577, -121.971),
+(8, 'Capitola City Beach', 36.9716, -121.951),
+(9, 'New Brighton Beach State Park', 36.9815, -121.938),
+(10, 'Seacliff State Beach', 36.9722, -121.916),
+(11, 'Rio Del Mar State Beach', 36.9689, -121.907),
+(12, 'Davenport Main Beach', 37.0096, -122.197),
+(13, 'Panther State Beach', 36.9914, -122.172),
+(16, 'Manresa State Beach', 36.9318, -121.865),
+(17, 'Casa Verde Beach/North Del Monte', 36.6027, -121.878),
+(18, 'Del Monte Beach at Wharf 2', 36.6015, -121.889),
+(19, 'Bonny Doon State Beach', 37.0009, -122.181),
+(20, 'Sunny Cove Beach', 36.9609, -121.992),
+(21, 'Moran Lake Beach', 36.9567, -121.979),
+(22, 'Twin Lakes State Beach', 36.962, -122.001),
+(24, 'Carmel City Beach', 36.5451, -121.934),
+(25, 'Hidden Beach', 36.5105, -121.944),
+(26, 'Scott Creek Beach', 37.0242, -122.233),
+(27, 'Natural Bridges State Beach', 36.9527, -122.06),
+(29, 'Palm State Beach', 36.8688, -121.821),
+(30, 'Blacks Beach', 36.9605, -122.012),
+(31, 'Monterey State Beach (North of Best Western)', 36.606, -121.867),
+(32, 'SLR at Felker St.', 36.9846, -122.027),
+(33, 'SLR at Laurel St. Bridge', 36.9698, -122.023),
+(34, 'SLR at Riverside Ave.', 36.9718, -122.022),
+(35, 'SLR at Soquel St. Bridge', 36.9736, -122.023),
+(36, 'Rail Trail', 36.9663, -122.012),
+(37, '4 Mile Beach', 36.9661, -122.123),
+(38, 'Beer Can Beach', 36.9549, -121.888),
+(39, 'Elkhorn Slough', 36.8058, -121.79),
+(40, 'Soquel Creek', 36.9827, -121.957),
+(41, 'Sand City Beach', 36.6257, -121.845),
+(42, 'SLR at Tannery', 36.9869, -122.028),
+(43, 'Waddell Creek State Beach', 37.0935, -122.283),
+(44, 'Rodeo Creek', 37.0067, -121.97);
 
 -- --------------------------------------------------------
 
@@ -266,7 +356,53 @@ INSERT INTO `tally` (`cid`, `iid`, `number`) VALUES
 (43, 30, 1),
 (43, 37, 1),
 (43, 39, 1),
-(43, 40, 1);
+(43, 40, 1),
+(45, 1, 4),
+(45, 3, 3),
+(45, 8, 3),
+(46, 2, 1),
+(61, 51, 2),
+(62, 1, 2),
+(62, 2, 3),
+(62, 3, 3),
+(62, 4, 3),
+(62, 5, 3),
+(62, 6, 2),
+(62, 8, 8),
+(62, 44, 1),
+(62, 45, 1),
+(62, 46, 1),
+(62, 47, 1),
+(62, 48, 1),
+(62, 49, 1),
+(62, 51, 1),
+(63, 4, 4),
+(63, 5, 4),
+(63, 8, 900),
+(63, 7, 98797),
+(63, 9, 4),
+(63, 17, 3),
+(63, 29, 3),
+(63, 34, 4),
+(63, 13, 5),
+(63, 26, 5),
+(63, 32, 4),
+(63, 14, 3),
+(63, 28, 4),
+(63, 10, 15),
+(63, 21, 2),
+(63, 36, 7),
+(63, 38, 2),
+(68, 1, 1),
+(69, 1, 1),
+(69, 2, 1),
+(69, 3, 1),
+(69, 4, 1),
+(69, 5, 1),
+(69, 9, 1),
+(69, 12, 1),
+(69, 34, 1),
+(69, 50, 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

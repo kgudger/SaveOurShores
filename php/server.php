@@ -13,7 +13,8 @@
 	$lat= $_REQUEST['lat'];
 	$lon= $_REQUEST['lon'];
 	$nam= $_REQUEST['namein'];
-	echo $db->send($lat,$lon,$nam);
+	$dat= $_REQUEST['datein'];
+	echo $db->send($lat,$lon,$nam,$dat);
   }
   elseif ($command == "getTally") {
 	$name= $_REQUEST['namein'];

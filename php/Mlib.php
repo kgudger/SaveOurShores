@@ -29,14 +29,14 @@ class DB
 	    return $this->db ;
 	}
 
-	function send($lat,$lon,$nam) 
+	function send($lat,$lon,$nam,$dat) 
 	{
 		$nam = strtoupper($nam);
 		$sql = "INSERT INTO `Collector` 
-			(`name`, `lat`, `lon`)
-			VALUES(?, ? , ?) ";
+			(`name`, `lat`, `lon`, `tdate`)
+			VALUES(?, ? , ?, ?) ";
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array($nam,$lat,$lon));
+		$stmt->execute(array($nam,$lat,$lon,$dat));
 		$lastId = $this->db->lastInsertId();
 		$iid = 1;
 		
@@ -128,7 +128,7 @@ class DB
 		cos( radians( ? ) - radians(lon) ) + sin( radians(lat) ) * 
 		sin( radians( ? ) ) ) ) 
 		AS distance 
-		FROM `Places` HAVING distance < 0.5
+		FROM `Places` HAVING distance < 1.0
 		ORDER BY distance
 		LIMIT 1";
 		 

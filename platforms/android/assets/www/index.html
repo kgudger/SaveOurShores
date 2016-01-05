@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="./css/style.css">
-    <style>
+	<link rel="stylesheet" type="text/css" href="./css/smoothness.datepick.css"> 
+	<style>
         /* following two viewport lines are equivalent to the meta viewport statement above, needed for Windows */
         /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ */
         @-ms-viewport { width: 100vw ; zoom: 100% ; }  @viewport { width: 100vw ; zoom: 100% ; }
@@ -22,6 +23,9 @@
     <script src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
 	<script src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.plugin.min.js"></script> 
+	<script type="text/javascript" src="./js/jquery.datepick.js"></script>
+	
 <script>
 $(document).bind('mobileinit',function(){
     $.mobile.changePage.defaults.changeHash = false;
@@ -58,12 +62,16 @@ $(document).bind('mobileinit',function(){
         <div id="cardhead" class="ui-field-contain">
             <label for "name-field">
             <input type=text class="right50" id="name-field" placeholder="your name" onblur="fillName(this.id);">
-                Group / Your Name</label>
-            <label for "place-field">
-			<select name="place-field" id="place-field" data-role="none" class="right50" onchange="newPlace()">
+            Group / Your Name
+            </label>
+				<label for "place-field" class="select">Your Location
+				<select name="place-field" id="place-field" data-inline="true" onchange="newPlace()">
 				<!-- <option selected value="GPS">Automatic</option> -->
 				<!-- onblur="fillName(this.id);"> -->
-           </select>Your Location</label>
+			</label>
+            <label for "date-field">
+            <input type=text class="right50" id="date-field">
+                Date</label>
             <label for "recycle">
             <input type=number class="right25" id="recycle">
                 Pounds of Recycling Collected:
@@ -77,6 +85,7 @@ $(document).bind('mobileinit',function(){
 			<input id="latin" type="hidden" name="lat" value="">
 			<input id="lonin" type="hidden" name="lon"  value="">
 			<input id="name-in" type="hidden" name="namein" value="">
+			<input id="datein" type="hidden" name="datein" value="">
             <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>

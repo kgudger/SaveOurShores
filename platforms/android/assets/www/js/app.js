@@ -113,7 +113,37 @@ function ready() {
 		console.warn("Geolocation failed. \nPlease enable GPS in Settings.", 1);
 		defaultPosition();
 	}
-}
+	$('#date-field').datepick({dateFormat: 'yyyy-mm-dd',
+		onClose: function(dates) { setDate(dates); }
+	});
+	var currentDate = new Date()
+	var day = currentDate.getDate()
+	var month = currentDate.getMonth() + 1
+	if(day < 10) {
+		day = '0' + day;
+	} 
+	if( month < 10 ) {
+		month = '0' + month ;
+	} 
+	var year = currentDate.getFullYear()
+	var ndate = year + '-' + month + '-' + day;
+    var out = document.getElementById("datein");
+    var dout = document.getElementById("date-field");
+    out.value = dout.value = ndate ;
+  }
+	/**
+	 *	set date function for date field
+	 */
+	function setDate(dates) {
+        var out = document.getElementById("datein");
+		var selected = ''; 
+		for (var i = 0; i < dates.length; i++) { 
+			selected += ',' + $.datepick.formatDate('yyyy-mm-dd',dates[i]); 
+		} 
+//		alert('Selected dates are: ' + selected.substring(1)); 
+        out.value = selected.substring(1) ;
+    }
+
 
 /** 
  *	sets current latitude and longitude from ready() function
@@ -170,6 +200,15 @@ function defaultPosition() {
         var queryString = "command=getTally" + "&namein=" + val ;
         sendfunc(queryString);
     }
+	/**
+	 *	onblur function for date field
+	 */
+	function fillDate(elt) {
+        var val = document.getElementById(elt).value;
+        var out = document.getElementById("datein");
+        out.value = val ;
+        alert("date is " + out.value);
+    }
 /*
 $(document).on('pagebeforeshow', '#dataCard', function(){       
 $( "#splashscreen" ).panel( "open"); });
@@ -179,9 +218,13 @@ $( "#splashscreen" ).panel( "open"); });
  */
 function sendData() {
     var out = document.getElementById("name-in").value;
+    var place = document.getElementById("place-field").value;
+//    alert("Location selection is " + place);
     if ( out == "" ) {
         alert("Please enter your name before submitting, thanks.");
-    } else {
+    } else if ( place == "Please Choose" ) {
+		alert("Please select a location before submitting, thanks.");
+	} else {
         var queryString = $('#trashform').serialize();
         queryString = "command=send&" + queryString;
         sendfunc(queryString);

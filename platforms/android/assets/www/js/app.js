@@ -13,9 +13,8 @@
  */
 	var currentLatitude = 0;
 	var currentLongitude = 0;
-	var location_timeout = "";
 	var options = {			// Intel GPS options
-        timeout: 10000,
+        timeout: 5000,
         maximumAge: 20000,
         enableHighAccuracy: true
 	};
@@ -98,14 +97,17 @@ var onDeviceReady=function(){
  */
 function ready() {
     if (navigator.geolocation) {
-		location_timeout = setTimeout("defaultPosition()", 10000);
-        navigator.geolocation.getCurrentPosition(showPosition,
+		var location_timeout = setTimeout("defaultPosition()", 5000);
+		
+        navigator.geolocation.getCurrentPosition(
+			function(pos) { clearTimeout(location_timeout); showPosition(pos); },
 			function(error) {
 				clearTimeout(location_timeout);
 				console.warn('ERROR(' + err.code + '): ' + err.message);
 				defaultPosition()
-			}, options );
-//		console.log('In ready after getCurrentPosition');
+			},
+			options
+		);
     }
     else {
 		console.warn("Geolocation failed. \nPlease enable GPS in Settings.", 1);
@@ -117,7 +119,6 @@ function ready() {
  *	sets current latitude and longitude from ready() function
  */
 function showPosition(position) {
-	clearTimeout(location_timeout);
 //	console.log('In showPosition');
     currentLatitude = position.coords.latitude;
 	currentLongitude = position.coords.longitude;
@@ -136,6 +137,7 @@ function showPosition(position) {
 function defaultPosition() {
 //	console.warn('ERROR(' + err.code + '): ' + err.message);
 //	console.log('In defaultPosition');
+	alert("defaultPosition");
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
 	sendfunc(queryString);
 }

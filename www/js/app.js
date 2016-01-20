@@ -156,7 +156,7 @@ function showPosition(position) {
     var lonid = document.getElementById("lonin");
     latid.value = currentLatitude;
     lonid.value = currentLongitude;
-    alert("Lat is " + latid.value + " Lon is " + lonid.value);
+    console.log("Lat is " + latid.value + " Lon is " + lonid.value);
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
     sendfunc(queryString);
 };
@@ -166,8 +166,8 @@ function showPosition(position) {
  */
 function defaultPosition() {
 //	console.warn('ERROR(' + err.code + '): ' + err.message);
-//	console.log('In defaultPosition');
-	alert("defaultPosition");
+	console.log('In defaultPosition');
+//	alert("defaultPosition");
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
 	sendfunc(queryString);
 }
@@ -207,7 +207,7 @@ function defaultPosition() {
         var val = document.getElementById(elt).value;
         var out = document.getElementById("datein");
         out.value = val ;
-        alert("date is " + out.value);
+        console.log("date is " + out.value);
     }
 /*
 $(document).on('pagebeforeshow', '#dataCard', function(){       

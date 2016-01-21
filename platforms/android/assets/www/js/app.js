@@ -27,9 +27,6 @@
 // by the same event or other events.
 
 function onAppReady() {
-    if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
-        navigator.splashscreen.hide() ;
-    }
     fillName("name-field");
 
     queryString = "command=getCats";
@@ -97,8 +94,8 @@ var onDeviceReady=function(){
  */
 function ready() {
     if (navigator.geolocation) {
-		var location_timeout = setTimeout("defaultPosition()", 5000);
-		
+		var location_timeout = setTimeout("defaultPosition()", 2000);
+		// changed to 2 seconds 
         navigator.geolocation.getCurrentPosition(
 			function(pos) { clearTimeout(location_timeout); showPosition(pos); },
 			function(error) {
@@ -156,7 +153,7 @@ function showPosition(position) {
     var lonid = document.getElementById("lonin");
     latid.value = currentLatitude;
     lonid.value = currentLongitude;
-    alert("Lat is " + latid.value + " Lon is " + lonid.value);
+    console.log("Lat is " + latid.value + " Lon is " + lonid.value);
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
     sendfunc(queryString);
 };
@@ -166,8 +163,8 @@ function showPosition(position) {
  */
 function defaultPosition() {
 //	console.warn('ERROR(' + err.code + '): ' + err.message);
-//	console.log('In defaultPosition');
-	alert("defaultPosition");
+	console.log('In defaultPosition');
+//	alert("defaultPosition");
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
 	sendfunc(queryString);
 }
@@ -207,7 +204,7 @@ function defaultPosition() {
         var val = document.getElementById(elt).value;
         var out = document.getElementById("datein");
         out.value = val ;
-        alert("date is " + out.value);
+        console.log("date is " + out.value);
     }
 /*
 $(document).on('pagebeforeshow', '#dataCard', function(){       
@@ -267,6 +264,9 @@ function sendfunc(params) {
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);
+						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
+							navigator.splashscreen.hide() ;
+						} // moved to here so splashscreen stays until really ready
                       fillForm(returnedList);
                   }
               }

@@ -27,9 +27,6 @@
 // by the same event or other events.
 
 function onAppReady() {
-    if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
-        navigator.splashscreen.hide() ;
-    }
     fillName("name-field");
 
     queryString = "command=getCats";
@@ -97,8 +94,8 @@ var onDeviceReady=function(){
  */
 function ready() {
     if (navigator.geolocation) {
-		var location_timeout = setTimeout("defaultPosition()", 5000);
-		
+		var location_timeout = setTimeout("defaultPosition()", 2000);
+		// changed to 2 seconds 
         navigator.geolocation.getCurrentPosition(
 			function(pos) { clearTimeout(location_timeout); showPosition(pos); },
 			function(error) {
@@ -267,6 +264,9 @@ function sendfunc(params) {
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);
+						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
+							navigator.splashscreen.hide() ;
+						} // moved to here so splashscreen stays until really ready
                       fillForm(returnedList);
                   }
               }

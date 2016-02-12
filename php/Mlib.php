@@ -152,6 +152,70 @@ class DB
 		echo json_encode($output) ;
         }
 
+	function getCategory()
+	{
+		$sql = "SELECT name
+			FROM `Categories`
+			ORDER BY name";
+		$result = $this->db->query($sql);
+		$output = array();
+		$output[Category] = "Category" ;
+		$temp = array();
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[] = $row[name] ;
+		}
+		$output[results] = $temp ;
+		echo json_encode($output) ;
+        }
+
+	function getName()
+	{
+		$sql = "SELECT DISTINCT name
+			FROM `Collector`
+			ORDER BY name";
+		$result = $this->db->query($sql);
+		$output = array();
+		$output[Name] = "Name" ;
+		$temp = array();
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[] = $row[name] ;
+		}
+		$output[results] = $temp ;
+		echo json_encode($output) ;
+        }
+
+	function getDate()
+	{
+		$sql = "SELECT DISTINCT CAST(`tdate` AS DATE) AS dateonly 
+			FROM `Collector`
+			ORDER BY dateonly";
+		$result = $this->db->query($sql);
+		$output = array();
+		$output[Date] = "Date" ;
+		$temp = array();
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[] = $row[dateonly] ;
+		}
+		$output[results] = $temp ;
+		echo json_encode($output) ;
+        }
+
+	function getItem()
+	{
+		$sql = "SELECT item
+			FROM `items`
+			ORDER BY item";
+		$result = $this->db->query($sql);
+		$output = array();
+		$output[Item] = "Item" ;
+		$temp = array();
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[] = $row[item] ;
+		}
+		$output[results] = $temp ;
+		echo json_encode($output) ;
+        }
+
      function getVoid($lat,$lon)
      {
         $sql = "SELECT id 

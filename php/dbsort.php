@@ -24,10 +24,10 @@ $checkArray = array();
 /// a new instance of the derived class (from MainPage)
 $dbsort = new dbSortPage($db,$sessvar,$checkArray) ;
 /// and ... start it up!  
-$dbsort->main("Welcome", $uid);
+$dbsort->main("Welcome", $uid, "", "dfile.php");
 /**
  * There are 2 choices for redirection dependent on the sessvar
  * above which one gets taken.
- * For this page, no redirection at all. */
+ * For this page, altredirect to download. */
 
 ?>

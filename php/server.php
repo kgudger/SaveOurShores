@@ -28,6 +28,18 @@
 	$lon= $_REQUEST['lonin'];
 	echo $db->getPlace($lat,$lon);
   }
+  elseif($command == "getName") {
+	echo $db->getName();
+  }
+  elseif($command == "getDate") {
+	echo $db->getDate();
+  }
+  elseif($command == "getCategory") {
+	echo $db->getCategory();
+  }
+  elseif($command == "getItem") {
+	echo $db->getItem();
+  }
   else
     echo "command was not recognized";
 ?>

@@ -233,8 +233,6 @@ function sendData() {
 /**
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is GET request string
- *	@param natnl is category for list
- *	@makelist is whether list or map
  */
 function sendfunc(params) {
     var xmlhttp;
@@ -343,7 +341,7 @@ function fillPlace(rList) {
 //        }
     }
 }
-// fillForm
+// fillPlace
 	/**
 	 *	onclick function for web addresses
 	 */

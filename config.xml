@@ -33,6 +33,31 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+<!-- iPhone / iPod Touch -->
+		<icon src="www/images/SOSlogo57.png" platform="ios" width="57" height="57" />
+		<icon src="www/images/SOSlogo114.png" platform="ios" width="114" height="114" />
+<!-- iPad -->
+		<icon src="www/images/SOSlogo72.png" platform="ios" width="72" height="72" />
+		<icon src="www/images/SOSlogo144.png" platform="ios" width="144" height="144" />
+<!-- iPhone Spotlight and Settings Icon -->
+		<icon src="www/images/SOSlogo29.png" platform="ios" width="29" height="29" />
+		<icon src="www/images/SOSlogo58.png" platform="ios" width="58" height="58" />
+<!-- iPad Spotlight and Settings Icon -->
+		<icon src="www/images/SOSlogo50.png" platform="ios" width="50" height="50" />
+		<icon src="www/images/SOSlogo100.png" platform="ios" width="100" height="100" />
+<!-- iPhone and iPod touch -->
+		<splash src="www/images/SOSlogo320x480.png" platform="ios" width="320" height="480" />
+		<splash src="www/images/SOSlogo640x960.png" platform="ios" width="640" height="960" />
+<!-- iPhone 5 / iPod Touch (5th Generation) -->
+		<splash src="www/images/SOSlogo640x1136.png" platform="ios" width="640" height="1136" />
+<!-- iPhone 6 -->
+		<splash src="www/images/SOSlogo750x1334.png" platform="ios" width="750" height="1334" />
+		<splash src="www/images/SOSlogo1242x2208.png" platform="ios" width="1242" height="2208" />
+<!-- iPad -->
+		<splash src="www/images/SOSlogo768x1024.png" platform="ios" width="768" height="1024" />
+<!-- Retina iPad -->
+		<splash src="www/images/SOSlogo1536x2048.png" platform="ios" width="1536" height="2048" />
     </platform>
-    <engine name="android" spec="~4.1.1" />
+	<engine name="android" spec="~4.1.1" />
+	<engine name="ios" spec="~3.9.2" />
 </widget>

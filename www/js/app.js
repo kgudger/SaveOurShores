@@ -98,7 +98,7 @@ function ready() {
 		// changed to 2 seconds 
         navigator.geolocation.getCurrentPosition(
 			function(pos) { clearTimeout(location_timeout); showPosition(pos); },
-			function(error) {
+			function(err) {
 				clearTimeout(location_timeout);
 				console.warn('ERROR(' + err.code + '): ' + err.message);
 				defaultPosition()

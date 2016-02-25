@@ -16,48 +16,39 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-	<preference name="SplashScreen" value="screen" />
-	<preference name="SplashScreenDelay" value="5000" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="5000" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon src="www/images/SOSlogo144.png" platform="android" qualifier="xxhdpi" />
-        <icon src="www/images/SOSlogo96.png" platform="android" qualifier="xhdpi" />
-        <icon src="www/images/SOSlogo72.png" platform="android" qualifier="hdpi" />
-        <icon src="www/images/SOSlogo48.png" platform="android" qualifier="mdpi" />
-        <icon src="www/images/SOSlogo36.png" platform="android" qualifier="ldpi" />
-		<splash src="www/images/SOSlogo320426.png" density="ldpi" />
-		<splash src="www/images/SOSlogo320470.png" density="mdpi" />
-		<splash src="www/images/SOSlogo480640.png" density="hdpi" />
-		<splash src="www/images/SOSlogo720960.png" density="xhdpi" />
+        <icon platform="android" qualifier="xxhdpi" src="www/images/SOSlogo144.png" />
+        <icon platform="android" qualifier="xhdpi" src="www/images/SOSlogo96.png" />
+        <icon platform="android" qualifier="hdpi" src="www/images/SOSlogo72.png" />
+        <icon platform="android" qualifier="mdpi" src="www/images/SOSlogo48.png" />
+        <icon platform="android" qualifier="ldpi" src="www/images/SOSlogo36.png" />
+        <splash density="ldpi" src="www/images/SOSlogo320426.png" />
+        <splash density="mdpi" src="www/images/SOSlogo320470.png" />
+        <splash density="hdpi" src="www/images/SOSlogo480640.png" />
+        <splash density="xhdpi" src="www/images/SOSlogo720960.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
-<!-- iPhone / iPod Touch -->
-		<icon src="www/images/SOSlogo57.png" platform="ios" width="57" height="57" />
-		<icon src="www/images/SOSlogo114.png" platform="ios" width="114" height="114" />
-<!-- iPad -->
-		<icon src="www/images/SOSlogo72.png" platform="ios" width="72" height="72" />
-		<icon src="www/images/SOSlogo144.png" platform="ios" width="144" height="144" />
-<!-- iPhone Spotlight and Settings Icon -->
-		<icon src="www/images/SOSlogo29.png" platform="ios" width="29" height="29" />
-		<icon src="www/images/SOSlogo58.png" platform="ios" width="58" height="58" />
-<!-- iPad Spotlight and Settings Icon -->
-		<icon src="www/images/SOSlogo50.png" platform="ios" width="50" height="50" />
-		<icon src="www/images/SOSlogo100.png" platform="ios" width="100" height="100" />
-<!-- iPhone and iPod touch -->
-		<splash src="www/images/SOSlogo320x480.png" platform="ios" width="320" height="480" />
-		<splash src="www/images/SOSlogo640x960.png" platform="ios" width="640" height="960" />
-<!-- iPhone 5 / iPod Touch (5th Generation) -->
-		<splash src="www/images/SOSlogo640x1136.png" platform="ios" width="640" height="1136" />
-<!-- iPhone 6 -->
-		<splash src="www/images/SOSlogo750x1334.png" platform="ios" width="750" height="1334" />
-		<splash src="www/images/SOSlogo1242x2208.png" platform="ios" width="1242" height="2208" />
-<!-- iPad -->
-		<splash src="www/images/SOSlogo768x1024.png" platform="ios" width="768" height="1024" />
-<!-- Retina iPad -->
-		<splash src="www/images/SOSlogo1536x2048.png" platform="ios" width="1536" height="2048" />
+        <icon height="57" platform="ios" src="www/images/SOSlogo57.png" width="57" />
+        <icon height="114" platform="ios" src="www/images/SOSlogo114.png" width="114" />
+        <icon height="72" platform="ios" src="www/images/SOSlogo72.png" width="72" />
+        <icon height="144" platform="ios" src="www/images/SOSlogo144.png" width="144" />
+        <icon height="29" platform="ios" src="www/images/SOSlogo29.png" width="29" />
+        <icon height="58" platform="ios" src="www/images/SOSlogo58.png" width="58" />
+        <icon height="50" platform="ios" src="www/images/SOSlogo50.png" width="50" />
+        <icon height="100" platform="ios" src="www/images/SOSlogo100.png" width="100" />
+        <splash height="480" platform="ios" src="www/images/SOSlogo320x480.png" width="320" />
+        <splash height="960" platform="ios" src="www/images/SOSlogo640x960.png" width="640" />
+        <splash height="1136" platform="ios" src="www/images/SOSlogo640x1136.png" width="640" />
+        <splash height="1334" platform="ios" src="www/images/SOSlogo750x1334.png" width="750" />
+        <splash height="2208" platform="ios" src="www/images/SOSlogo1242x2208.png" width="1242" />
+        <splash height="1024" platform="ios" src="www/images/SOSlogo768x1024.png" width="768" />
+        <splash height="2048" platform="ios" src="www/images/SOSlogo1536x2048.png" width="1536" />
     </platform>
-	<engine name="android" spec="~4.1.1" />
-	<engine name="ios" spec="~3.9.2" />
+    <engine name="android" spec="~4.1.1" />
+    <engine name="ios" spec="~3.9.2" />
 </widget>

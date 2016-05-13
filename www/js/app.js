@@ -31,6 +31,8 @@ function onAppReady() {
 
     queryString = "command=getCats";
     sendfunc(queryString);
+    queryString = "command=getEvent";
+    sendfunc(queryString);
     ready();
 }
 
@@ -260,6 +262,10 @@ function sendfunc(params) {
 //                      alert("place is " + returnedList["place"] );
                       fillPlace(returnedList);
 				  }
+                  else if (typeof (returnedList["Event"]) !== 'undefined') {
+//                      alert("Event is " + returnedList["Event"] );
+                      fillEvent(returnedList);
+				  }
                   else {
 //                      alert(returnedList["Top Items"]);
 						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
@@ -342,6 +348,25 @@ function fillPlace(rList) {
     }
 }
 // fillPlace
+
+/**
+ *	Function to create Event list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function fillEvent(rList) {
+    var myHTML = "" ;
+    var select = document.getElementById('event-field');
+    for (var topKey in rList['results']) {
+//		console.log("Topkey in fillEvent is " + topKey);
+//		console.log("Innerkey in fillEvent is " + rList['results'][topKey]);
+		option = document.createElement( 'option' );
+		option.value = option.text = rList['results'][topKey];
+		select.add( option );
+    }
+}
+// fillEvent
+
 	/**
 	 *	onclick function for web addresses
 	 */

@@ -40,6 +40,9 @@
   elseif($command == "getItem") {
 	echo $db->getItem();
   }
+  elseif($command == "getEvent") {
+	echo $db->getEvent();
+  }
   else
     echo "command was not recognized";
 ?>

@@ -103,7 +103,7 @@ class DB
 		$sql = "SELECT name, item, aname 
 			FROM `items`, `Categories` 
 			WHERE items.category = Categories.catid 
-			ORDER BY category";
+			ORDER BY category, item";
 		$result = $this->db->query($sql);
 		$output = array();
 		$cname = "" ;
@@ -211,6 +211,22 @@ class DB
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$temp[] = $row[item] ;
+		}
+		$output[results] = $temp ;
+		echo json_encode($output) ;
+        }
+
+	function getEvent()
+	{
+		$sql = "SELECT name, eid
+			FROM `Event`
+			ORDER BY eid";
+		$result = $this->db->query($sql);
+		$output = array();
+		$output[Event] = "Event" ;
+		$temp = array();
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$temp[] = $row[name] ;
 		}
 		$output[results] = $temp ;
 		echo json_encode($output) ;

@@ -223,7 +223,10 @@ function defaultPosition() {
         var val2 = document.getElementById("OTHER");
         if( val != null) {
 	        val.value = val2.value;
-			alert ("value is " + val.value + " value 2 is " + val2.value);
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+		else {
+			val2.value = 0;
 		}
     }
 
@@ -252,16 +255,20 @@ $(document).on('pagebeforeshow', '#dataCard', function(){
 $( "#splashscreen" ).panel( "open"); });
 */
 /**
- *	onblur function for name field
+ *	sendData function, called at 'submit'
  */
 function sendData() {
     var out = document.getElementById("name-in").value;
     var place = document.getElementById("place-field").value;
+    var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
         alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
+    } else if ( event == "0" ) {
+		alert("Please select an Event type before submitting, thanks.");
+		console.log("Event type is " + event);
 	} else {
         var queryString = $('#trashform').serialize();
         queryString = "command=send&" + queryString;
@@ -419,11 +426,16 @@ function fillPlace(rList) {
 function fillEvent(rList) {
     var myHTML = "" ;
     var select = document.getElementById('event-field');
+	var option = document.createElement( 'option' );
+	option.value = 0;
+	option.text = "Please Select";
+	select.add( option );
     for (var topKey in rList['results']) {
 //		console.log("Topkey in fillEvent is " + topKey);
 //		console.log("Innerkey in fillEvent is " + rList['results'][topKey]);
 		option = document.createElement( 'option' );
-		option.value = option.text = rList['results'][topKey];
+		option.value = topKey ;
+		option.text = rList['results'][topKey];
 		select.add( option );
     }
 }
@@ -437,8 +449,14 @@ function fillEvent(rList) {
 function changeOther() {
     var myHTML = "" ;
     var select = document.getElementById('other-field');
+//    other_change() ;
     otherStuff = select.options[select.selectedIndex].value;
-//    alert ("Changed to " + otherStuff);
+    var val = document.getElementById(otherStuff);
+    var val2 = document.getElementById("OTHER");
+    if( val != null) {
+	    val2.value = val.value;
+//		alert ("value is " + val.value + " value 2 is " + val2.value);
+	}
 }
 // changeOther()
 

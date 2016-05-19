@@ -226,7 +226,7 @@ class DB
 		$output[Event] = "Event" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[] = $row[name] ;
+			$temp[$row['eid']] = $row['name'] ;
 		}
 		$output[results] = $temp ;
 		echo json_encode($output) ;

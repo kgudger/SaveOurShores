@@ -29,14 +29,14 @@ class DB
 	    return $this->db ;
 	}
 
-	function send($lat,$lon,$nam,$dat) 
+	function send($lat,$lon,$nam,$dat,$evnt) 
 	{
 		$nam = strtoupper($nam);
 		$sql = "INSERT INTO `Collector` 
-			(`name`, `lat`, `lon`, `tdate`)
-			VALUES(?, ? , ?, ?) ";
+			(`name`, `lat`, `lon`, `tdate`, `eid`)
+			VALUES(?, ? , ?, ?, ?) ";
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array($nam,$lat,$lon,$dat));
+		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt));
 		$lastId = $this->db->lastInsertId();
 		$iid = 1;
 		

@@ -19,6 +19,7 @@
         enableHighAccuracy: true
 	};
 	var Places = [];
+	var otherStuff ;
 
 
 // The function below is an example of the best way to "start" your app.
@@ -30,6 +31,8 @@ function onAppReady() {
     fillName("name-field");
 
     queryString = "command=getCats";
+    sendfunc(queryString);
+    queryString = "command=getEvent";
     sendfunc(queryString);
     ready();
 }
@@ -186,6 +189,47 @@ function defaultPosition() {
         val.value++;
     }
 
+/**
+	 *	onclick function for "other minus" button
+	 */
+	function other_minus_one(elt) {
+        var val2 = document.getElementById(elt);
+        var val = document.getElementById(otherStuff);
+        if( val != null) {
+			if (val.value > 0) val.value--;
+			val2.value = val.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+    }
+
+	/**
+	 *	onclick function for "other plus" button
+	 */
+	function other_plus_one(elt) {
+        var val = document.getElementById(otherStuff);
+        var val2 = document.getElementById(elt);
+        if( val != null) {
+	        val.value++;
+			val2.value = val.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+    }
+
+	/**
+	 *	oninput function for "other" input
+	 */
+	function other_change() {
+        var val = document.getElementById(otherStuff);
+        var val2 = document.getElementById("OTHER");
+        if( val != null) {
+	        val.value = val2.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+		else {
+			val2.value = 0;
+		}
+    }
+
 	/**
 	 *	onblur function for name field
 	 */
@@ -211,17 +255,24 @@ $(document).on('pagebeforeshow', '#dataCard', function(){
 $( "#splashscreen" ).panel( "open"); });
 */
 /**
- *	onblur function for name field
+ *	sendData function, called at 'submit'
  */
 function sendData() {
     var out = document.getElementById("name-in").value;
     var place = document.getElementById("place-field").value;
+    var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
         alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
+    } else if ( event == "0" ) {
+		alert("Please select an Event type before submitting, thanks.");
+		console.log("Event type is " + event);
 	} else {
+        var val = document.getElementById("event-field").value;
+        var out = document.getElementById("eventin");
+        out.value = val;
         var queryString = $('#trashform').serialize();
         queryString = "command=send&" + queryString;
         sendfunc(queryString);
@@ -260,6 +311,10 @@ function sendfunc(params) {
 //                      alert("place is " + returnedList["place"] );
                       fillPlace(returnedList);
 				  }
+                  else if (typeof (returnedList["Event"]) !== 'undefined') {
+//                      alert("Event is " + returnedList["Event"] );
+                      fillEvent(returnedList);
+				  }
                   else {
 //                      alert(returnedList["Top Items"]);
 						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
@@ -283,16 +338,39 @@ function sendfunc(params) {
  */
 function fillForm(rList) {
     var myHTML = "" ;
+    var option;
+	var newHtml = "<div>" ;
     for (var topKey in rList) {
-        myHTML = '<div class="header-field">' + topKey + '</div>';
+		myHTML = '<div class="header-field">' + topKey + '</div>';
+		if ( topKey == "OTHER" ) {
+			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change()" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
+			myHTML += '<select name="other-field" id="other-field" data-inline="true" onChange="changeOther()"></select>';
+		}
 //        $('#formData').append(myHTML);
         document.getElementById('formData').innerHTML+= myHTML;
-        for (var innerKey in rList[topKey]) {
-            var iVal = rList[topKey][innerKey] ;
-            myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
-        document.getElementById('formData').innerHTML+= myHTML;
-        }
+        if ( topKey != "OTHER" ) {
+			for (var innerKey in rList[topKey]) {
+				var iVal = rList[topKey][innerKey] ;
+				myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
+				document.getElementById('formData').innerHTML+= myHTML;
+			}
+        } else {
+			var select = document.getElementById('other-field');
+			option = document.createElement( 'option' );
+			option.value = 'empty';
+			option.text = 'Please Select';
+			select.add( option );
+			for (var innerKey in rList[topKey]) {
+				option = document.createElement( 'option' );
+				option.value = rList[topKey][innerKey];
+				option.text = innerKey;
+				select.add( option );
+				newHtml+= '<input id="' + rList[topKey][innerKey] + '" type="hidden" name="' + rList[topKey][innerKey] + '" value="0">';
+			}
+		}
     }
+	newHtml += "</div>";
+	document.getElementById('formData').innerHTML+= newHtml;
 }
 // fillForm
 
@@ -342,6 +420,49 @@ function fillPlace(rList) {
     }
 }
 // fillPlace
+
+/**
+ *	Function to create Event list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function fillEvent(rList) {
+    var myHTML = "" ;
+    var select = document.getElementById('event-field');
+	var option = document.createElement( 'option' );
+	option.value = 0;
+	option.text = "Please Select";
+	select.add( option );
+    for (var topKey in rList['results']) {
+//		console.log("Topkey in fillEvent is " + topKey);
+//		console.log("Innerkey in fillEvent is " + rList['results'][topKey]);
+		option = document.createElement( 'option' );
+		option.value = topKey ;
+		option.text = rList['results'][topKey];
+		select.add( option );
+    }
+}
+// fillEvent
+
+/**
+ *	Function to create Event list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function changeOther() {
+    var myHTML = "" ;
+    var select = document.getElementById('other-field');
+//    other_change() ;
+    otherStuff = select.options[select.selectedIndex].value;
+    var val = document.getElementById(otherStuff);
+    var val2 = document.getElementById("OTHER");
+    if( val != null) {
+	    val2.value = val.value;
+//		alert ("value is " + val.value + " value 2 is " + val2.value);
+	}
+}
+// changeOther()
+
 	/**
 	 *	onclick function for web addresses
 	 */

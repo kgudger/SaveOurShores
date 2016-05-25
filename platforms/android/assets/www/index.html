@@ -64,6 +64,15 @@ $(document).bind('mobileinit',function(){
             <input type=text class="right50" id="name-field" placeholder="your name" onblur="fillName(this.id);">
             Group / Your Name
             </label>
+            <label for "event-field" class="select">Type of Event
+            <select name="event-field" id="event-field" data-inline="true">
+<!--				<option selected value="Public">Public</option>
+				<option value="School">School</option>
+				<option value="Monthly/Recurring">Monthly/Recurring</option>
+				<option value="Corporate">Corporate</option>
+				<option value="River/Inland">River/Inland</option> -->
+			</select>
+            </label>
 				<label for "place-field" class="select">Your Location
 				<select name="place-field" id="place-field" data-inline="true" onchange="newPlace()">
 				<!-- <option selected value="GPS">Automatic</option> -->
@@ -86,6 +95,7 @@ $(document).bind('mobileinit',function(){
 			<input id="lonin" type="hidden" name="lon"  value="">
 			<input id="name-in" type="hidden" name="namein" value="">
 			<input id="datein" type="hidden" name="datein" value="">
+			<input id="eventin" type="hidden" name="eventin" value="">
             <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>

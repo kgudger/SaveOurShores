@@ -270,6 +270,9 @@ function sendData() {
 		alert("Please select an Event type before submitting, thanks.");
 		console.log("Event type is " + event);
 	} else {
+        var val = document.getElementById("event-field").value;
+        var out = document.getElementById("eventin");
+        out.value = val;
         var queryString = $('#trashform').serialize();
         queryString = "command=send&" + queryString;
         sendfunc(queryString);

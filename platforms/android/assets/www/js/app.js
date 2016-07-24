@@ -278,6 +278,10 @@ function sendData() {
         sendfunc(queryString);
 //    alert(queryString);
         document.getElementById("trashform").reset()
+//		alert("Before Change Page");
+		$(":mobile-pagecontainer").pagecontainer("change", "submitted.html", { transition: "fade" });
+//		$( "#submit-page" ).panel().panel( "open" );
+//		$.mobile.changePage( $("#submit-page"));
     }
 }
 

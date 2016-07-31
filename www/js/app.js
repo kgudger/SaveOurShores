@@ -341,25 +341,25 @@ function sendfunc(params) {
  * @param rList is object returned from ajax
  */
 function fillForm(rList) {
-    var myHTML = "" ;
+    var myHTML = '<ul data-role="collapsible-set">';
     var option;
-	var newHtml = "<div>" ;
+//	var newHtml = "<div>" ;
     for (var topKey in rList) {
-		myHTML = '<div class="header-field">' + topKey + '</div>';
+		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2><ul data-role="listview">';
 //		if ( topKey == "OTHER" ) {
-			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
+/*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
 			myHTML += '<select name="'+topKey+'-field" id="'+topKey+'-field" data-inline="true" onChange="changeOther('+"'"+topKey+"'"+')"></select>';
 			Stuff[topKey] = "";
 //		}
 //        $('#formData').append(myHTML);
         document.getElementById('formData').innerHTML+= myHTML;
-/*        if ( topKey != "OTHER" ) {
-			for (var innerKey in rList[topKey]) {
-				var iVal = rList[topKey][innerKey] ;
-				myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
-				document.getElementById('formData').innerHTML+= myHTML;
-			}
-        } else {*/
+/*        if ( topKey != "OTHER" ) {*/
+		for (var innerKey in rList[topKey]) {
+			var iVal = rList[topKey][innerKey] ;
+			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';
+		}
+//				document.getElementById('formData').innerHTML+= myHTML;
+    /*} else {
 			var fieldname = topKey+'-field';
 			var select = document.getElementById(fieldname);
 			option = document.createElement( 'option' );
@@ -374,9 +374,12 @@ function fillForm(rList) {
 				newHtml+= '<input id="' + rList[topKey][innerKey] + '" type="hidden" name="' + rList[topKey][innerKey] + '" value="0">';
 			}
 //		}
-    }
-	newHtml += "</div>";
-	document.getElementById('formData').innerHTML+= newHtml;
+    }*/
+		myHTML += "</ul></li>";
+//		document.getElementById('formData').innerHTML+= newHtml;
+	}
+	myHTML += "</ul>";
+	document.getElementById('formData').innerHTML+= myHTML;
 }
 // fillForm
 

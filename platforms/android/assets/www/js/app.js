@@ -19,7 +19,7 @@
         enableHighAccuracy: true
 	};
 	var Places = [];
-	var otherStuff ;
+	var Stuff = {}; // Object / associative array to hold which item gets updated
 
 
 // The function below is an example of the best way to "start" your app.
@@ -194,7 +194,7 @@ function defaultPosition() {
 	 */
 	function other_minus_one(elt) {
         var val2 = document.getElementById(elt);
-        var val = document.getElementById(otherStuff);
+        var val = document.getElementById(Stuff[elt]);
         if( val != null) {
 			if (val.value > 0) val.value--;
 			val2.value = val.value;
@@ -206,7 +206,7 @@ function defaultPosition() {
 	 *	onclick function for "other plus" button
 	 */
 	function other_plus_one(elt) {
-        var val = document.getElementById(otherStuff);
+        var val = document.getElementById(Stuff[elt]);
         var val2 = document.getElementById(elt);
         if( val != null) {
 	        val.value++;
@@ -218,9 +218,9 @@ function defaultPosition() {
 	/**
 	 *	oninput function for "other" input
 	 */
-	function other_change() {
-        var val = document.getElementById(otherStuff);
-        var val2 = document.getElementById("OTHER");
+	function other_change(field_name) {
+        var val = document.getElementById(Stuff[field_name]);
+        var val2 = document.getElementById(field_name);
         if( val != null) {
 	        val.value = val2.value;
 //			alert ("value is " + val.value + " value 2 is " + val2.value);
@@ -341,25 +341,26 @@ function sendfunc(params) {
  * @param rList is object returned from ajax
  */
 function fillForm(rList) {
-    var myHTML = "" ;
+    var myHTML = '<ul data-role="collapsible-set">';
     var option;
-	var newHtml = "<div>" ;
+//	var newHtml = "<div>" ;
     for (var topKey in rList) {
-		myHTML = '<div class="header-field">' + topKey + '</div>';
-		if ( topKey == "OTHER" ) {
-			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change()" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
-			myHTML += '<select name="other-field" id="other-field" data-inline="true" onChange="changeOther()"></select>';
-		}
+		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2><ul data-role="listview">';
+//		if ( topKey == "OTHER" ) {
+/*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
+			myHTML += '<select name="'+topKey+'-field" id="'+topKey+'-field" data-inline="true" onChange="changeOther('+"'"+topKey+"'"+')"></select>';
+			Stuff[topKey] = "";
+//		}
 //        $('#formData').append(myHTML);
         document.getElementById('formData').innerHTML+= myHTML;
-        if ( topKey != "OTHER" ) {
-			for (var innerKey in rList[topKey]) {
-				var iVal = rList[topKey][innerKey] ;
-				myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
-				document.getElementById('formData').innerHTML+= myHTML;
-			}
-        } else {
-			var select = document.getElementById('other-field');
+/*        if ( topKey != "OTHER" ) {*/
+		for (var innerKey in rList[topKey]) {
+			var iVal = rList[topKey][innerKey] ;
+			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" ><div class="setwidth">' + innerKey + '</div> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';
+		}
+    /*} else {
+			var fieldname = topKey+'-field';
+			var select = document.getElementById(fieldname);
 			option = document.createElement( 'option' );
 			option.value = 'empty';
 			option.text = 'Please Select';
@@ -371,10 +372,13 @@ function fillForm(rList) {
 				select.add( option );
 				newHtml+= '<input id="' + rList[topKey][innerKey] + '" type="hidden" name="' + rList[topKey][innerKey] + '" value="0">';
 			}
-		}
-    }
-	newHtml += "</div>";
-	document.getElementById('formData').innerHTML+= newHtml;
+//		}
+    }*/
+		myHTML+= "</ul></li>";
+//		document.getElementById('formData').innerHTML+= myHTML;
+	}
+	myHTML+= "</ul>";
+	document.getElementById('formData').innerHTML+= myHTML;
 }
 // fillForm
 
@@ -453,13 +457,13 @@ function fillEvent(rList) {
  *
  * @param rList is object returned from ajax
  */
-function changeOther() {
+function changeOther(field_name) {
     var myHTML = "" ;
-    var select = document.getElementById('other-field');
+    var select = document.getElementById(field_name+"-field");
 //    other_change() ;
-    otherStuff = select.options[select.selectedIndex].value;
-    var val = document.getElementById(otherStuff);
-    var val2 = document.getElementById("OTHER");
+    Stuff[field_name] = select.options[select.selectedIndex].value;
+    var val = document.getElementById(Stuff[field_name]);
+    var val2 = document.getElementById(field_name);
     if( val != null) {
 	    val2.value = val.value;
 //		alert ("value is " + val.value + " value 2 is " + val2.value);

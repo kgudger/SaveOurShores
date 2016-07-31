@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.phonegap.saveourshores" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <preference name="loglevel" value="DEBUG" />
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
@@ -9,16 +8,6 @@
         <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
         <param name="onload" value="true" />
     </feature>
-    <allow-intent href="market:*" />
-    <icon platform="android" qualifier="xxhdpi" src="www/images/SOSlogo144.png" />
-    <icon platform="android" qualifier="xhdpi" src="www/images/SOSlogo96.png" />
-    <icon platform="android" qualifier="hdpi" src="www/images/SOSlogo72.png" />
-    <icon platform="android" qualifier="mdpi" src="www/images/SOSlogo48.png" />
-    <icon platform="android" qualifier="ldpi" src="www/images/SOSlogo36.png" />
-    <splash density="ldpi" src="www/images/SOSlogo320426.png" />
-    <splash density="mdpi" src="www/images/SOSlogo320470.png" />
-    <splash density="hdpi" src="www/images/SOSlogo480640.png" />
-    <splash density="xhdpi" src="www/images/SOSlogo720960.png" />
     <name>Save Our Shores</name>
     <description>
         Marine Debris Collection Data Input Application.
@@ -34,6 +23,17 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-intent href="market:*" />
+    <icon platform="android" qualifier="xxhdpi" src="www/images/SOSlogo144.png" />
+    <icon platform="android" qualifier="xhdpi" src="www/images/SOSlogo96.png" />
+    <icon platform="android" qualifier="hdpi" src="www/images/SOSlogo72.png" />
+    <icon platform="android" qualifier="mdpi" src="www/images/SOSlogo48.png" />
+    <icon platform="android" qualifier="ldpi" src="www/images/SOSlogo36.png" />
+    <splash density="ldpi" src="www/images/SOSlogo320426.png" />
+    <splash density="mdpi" src="www/images/SOSlogo320470.png" />
+    <splash density="hdpi" src="www/images/SOSlogo480640.png" />
+    <splash density="xhdpi" src="www/images/SOSlogo720960.png" />
+    <preference name="loglevel" value="DEBUG" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="5000" />
 </widget>

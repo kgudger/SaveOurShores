@@ -39,8 +39,8 @@ function onAppReady() {
 
 document.addEventListener("app.Ready", onAppReady, false) ;
 $(window).bind("load", function() {
-	var before = getCookie("before");
-	alert("In script before is " + before);
+	var before = getCookie("SOSbefore");
+//	alert("In script before is " + before);
    	if (before != "") {
 		hideSplash();
 	}
@@ -495,8 +495,22 @@ function changeOther(field_name) {
  * Function to change from splash page to main page.
  */
 function hideSplash() {
-	document.cookie = "before=;";
-  $.mobile.changePage("#dataCard", "fade");
+	var before = getCookie("SOSbefore");
+//	alert("In hidesplash before is " + before);
+	switch(before) {
+		case "" :
+			document.cookie = "SOSbefore=1";
+			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-2.png'
+			break;
+		case "1":
+			document.cookie = "SOSbefore=2";
+			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-3.png'
+			break;
+		case "2":
+		default:
+			$.mobile.changePage("#dataCard", "fade");
+			break;
+	}
 }
 // 37.0067 -121.97
 	/**

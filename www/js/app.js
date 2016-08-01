@@ -38,6 +38,14 @@ function onAppReady() {
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
+$(window).bind("load", function() {
+	var before = getCookie("before");
+	alert("In script before is " + before);
+   	if (before != "") {
+		hideSplash();
+	}
+});
+
 /*
 if(typeof intel === 'undefined') {
     document.addEventListener( "DOMContentLoaded", ready, false );
@@ -345,7 +353,7 @@ function fillForm(rList) {
     var option;
 //	var newHtml = "<div>" ;
     for (var topKey in rList) {
-		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2><ul data-role="listview">';
+		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2>';
 //		if ( topKey == "OTHER" ) {
 /*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
 			myHTML += '<select name="'+topKey+'-field" id="'+topKey+'-field" data-inline="true" onChange="changeOther('+"'"+topKey+"'"+')"></select>';
@@ -356,7 +364,8 @@ function fillForm(rList) {
 /*        if ( topKey != "OTHER" ) {*/
 		for (var innerKey in rList[topKey]) {
 			var iVal = rList[topKey][innerKey] ;
-			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';
+/*			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';*/
+			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iVal + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></div></div></div>';
 		}
 //				document.getElementById('formData').innerHTML+= myHTML;
     /*} else {
@@ -375,7 +384,7 @@ function fillForm(rList) {
 			}
 //		}
     }*/
-		myHTML += "</ul></li>";
+		myHTML += "</li>";
 //		document.getElementById('formData').innerHTML+= newHtml;
 	}
 	myHTML += "</ul>";
@@ -486,6 +495,7 @@ function changeOther(field_name) {
  * Function to change from splash page to main page.
  */
 function hideSplash() {
+	document.cookie = "before=;";
   $.mobile.changePage("#dataCard", "fade");
 }
 // 37.0067 -121.97
@@ -507,3 +517,22 @@ function hideSplash() {
 		}
 	}
 // newPlace
+
+/** function to get a cookie by name
+ *  param cname is cookie name to look for
+ *  returns cookie value
+ */
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}

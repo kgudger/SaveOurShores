@@ -38,14 +38,14 @@ function onAppReady() {
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
-$(window).bind("load", function() {
+/*$(window).on("load", function() {
 	var before = getCookie("SOSbefore");
 //	alert("In script before is " + before);
    	if (before != "") {
 		hideSplash();
 	}
 });
-
+*/
 /*
 if(typeof intel === 'undefined') {
     document.addEventListener( "DOMContentLoaded", ready, false );
@@ -333,6 +333,11 @@ function sendfunc(params) {
 							navigator.splashscreen.hide() ;
 						} // moved to here so splashscreen stays until really ready
                       fillForm(returnedList);
+						var before = getCookie("SOSbefore");
+//	alert("In script before is " + before);
+					   	if (before != "") {
+							hideSplash();
+						}
                   }
               }
           }

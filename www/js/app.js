@@ -499,11 +499,13 @@ function hideSplash() {
 //	alert("In hidesplash before is " + before);
 	switch(before) {
 		case "" :
-			document.cookie = "SOSbefore=1";
+//			document.cookie = "SOSbefore=1";
+			window.localStorage.setItem("SOSbefore",1);
 			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-2.png'
 			break;
 		case "1":
-			document.cookie = "SOSbefore=2";
+//			document.cookie = "SOSbefore=2";
+			window.localStorage.setItem("SOSbefore",2);
 			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-3.png'
 			break;
 		case "2":
@@ -537,7 +539,8 @@ function hideSplash() {
  *  returns cookie value
  */
 function getCookie(cname) {
-    var name = cname + "=";
+	var name = window.localStorage.getItem(cname);
+/*    var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i <ca.length; i++) {
         var c = ca[i];
@@ -548,5 +551,9 @@ function getCookie(cname) {
             return c.substring(name.length,c.length);
         }
     }
-    return "";
+    return "";*/
+	if ( (typeof name === 'undefined') || (name == null) ) {
+		name = "";
+	}
+	return name;
 }

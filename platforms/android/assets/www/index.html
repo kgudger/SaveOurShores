@@ -47,7 +47,7 @@ $(document).bind('mobileinit',function(){
 <!-- <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a"> -->
 <div data-role="page" id="splashscreen" data-theme="b">
 	<div role="main" class="ui-content" id="splashbox">
-        <img class="displaycenter setwidth" src="images/App-Welcome-Screen-Slide-1.png" onclick="hideSplash();">
+        <img class="displaycenter setwidth" src="images/App-Welcome-Screen-Slide-1.png" onclick="hideSplash();" id="splashimage">
     </div>
 </div><!-- /page -->
 
@@ -68,7 +68,7 @@ $(document).bind('mobileinit',function(){
             Your email
             </label>
             <label for "event-field" class="select">Type of Cleanup
-            <select name="event-field" id="event-field" data-inline="true">
+            <select name="event-field" id="event-field" data-inline="true" >
 <!--				<option selected value="Public">Public</option>
 				<option value="School">School</option>
 				<option value="Monthly/Recurring">Monthly/Recurring</option>

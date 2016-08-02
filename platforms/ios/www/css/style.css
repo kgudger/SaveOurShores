@@ -17,10 +17,10 @@
 	.button_right {
 		float: right;
 		padding: 0 0 1em 1.5em;
-		top: 0.25em;
 	}
 
 	.itemin {
+		float: left;
 		white-space:nowrap;
 	}
 	
@@ -31,7 +31,24 @@
 		border-radius: inherit;
 		margin: 0;
 		min-height: 2.2em;
-		text-align: left;
+		text-align: right;
+	}
+
+	.left25 {
+		width: 50px !important;
+		border: 0 none;
+		border-radius: inherit;
+		margin: 0;
+		text-align: right;
+		float: left;
+	}
+
+	.fright {
+		float: right;
+	}
+
+	.fleft {
+		float: left;
 	}
 
 	.right50 {
@@ -87,6 +104,7 @@ img.displaycenter {
 .kgheader {
   color: white !important;
   background-color: #15BDDE !important;
+  margin-top: 25px !important;
 }
 .blue_back {
   background-color: #15BDDE !important;
@@ -100,6 +118,15 @@ img.displaycenter {
     border-bottom-width: 1px;
     border-bottom-color: #414141;
     margin: 0.5em 0 0;
+	width: 100%;
+	display: table;
+}
+.item_name {
+	width: 50%;
+	float: left;
+}
+.item_right {
+  margin-top: -10px;
 }
 .blue_sub {
   background: #15BDDE;

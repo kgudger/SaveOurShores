@@ -19,6 +19,7 @@
         enableHighAccuracy: true
 	};
 	var Places = [];
+	var Stuff = {}; // Object / associative array to hold which item gets updated
 
 
 // The function below is an example of the best way to "start" your app.
@@ -30,6 +31,8 @@ function onAppReady() {
     fillName("name-field");
 
     queryString = "command=getCats";
+    sendfunc(queryString);
+    queryString = "command=getEvent";
     sendfunc(queryString);
     ready();
 }
@@ -186,6 +189,47 @@ function defaultPosition() {
         val.value++;
     }
 
+/**
+	 *	onclick function for "other minus" button
+	 */
+	function other_minus_one(elt) {
+        var val2 = document.getElementById(elt);
+        var val = document.getElementById(Stuff[elt]);
+        if( val != null) {
+			if (val.value > 0) val.value--;
+			val2.value = val.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+    }
+
+	/**
+	 *	onclick function for "other plus" button
+	 */
+	function other_plus_one(elt) {
+        var val = document.getElementById(Stuff[elt]);
+        var val2 = document.getElementById(elt);
+        if( val != null) {
+	        val.value++;
+			val2.value = val.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+    }
+
+	/**
+	 *	oninput function for "other" input
+	 */
+	function other_change(field_name) {
+        var val = document.getElementById(Stuff[field_name]);
+        var val2 = document.getElementById(field_name);
+        if( val != null) {
+	        val.value = val2.value;
+//			alert ("value is " + val.value + " value 2 is " + val2.value);
+		}
+		else {
+			val2.value = 0;
+		}
+    }
+
 	/**
 	 *	onblur function for name field
 	 */
@@ -211,22 +255,33 @@ $(document).on('pagebeforeshow', '#dataCard', function(){
 $( "#splashscreen" ).panel( "open"); });
 */
 /**
- *	onblur function for name field
+ *	sendData function, called at 'submit'
  */
 function sendData() {
     var out = document.getElementById("name-in").value;
     var place = document.getElementById("place-field").value;
+    var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
         alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
+    } else if ( event == "0" ) {
+		alert("Please select an Event type before submitting, thanks.");
+		console.log("Event type is " + event);
 	} else {
+        var val = document.getElementById("event-field").value;
+        var out = document.getElementById("eventin");
+        out.value = val;
         var queryString = $('#trashform').serialize();
         queryString = "command=send&" + queryString;
         sendfunc(queryString);
 //    alert(queryString);
         document.getElementById("trashform").reset()
+//		alert("Before Change Page");
+		$(":mobile-pagecontainer").pagecontainer("change", "submitted.html", { transition: "fade" });
+//		$( "#submit-page" ).panel().panel( "open" );
+//		$.mobile.changePage( $("#submit-page"));
     }
 }
 
@@ -260,12 +315,21 @@ function sendfunc(params) {
 //                      alert("place is " + returnedList["place"] );
                       fillPlace(returnedList);
 				  }
+                  else if (typeof (returnedList["Event"]) !== 'undefined') {
+//                      alert("Event is " + returnedList["Event"] );
+                      fillEvent(returnedList);
+				  }
                   else {
 //                      alert(returnedList["Top Items"]);
 						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
 							navigator.splashscreen.hide() ;
 						} // moved to here so splashscreen stays until really ready
                       fillForm(returnedList);
+						var before = getCookie("SOSbefore");
+//	alert("In script before is " + before);
+					   	if (before != "") {
+							hideSplash();
+						}
                   }
               }
           }
@@ -282,17 +346,46 @@ function sendfunc(params) {
  * @param rList is object returned from ajax
  */
 function fillForm(rList) {
-    var myHTML = "" ;
+    var myHTML = '<ul data-role="collapsible-set">';
+    var option;
+//	var newHtml = "<div>" ;
     for (var topKey in rList) {
-        myHTML = '<div class="header-field">' + topKey + '</div>';
+		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2>';
+//		if ( topKey == "OTHER" ) {
+/*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
+			myHTML += '<select name="'+topKey+'-field" id="'+topKey+'-field" data-inline="true" onChange="changeOther('+"'"+topKey+"'"+')"></select>';
+			Stuff[topKey] = "";
+//		}
 //        $('#formData').append(myHTML);
         document.getElementById('formData').innerHTML+= myHTML;
-        for (var innerKey in rList[topKey]) {
-            var iVal = rList[topKey][innerKey] ;
-            myHTML = '<div class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a>' + innerKey + '</label></div>';
-        document.getElementById('formData').innerHTML+= myHTML;
-        }
-    }
+/*        if ( topKey != "OTHER" ) {*/
+		for (var innerKey in rList[topKey]) {
+			var iVal = rList[topKey][innerKey] ;
+/*			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';*/
+			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iVal + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></div></div></div>';
+		}
+//				document.getElementById('formData').innerHTML+= myHTML;
+    /*} else {
+			var fieldname = topKey+'-field';
+			var select = document.getElementById(fieldname);
+			option = document.createElement( 'option' );
+			option.value = 'empty';
+			option.text = 'Please Select';
+			select.add( option );
+			for (var innerKey in rList[topKey]) {
+				option = document.createElement( 'option' );
+				option.value = rList[topKey][innerKey];
+				option.text = innerKey;
+				select.add( option );
+				newHtml+= '<input id="' + rList[topKey][innerKey] + '" type="hidden" name="' + rList[topKey][innerKey] + '" value="0">';
+			}
+//		}
+    }*/
+		myHTML += "</li>";
+//		document.getElementById('formData').innerHTML+= newHtml;
+	}
+	myHTML += "</ul>";
+	document.getElementById('formData').innerHTML+= myHTML;
 }
 // fillForm
 
@@ -342,6 +435,49 @@ function fillPlace(rList) {
     }
 }
 // fillPlace
+
+/**
+ *	Function to create Event list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function fillEvent(rList) {
+    var myHTML = "" ;
+    var select = document.getElementById('event-field');
+	var option = document.createElement( 'option' );
+	option.value = 0;
+	option.text = "Please Select";
+	select.add( option );
+    for (var topKey in rList['results']) {
+//		console.log("Topkey in fillEvent is " + topKey);
+//		console.log("Innerkey in fillEvent is " + rList['results'][topKey]);
+		option = document.createElement( 'option' );
+		option.value = topKey ;
+		option.text = rList['results'][topKey];
+		select.add( option );
+    }
+}
+// fillEvent
+
+/**
+ *	Function to create Event list with data from database
+ *
+ * @param rList is object returned from ajax
+ */
+function changeOther(field_name) {
+    var myHTML = "" ;
+    var select = document.getElementById(field_name+"-field");
+//    other_change() ;
+    Stuff[field_name] = select.options[select.selectedIndex].value;
+    var val = document.getElementById(Stuff[field_name]);
+    var val2 = document.getElementById(field_name);
+    if( val != null) {
+	    val2.value = val.value;
+//		alert ("value is " + val.value + " value 2 is " + val2.value);
+	}
+}
+// changeOther()
+
 	/**
 	 *	onclick function for web addresses
 	 */
@@ -356,7 +492,24 @@ function fillPlace(rList) {
  * Function to change from splash page to main page.
  */
 function hideSplash() {
-  $.mobile.changePage("#dataCard", "fade");
+	var before = getCookie("SOSbefore");
+//	alert("In hidesplash before is " + before);
+	switch(before) {
+		case "" :
+//			document.cookie = "SOSbefore=1";
+			window.localStorage.setItem("SOSbefore",1);
+			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-2.png'
+			break;
+		case "1":
+//			document.cookie = "SOSbefore=2";
+			window.localStorage.setItem("SOSbefore",2);
+			document.getElementById('splashimage').src='images/App-Welcome-Screen-Slide-3.png'
+			break;
+		case "2":
+		default:
+			$.mobile.changePage("#dataCard", "fade");
+			break;
+	}
 }
 // 37.0067 -121.97
 	/**
@@ -377,3 +530,27 @@ function hideSplash() {
 		}
 	}
 // newPlace
+
+/** function to get a cookie by name
+ *  param cname is cookie name to look for
+ *  returns cookie value
+ */
+function getCookie(cname) {
+	var name = window.localStorage.getItem(cname);
+/*    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";*/
+	if ( (typeof name === 'undefined') || (name == null) ) {
+		name = "";
+	}
+	return name;
+}

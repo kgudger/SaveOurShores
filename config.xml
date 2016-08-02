@@ -41,6 +41,7 @@
         <icon height="58" platform="ios" src="www/images/SOSlogo58.png" width="58" />
         <icon height="50" platform="ios" src="www/images/SOSlogo50.png" width="50" />
         <icon height="100" platform="ios" src="www/images/SOSlogo100.png" width="100" />
+        <icon height="100" platform="ios" src="www/images/SOSlogo167.png" width="167” />
         <splash height="480" platform="ios" src="www/images/SOSlogo320x480.png" width="320" />
         <splash height="960" platform="ios" src="www/images/SOSlogo640x960.png" width="640" />
         <splash height="1136" platform="ios" src="www/images/SOSlogo640x1136.png" width="640" />

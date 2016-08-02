@@ -4,7 +4,7 @@
   * Please see the included README.md file for license terms and conditions.
   -->
 <head>
-    <title>Save Our Shores Marine Debris Tally</title>
+    <title>Save Our Shores Cleanup Card</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
     <!-- see http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag -->
@@ -28,7 +28,7 @@
 	
 <script>
 $(document).bind('mobileinit',function(){
-    $.mobile.changePage.defaults.changeHash = false;
+    $.mobile.changePage.defaults.changeHash = true;
     $.mobile.hashListeningEnabled = false;
     $.mobile.pushStateEnabled = false;
 });</script>
@@ -47,14 +47,13 @@ $(document).bind('mobileinit',function(){
 <!-- <div data-role="panel" data-position="right" id="splashOver" data-display="push" data-theme="a"> -->
 <div data-role="page" id="splashscreen" data-theme="b">
 	<div role="main" class="ui-content" id="splashbox">
-        <img class="displaycenter setwidth" src="images/SOSlogo.png" onclick="hideSplash();">
-        <p class="splashtext">Touch image to begin.</p>
+        <img class="displaycenter setwidth" src="images/App-Welcome-Screen-Slide-1.png" onclick="hideSplash();" id="splashimage">
     </div>
 </div><!-- /page -->
 
 <div data-role="page" id="dataCard" class="ui-responsive-panel">
 	<div data-role="header" class="kgheader">
-        <h2>CLEANUP</br>DATA CARD</h2>
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
         <a href="#info"><img src="images/icons-png/bars-black.png"</a>
         <a href="#help" class="ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon ui-btn-right ui-btn">Help</a>
     </div>
@@ -63,6 +62,19 @@ $(document).bind('mobileinit',function(){
             <label for "name-field">
             <input type=text class="right50" id="name-field" placeholder="your name" onblur="fillName(this.id);">
             Group / Your Name
+            </label>
+            <label for "email-field">
+            <input type="email" class="right50" id="email-field" placeholder="your email">
+            Your email
+            </label>
+            <label for "event-field" class="select">Type of Cleanup
+            <select name="event-field" id="event-field" data-inline="true" >
+<!--				<option selected value="Public">Public</option>
+				<option value="School">School</option>
+				<option value="Monthly/Recurring">Monthly/Recurring</option>
+				<option value="Corporate">Corporate</option>
+				<option value="River/Inland">River/Inland</option> -->
+			</select>
             </label>
 				<label for "place-field" class="select">Your Location
 				<select name="place-field" id="place-field" data-inline="true" onchange="newPlace()">
@@ -86,6 +98,7 @@ $(document).bind('mobileinit',function(){
 			<input id="lonin" type="hidden" name="lon"  value="">
 			<input id="name-in" type="hidden" name="namein" value="">
 			<input id="datein" type="hidden" name="datein" value="">
+			<input id="eventin" type="hidden" name="eventin" value="">
             <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>
@@ -108,6 +121,7 @@ $(document).bind('mobileinit',function(){
     <!-- Start of left info panel -->
     <div data-role="panel" id="info" data-display="overlay" data-theme="a">
         <div class="header-field">ABOUT</div>
+        <div><a href="http://www.saveourshores.org"> <img src="images/SOSlogo72.png"></a></div>
         <p>Save Our Shores is a marine conservation nonprofit based in Santa Cruz, California. Our mission is caring for the Central Coast marine environment through ocean awareness, advocacy, and citizen action.  Visit our website at</p><a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>saveourshores.org</b></a></br>
 <address>345 Lake Avenue, Suite A</br>
 Santa Cruz, CA 95062</br>
@@ -115,7 +129,7 @@ Santa Cruz, CA 95062</br>
 <a href="#" onclick="splashclick('tel: +18314625660')">Phone: 831.462.5660</a></br>
 <p>Version 1.0</p>
 	</div><!-- /panel -->
-
+	
 </div><!-- /page -->
 
 

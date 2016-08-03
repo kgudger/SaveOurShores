@@ -32,7 +32,6 @@
 		5142A7B549F549FAB6A28874 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 94F208ACEF8D476395948D62 /* CDVSplashScreen.m */; };
 		59627949A6744DE58B3B922F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1677C146EF44FD9069D374 /* CoreLocation.framework */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; };
-		65CE3D831D51523B00ECD9A5 /* SOSlogo1536x2048.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CE3D821D51523B00ECD9A5 /* SOSlogo1536x2048.storyboard */; };
 		65CE3D851D515A2800ECD9A5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65CE3D841D515A2800ECD9A5 /* Images.xcassets */; };
 		721C076C7EBE4813AFCCDCC7 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 64DB9C7AB1114388A2D8DB1C /* CDVViewController+SplashScreen.m */; };
 		7E7966DE1810823500FA85AD /* icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966D41810823500FA85AD /* icon-40.png */; };
@@ -94,7 +93,6 @@
 		32CA4F630368D1EE00C91783 /* Save Our Shores-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Save Our Shores-Prefix.pch"; sourceTree = "<group>"; };
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		64DB9C7AB1114388A2D8DB1C /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
-		65CE3D821D51523B00ECD9A5 /* SOSlogo1536x2048.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SOSlogo1536x2048.storyboard; path = www/images/SOSlogo1536x2048.storyboard; sourceTree = "<group>"; };
 		65CE3D841D515A2800ECD9A5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Save Our Shores/Images.xcassets"; sourceTree = SOURCE_ROOT; };
 		7E7966D41810823500FA85AD /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
 		7E7966D51810823500FA85AD /* icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40@2x.png"; sourceTree = "<group>"; };
@@ -160,7 +158,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				65CE3D821D51523B00ECD9A5 /* SOSlogo1536x2048.storyboard */,
 				EB87FDF41871DAF40020F90C /* config.xml */,
 				EB87FDF31871DA8E0020F90C /* www */,
 				EB87FDF21871DA7A0020F90C /* merges */,
@@ -378,7 +375,6 @@
 				7E7966DE1810823500FA85AD /* icon-40.png in Resources */,
 				3088BBC1154F3926009F9C59 /* Default@2x~iphone.png in Resources */,
 				7E7966E21810823500FA85AD /* icon-60.png in Resources */,
-				65CE3D831D51523B00ECD9A5 /* SOSlogo1536x2048.storyboard in Resources */,
 				3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */,
 				D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */,
 				30B4F30219D5E07200D9F7D8 /* Default-Landscape-736h.png in Resources */,

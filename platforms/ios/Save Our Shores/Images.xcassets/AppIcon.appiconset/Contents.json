@@ -20,12 +20,13 @@
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "icon-40@2x.png",
+      "filename" : "SOSlogo40.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "iphone",
       "size" : "40x40",
+      "idiom" : "iphone",
+      "filename" : "SOSlogo120.png",
       "scale" : "3x"
     },
     {
@@ -43,12 +44,13 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "icon-60@2x.png",
+      "filename" : "SOSlogo60.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "iphone",
       "size" : "60x60",
+      "idiom" : "iphone",
+      "filename" : "SOSlogo120-1.png",
       "scale" : "3x"
     },
     {
@@ -72,7 +74,7 @@
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "icon-40@2x.png",
+      "filename" : "SOSlogo40-1.png",
       "scale" : "2x"
     },
     {
@@ -108,12 +110,13 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "icon-76@2x.png",
+      "filename" : "SOSlogo76.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "ipad",
       "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "SOSlogo167.png",
       "scale" : "2x"
     }
   ],

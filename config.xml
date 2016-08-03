@@ -39,7 +39,10 @@
         <icon height="144" platform="ios" src="www/images/SOSlogo144.png" width="144" />
         <icon height="29" platform="ios" src="www/images/SOSlogo29.png" width="29" />
         <icon height="58" platform="ios" src="www/images/SOSlogo58.png" width="58" />
+        <icon height="40" platform="ios" src="www/images/SOSlogo40.png" width="40" />
         <icon height="50" platform="ios" src="www/images/SOSlogo50.png" width="50" />
+        <icon height="60" platform="ios" src="www/images/SOSlogo60.png" width="60" />
+        <icon height="76" platform="ios" src="www/images/SOSlogo76.png" width="76" />
         <icon height="100" platform="ios" src="www/images/SOSlogo100.png" width="100" />
         <icon height="167" platform="ios" src="www/images/SOSlogo167.png" width="167" />
         <splash height="480" platform="ios" src="www/images/SOSlogo320x480.png" width="320" />

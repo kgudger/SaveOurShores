@@ -21,6 +21,9 @@
 	var Places = [];
 	var Stuff = {}; // Object / associative array to hold which item gets updated
 
+	var cats_done = false;
+	var event_done = false;
+	var place_done = false;
 
 // The function below is an example of the best way to "start" your app.
 // This example is calling the standard Cordova "hide splashscreen" function.
@@ -38,14 +41,6 @@ function onAppReady() {
 }
 
 document.addEventListener("app.Ready", onAppReady, false) ;
-/*$(window).on("load", function() {
-	var before = getCookie("SOSbefore");
-//	alert("In script before is " + before);
-   	if (before != "") {
-		hideSplash();
-	}
-});
-*/
 /*
 if(typeof intel === 'undefined') {
     document.addEventListener( "DOMContentLoaded", ready, false );
@@ -322,10 +317,14 @@ function sendfunc(params) {
                   else if (typeof (returnedList["place"]) !== 'undefined') {
 //                      alert("place is " + returnedList["place"] );
                       fillPlace(returnedList);
+                      place_done = true;
+                      checkAndHide();
 				  }
                   else if (typeof (returnedList["Event"]) !== 'undefined') {
 //                      alert("Event is " + returnedList["Event"] );
                       fillEvent(returnedList);
+                      event_done = true;
+                      checkAndHide();
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);
@@ -333,11 +332,8 @@ function sendfunc(params) {
 							navigator.splashscreen.hide() ;
 						} // moved to here so splashscreen stays until really ready
                       fillForm(returnedList);
-						var before = getCookie("SOSbefore");
-//	alert("In script before is " + before);
-					   	if (before != "") {
-							hideSplash();
-						}
+                      cats_done = true;
+                      checkAndHide();
                   }
               }
           }
@@ -347,6 +343,19 @@ function sendfunc(params) {
 	xmlhttp.send(null);
     }
 }; // sendfunc
+
+/**
+ *	Function to hide splash screen if seen before and
+ *  all Ajax if completed.
+ */
+function checkAndHide() {
+	var before = getCookie("SOSbefore");
+//	alert("In checkAndHide before is " + before);
+   	if ( cats_done && place_done && event_done && (before != ""))
+   	{
+		hideSplash();
+	}
+}
 
 /**
  *	Function to fill form with data from database

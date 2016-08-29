@@ -352,7 +352,11 @@ function sendfunc(params) {
  *  all Ajax if completed.
  */
 function checkAndHide() {
-	var before = getCookie("SOSbefore");
+	var before = "";
+	if(typeof(window.localStorage) != 'undefined'){ 
+		before = window.localStorage.getItem ("SOSbefore"); 
+	} 
+//	var before = getCookie("SOSbefore");
 //	alert("In checkAndHide before is " + before);
    	if ( cats_done && place_done && event_done && (before != ""))
    	{
@@ -512,7 +516,10 @@ function changeOther(field_name) {
  * Function to change from splash page to main page.
  */
 function hideSplash() {
-	var before = getCookie("SOSbefore");
+	var before = "";
+	if(typeof(window.localStorage) != 'undefined'){ 
+		before = window.localStorage.getItem ("SOSbefore"); 
+	} 
 //	alert("In hidesplash before is " + before);
 	switch(before) {
 		case "" :

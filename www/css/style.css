@@ -17,6 +17,7 @@
 	.button_right {
 		float: right;
 		padding: 0 0 1em 1.5em;
+		font-size: 20px !important;
 	}
 
 	.itemin {
@@ -86,7 +87,6 @@ input[type=number]::-webkit-outer-spin-button {
   text-align: center;
 }
 img.setwidth {
-	max-width: 300px;
 	width: 100%;
 }
 img.setheight {

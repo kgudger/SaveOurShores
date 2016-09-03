@@ -24,6 +24,8 @@
 	var cats_done = false;
 	var event_done = false;
 	var place_done = false;
+    var queryString = "";
+
 
 // The function below is an example of the best way to "start" your app.
 // This example is calling the standard Cordova "hide splashscreen" function.
@@ -39,6 +41,7 @@ function onAppReady() {
     sendfunc(queryString);
     ready();
 }
+
 
 document.addEventListener("app.Ready", onAppReady, false) ;
 /*
@@ -241,9 +244,21 @@ function defaultPosition() {
         var out = document.getElementById("name-in");
         out.value = val;
  //       alert("Name is " + out.value);
-        var queryString = "command=getTally" + "&namein=" + val ;
-        sendfunc(queryString);
     }
+
+	/**
+	 *	onchange function for email select
+	 */
+	function newEmail(elt) {
+		var val = document.getElementById(elt).value;
+        var out = document.getElementById("emailin");
+        out.value = val;
+        var queryString = "command=getTally" + "&emailin=" + val ;
+        sendfunc(queryString);
+//		alert ("Email found is " + val);
+	}
+// newEmail
+
 	/**
 	 *	onblur function for date field
 	 */
@@ -262,6 +277,7 @@ $( "#splashscreen" ).panel( "open"); });
  */
 function sendData() {
     var out = document.getElementById("name-in").value;
+    var eml = document.getElementById("emailin").value;
     var place = document.getElementById("place-field").value;
     var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
@@ -272,6 +288,8 @@ function sendData() {
     } else if ( event == "0" ) {
 		alert("Please select an Event type before submitting, thanks.");
 		console.log("Event type is " + event);
+	} else if ( eml == "" ) {
+		alert("Please enter your email before submitting, thanks.");
 	} else {
         var val = document.getElementById("event-field").value;
         var out = document.getElementById("eventin");
@@ -279,18 +297,72 @@ function sendData() {
         val = document.getElementById("email-field").value;
         out = document.getElementById("emailin");
         out.value = val;
-        var queryString = $('#trashform').serialize();
+        queryString = $('#trashform').serialize(); // now global variable
+//        console.log (queryString);
+		$.mobile.changePage("#summary", "fade");
+/*
         queryString = "command=send&" + queryString;
         sendfunc(queryString);
 //    alert(queryString);
         document.getElementById("trashform").reset()
 //		alert("Before Change Page");
-		$(":mobile-pagecontainer").pagecontainer("change", "submitted.html", { transition: "fade" });
+//		$(":mobile-pagecontainer").pagecontainer("change", "submitted.html", { transition: "fade" });
 //		$( "#submit-page" ).panel().panel( "open" );
 //		$.mobile.changePage( $("#submit-page"));
-    }
+*/    }
 }
 
+$(document).on("pagecontainerbeforeshow", function () {
+    var activePage = $.mobile.pageContainer.pagecontainer("getActivePage");
+    var activePageId = activePage[0].id;
+    if (activePageId == "summary") {
+//		alert("Switched to Summary");
+		var inputs = $("#trashform :input");
+		var obj = $.map(inputs, function(n, i)
+		{
+			var o = {};
+			o[n.id] = $(n).val();
+			return o;
+		});
+        tbl = document.getElementById("summaryData");
+        myHTML = "<table width=95%>" ;
+        var i = 0;
+		for (var Key in obj) {
+			for (var innerKey in obj[Key]) {
+				if ( obj[Key][innerKey] != 0 ) {
+					if ( innerKey == "name-in" ) {
+						myHTML+= "<tr><td>" + "User Name" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "emailin" ) {
+						myHTML+= "<tr><td>" + "Email" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>" +
+							"<tr><th>Item</th><th class='fright'>Amount</tr>";
+					} else if ( i > 5 ) {
+						myHTML+= "<tr><td>" + innerKey.replace(/-/g, ' ') +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					}
+					console.log( innerKey.replace(/-/g, " ") + "=" + obj[Key][innerKey] );
+				}
+			}
+			i++ ;
+		}
+		myHTML+= "</table>";
+		tbl.innerHTML = myHTML;
+//		console.log(obj);
+//		myHTML += "</ul>";
+//		document.getElementById('formData').innerHTML+= myHTML;
+	}
+});
+
+/**
+ *	reallySendData function, called at final 'submit'
+ */
+function reallySendData() {
+    queryString = "command=send&" + queryString;
+    sendfunc(queryString);
+    document.getElementById("trashform").reset()
+    splashclick('http://www.saveourshores.org/leaderboard/');
+}
 /**
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is GET request string
@@ -374,7 +446,7 @@ function fillForm(rList) {
     var option;
 //	var newHtml = "<div>" ;
     for (var topKey in rList) {
-		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="header-field">' + topKey + '</h2>';
+		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="catheader">' + topKey + '</h2>';
 //		if ( topKey == "OTHER" ) {
 /*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
 			myHTML += '<select name="'+topKey+'-field" id="'+topKey+'-field" data-inline="true" onChange="changeOther('+"'"+topKey+"'"+')"></select>';
@@ -386,7 +458,9 @@ function fillForm(rList) {
 		for (var innerKey in rList[topKey]) {
 			var iVal = rList[topKey][innerKey] ;
 /*			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';*/
-			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iVal + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></div></div></div>';
+//			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iVal + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></div></div></div>';
+			iValNew = innerKey.replace(/ /g, "-") ;
+			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iValNew + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iValNew + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iValNew + "'" + ')"></a></div></div></div>';
 		}
 //				document.getElementById('formData').innerHTML+= myHTML;
     /*} else {

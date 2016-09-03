@@ -15,10 +15,11 @@
 	$nam= $_REQUEST['namein'];
 	$dat= $_REQUEST['datein'];
 	$evnt= $_REQUEST['eventin'];
-	echo $db->send($lat,$lon,$nam,$dat,$evnt);
+	$emal= $_REQUEST['emailin'];
+	echo $db->send($lat,$lon,$nam,$dat,$evnt,$emal);
   }
   elseif ($command == "getTally") {
-	$name= $_REQUEST['namein'];
+	$name= $_REQUEST['emailin'];
 	echo $db->getTally(urldecode($name));
   }
   elseif ($command == "getCats") {

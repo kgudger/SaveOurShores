@@ -29,14 +29,14 @@ class DB
 	    return $this->db ;
 	}
 
-	function send($lat,$lon,$nam,$dat,$evnt) 
+	function send($lat,$lon,$nam,$dat,$evnt,$email) 
 	{
 		$nam = strtoupper($nam);
 		$sql = "INSERT INTO `Collector` 
-			(`name`, `lat`, `lon`, `tdate`, `eid`)
-			VALUES(?, ? , ?, ?, ?) ";
+			(`name`, `lat`, `lon`, `tdate`, `eid`, `email`)
+			VALUES(?, ? , ?, ?, ?, ?) ";
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt));
+		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt,$email));
 		$lastId = $this->db->lastInsertId();
 		$iid = 1;
 		
@@ -63,7 +63,7 @@ class DB
 	  if ( $name != "" ) {
 		$sql = "SELECT SUM(number * weight) 
 			FROM tally, items, Collector 
-			WHERE (Collector.name = ?) AND
+			WHERE (Collector.email = ?) AND
 				Collector.cid = tally.cid AND
 				tally.iid = items.iid AND
 				items.recycle IS FALSE";
@@ -78,7 +78,7 @@ class DB
 	
 		$sql = "SELECT SUM(number * weight) 
 			FROM tally, items, Collector 
-			WHERE (Collector.name = ?) AND
+			WHERE (Collector.email = ?) AND
 				Collector.cid = tally.cid AND
 				tally.iid = items.iid AND
 				items.recycle IS TRUE";

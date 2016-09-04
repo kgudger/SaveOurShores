@@ -22,6 +22,11 @@
 	$name= $_REQUEST['emailin'];
 	echo $db->getTally(urldecode($name));
   }
+  elseif ($command == "checkUname") {
+	$name = $_REQUEST['namein'];
+	$email= $_REQUEST['emailin'];
+	echo $db->getUname(urldecode($name),urldecode($email));
+  }
   elseif ($command == "getCats") {
 	echo $db->getCats();
   }

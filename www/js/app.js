@@ -243,7 +243,11 @@ function defaultPosition() {
         var val = document.getElementById(elt).value;
         var out = document.getElementById("name-in");
         out.value = val;
- //       alert("Name is " + out.value);
+		var eml = document.getElementById("emailin").value
+//		alert ("User name is " + val + " and Email is " + eml);
+		if ( (eml != "") && (val != "") ) {
+			checkUname();
+		}
     }
 
 	/**
@@ -255,10 +259,26 @@ function defaultPosition() {
         out.value = val;
         var queryString = "command=getTally" + "&emailin=" + val ;
         sendfunc(queryString);
-//		alert ("Email found is " + val);
+		var name = document.getElementById("name-in").value
+//		alert ("User name is " + name + " and Email is " + val);
+		if ( (name != "") &&  (val != "") ) {
+			checkUname();
+		}
 	}
 // newEmail
 
+	/** 
+	 * This function pings the server to make sure that the user name is unique
+	 * If it's not, the user name gets updated after call.
+	 */
+	 function checkUname() {
+		var eml = document.getElementById("emailin").value
+		var name = document.getElementById("name-in").value
+//		alert ("User name is " + name + " and Email is " + eml);
+        var queryString = "command=checkUname" + "&namein=" + name + "&emailin=" + eml ;
+        sendfunc(queryString);
+	}
+	
 	/**
 	 *	onblur function for date field
 	 */
@@ -400,6 +420,14 @@ function sendfunc(params) {
                       fillEvent(returnedList);
                       event_done = true;
                       checkAndHide();
+				  }
+                  else if (typeof (returnedList["uname"]) !== 'undefined') {
+//                    alert("Uname is " + returnedList["uname"] );
+					var val = document.getElementById("name-in")
+                    val.value = returnedList["uname"];
+                    val = document.getElementById("name-field")
+                    val.value = returnedList["uname"];
+
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);

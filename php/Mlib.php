@@ -98,6 +98,29 @@ class DB
 	  echo json_encode($output) ;
     }
 
+	function getUname($name,$email)
+	{
+	  $output = array();
+	  if ( ($name != "") && ($email != "") ) {
+		$new_name = $oname = $name ;
+		$sql = "SELECT name
+				FROM Collector 
+				WHERE (name   = ?) AND
+						(email != ?)" ;
+		$stmt = $this->db->prepare($sql);
+		$i = 1 ;
+		do {
+			$name = $new_name ;
+			$new_name = $oname . $i++ ; // adds integer to original name
+			$stmt->execute(array((strtoupper($name)),$email));
+		}
+		while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) );
+			// check to see if user name exists
+		$output["uname"] = $name ;
+	  }
+	  echo json_encode($output);
+	}
+		
 	function getCats()
 	{
 		$sql = "SELECT name, item, aname 

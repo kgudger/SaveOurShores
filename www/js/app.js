@@ -7,10 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.0
+ * @version    Release: 1.1
  * @package    SaveOurShores
  *
  */
+	var Version = "1.1";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -461,6 +462,9 @@ function checkAndHide() {
    	if ( cats_done && place_done && event_done && (before != ""))
    	{
 		hideSplash();
+		var out = document.getElementById("Version");
+		out.innerHTML = "Version " + Version;
+//    alert("Version is " + Version);
 	}
 }
 

@@ -5,20 +5,6 @@
     },
     "config_munge": {
         "files": {
-            "res/xml/config.xml": {
-                "parents": {
-                    "/*": [
-                        {
-                            "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        }
-                    ]
-                }
-            },
             "AndroidManifest.xml": {
                 "parents": {
                     "/*": [
@@ -32,35 +18,54 @@
                         }
                     ]
                 }
+            },
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
             }
         }
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
-        },
         "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
+            "PACKAGE_NAME": "com.phonegap.saveourshores"
         },
         "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.phonegap.saveourshores"
+        },
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.phonegap.saveourshores"
         }
     },
     "dependent_plugins": {},
     "modules": [
         {
-            "file": "plugins/cordova-plugin-whitelist/whitelist.js",
-            "id": "cordova-plugin-whitelist.whitelist",
-            "pluginId": "cordova-plugin-whitelist",
-            "runs": true
-        },
-        {
-            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
             "id": "cordova-plugin-splashscreen.SplashScreen",
+            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
             "pluginId": "cordova-plugin-splashscreen",
             "clobbers": [
                 "navigator.splashscreen"
             ]
+        },
+        {
+            "id": "cordova-plugin-whitelist.whitelist",
+            "file": "plugins/cordova-plugin-whitelist/whitelist.js",
+            "pluginId": "cordova-plugin-whitelist",
+            "runs": true
         }
-    ]
+    ],
+    "plugin_metadata": {
+        "cordova-plugin-geolocation": "1.0.1",
+        "cordova-plugin-splashscreen": "3.0.0",
+        "cordova-plugin-whitelist": "1.0.0"
+    }
 }

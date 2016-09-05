@@ -61,10 +61,10 @@ $(document).bind('mobileinit',function(){
         <div id="cardhead" class="ui-field-contain">
             <label for "name-field">
             <input type=text class="right50" id="name-field" placeholder="your name" onblur="fillName(this.id);">
-            Group / Your Name
+            User Name
             </label>
             <label for "email-field">
-            <input type="email" class="right50" id="email-field" placeholder="your email">
+            <input type="email" class="right50" id="email-field" placeholder="your email" onblur="newEmail(this.id)">
             Your email
             </label>
             <label for "event-field" class="select">Type of Cleanup
@@ -99,15 +99,16 @@ $(document).bind('mobileinit',function(){
 			<input id="name-in" type="hidden" name="namein" value="">
 			<input id="datein" type="hidden" name="datein" value="">
 			<input id="eventin" type="hidden" name="eventin" value="">
+			<input id="emailin" type="hidden" name="emailin" value="">
             <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>
-    </div>
+	    </div>
 
     <!-- Start of right help panel -->
     <div data-role="panel" id="help" data-display="overlay" data-position="right" data-theme="a">
         <div class="header-field">INSTRUCTIONS</div>
-        <p>Please enter your name, or your group's name at the top.</p>
+        <p>Please enter your user name and email at the top.</p>
         <p>The app will attempt to automatically locate your clean up site.  
         If it doesn't, please choose one from the drop down list.</p>
         <p>Today's date will appear in the Date section.  Clicking the date will open a calendar.</p>
@@ -121,15 +122,31 @@ $(document).bind('mobileinit',function(){
     <!-- Start of left info panel -->
     <div data-role="panel" id="info" data-display="overlay" data-theme="a">
         <div class="header-field">ABOUT</div>
-        <div><a href="http://www.saveourshores.org"> <img src="images/SOSlogo72.png"></a></div>
+        <div><a href="http://www.saveourshores.org"> <img class="displaycenter" src="images/SOSlogo72old.png"></a></div>
         <p>Save Our Shores is a marine conservation nonprofit based in Santa Cruz, California. Our mission is caring for the Central Coast marine environment through ocean awareness, advocacy, and citizen action.  Visit our website at</p><a href="#" onclick="splashclick('http://www.saveourshores.org')"><b>saveourshores.org</b></a></br>
 <address>345 Lake Avenue, Suite A</br>
 Santa Cruz, CA 95062</br>
 <a href=mailto:info@saveourshores.org>info@saveourshores.org</a></br></address>
 <a href="#" onclick="splashclick('tel: +18314625660')">Phone: 831.462.5660</a></br>
-<p>Version 1.0</p>
+<p>I acknowledge that by using this app I agree to the terms of Save Our Shores safety waiver, available <a href="#" onclick="splashclick('http://bit.ly/safetywaiver2016')"><b>here.</b></a></p>
+<p id="Version"></p>
 	</div><!-- /panel -->
 	
+</div><!-- /page -->
+<div data-role="page" id="summary">
+
+	<div data-role="header" class="kgheader">
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
+    </div>
+	<div role="main" class="ui-content">
+        <div id="summaryData"></div><p></p>
+        <p>If this is correct, click Submit - else go back to the Cleanup Card.</gr></p>
+        <form id="summaryform">
+                <a href="#" class="blue_sub" onclick="reallySendData()">Submit</a>
+        </form>
+		<p><a href="#dataCard" class="blue_sub">Back to Cleanup Card</a></p>
+	</div><!-- /content -->
+
 </div><!-- /page -->
 
 

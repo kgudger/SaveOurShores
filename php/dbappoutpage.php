@@ -1,11 +1,11 @@
 <?php
 /**
-* @file dbsortpage.php
-* Purpose: Sort Data Base
+* @file dbappoutpage.php
+* Purpose: Sort and Output Data Base
 * Extends MainPage Class
 *
 * @author Keith Gudger
-* @copyright  (c) 2015, Keith Gudger, all rights reserved
+* @copyright  (c) 2016, Keith Gudger, all rights reserved
 * @license    http://opensource.org/licenses/BSD-2-Clause
 * @version    Release: 1.0
 * @package    SOS
@@ -15,7 +15,7 @@
 * 
 */
 
-require_once("wp-content/plugins/leaderboard/includes/mainpage.php");
+require_once("includes/mainpage.php");
 include_once "includes/util.php";
 require_once 'includes/phplot-6.2.0/phplot.php';
 $plot_data = array();
@@ -25,10 +25,10 @@ $plot_data = array();
  *
  * Implements processData and showContent
  */
-  $radiolist = array("Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
+  $radiolist = array(""=>0,"Name"=>1,"Date"=>2,"Category"=>3,"Item"=>4,"Location"=>5);
   $radiolist2 = array(""=>0,"Top Names"=>1,"Most Recent Date"=>2,"Category"=>3,"Top Items"=>4,"Top Locations"=>5);
 
-class dbSortPage extends MainPage {
+class dbAppOutPage extends MainPage {
 
 /**
  * Process the data and insert / modify database.
@@ -36,10 +36,11 @@ class dbSortPage extends MainPage {
  * @param $uid is user id passed by reference.
  */
 function processData(&$uid) {
-  $radiolist = array("Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
+  $radiolist = array("Total Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
   global $radiolist2;
-  $uid = array($this->formL->getValue("cat"),$this->formL->getValue("subsort"),$this->formL->getValue("subsubsort"));
-  if ( $this->formL->getValue("getFile")[0] == "yes" ) {
+  $uid = array($this->formL->getValue("cat"),$this->formL->getValue("sortstart"),$this->formL->getValue("sortend"));
+  if ( isset($this->formL->getValue("getFile")[0]) && 
+			$this->formL->getValue("getFile")[0] == "yes" ) {
 	  $this->sessnp = "yes";
   }
     // Process the verified data here.
@@ -54,39 +55,59 @@ function processData(&$uid) {
 function showContent($title, &$uid) {
 
 // Put HTML after the closing PHP tag
-  global $radiolist;
   global $radiolist2;
 ?>
 <script src="http://www.saveourshores.org/js/app2.js"></script>     
 <div class="preamble" id="SOS-preamble" role="article">
+<h3>Select type of Data Base Sort.</h3><p></p>
 <?php
 	echo $this->formL->reportErrors();
-	echo $this->formL->start('POST', "", 'name="databasesort"');
+	echo $this->formL->start('POST', "", 'name="appoutsort"');
 ?>
 <fieldset>
-<legend>Please Select how you would like to sort the data.</legend>
+<legend>Please Select the sort type below</legend>
 <br>
+<table>
+<tr> <th>Sort By</th>
+	 <th>Limit Start</th>
+     <th>Limit End</th></tr>
+<tr>
+<td class="inputcell">
 <?php
   $radiolist = array("Total Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
   echo $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");?>
+</td>
+<td class="inputcell">
+<?php
+  $mtarray = array();
+  echo $this->formL->makeSelect('sortstart', $mtarray, "", "id='sortstart' onchange='newSubSort()'");?>
+</td>
+<td class="inputcell">
+<?php
+  echo $this->formL->makeSelect('sortend', $mtarray, "", "id='sortend'");?>
+</td>
+</tr>
+<tr><td>
 <input class="subbutton" type="submit" name="Submit" value="Submit">
+</td>
+<td></td><td>
+	<?php echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
+?></td></tr>
+</table>
 </fieldset>
+
 </form>
 <script> newSort(); </script>
 <?php
-  if ( $uid[0] >= 0 ) {
+//   $radiolist = array("Total Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
+
+  if ( $uid[0] > 0 ) {
     switch ($uid[0]) {
-      case $radiolist["Name"]: // Name
+      case $radiolist["Total Amount"]: // Name
          $this->nameTable($uid[1],$uid[2]);
-       break;
-      case $radiolist["Total Amount"]: // Amount 
-         $this->amountTable($uid[1],$uid[2]);
        break;
       case $radiolist["Date"]: // Date
          $this->dateTable($uid[1],$uid[2]);
-       break;
-      case $radiolist["Category"]: 
-         $this->categoryTable($uid[1],$uid[2]);
        break;
       case $radiolist["Item"]: 
          $this->itemTable($uid[1],$uid[2]);
@@ -99,7 +120,7 @@ function showContent($title, &$uid) {
     }
   }
   else echo "No sort selected.";
-  echo ($this->formL->getValue("getFile")[0]);
+//  echo ($this->formL->getValue("getFile")[0]);
 ?>
 </div>
 
@@ -176,7 +197,7 @@ $sort_string = "" ;
   $plot->SetPlotType('bars');
   $plot->SetDataType('text-data');
 //  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
   $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
   $plot->SetDataValues($plot_data);
   $plot->SetFailureImage(False); // No error images
@@ -269,7 +290,7 @@ $sort_string = "" ;
   $plot->SetPlotType('bars');
   $plot->SetDataType('text-data');
 //  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
   $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
   $plot->SetDataValues($plot_data);
   $plot->SetFailureImage(False); // No error images
@@ -357,7 +378,7 @@ $sort_string = "" ;
   $plot->SetPlotType('bars');
   $plot->SetDataType('text-data');
 //  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
   $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
   $plot->SetDataValues($plot_data);
   $plot->SetFailureImage(False); // No error images
@@ -407,24 +428,39 @@ function itemTable($sub,$subsub) {
   }
   global $plot_data ;
   echo '<table class="volemail"> <tr> <th>Item</th>';
-  echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
-  $sql = "SELECT SUM(number*weight) AS Total,
-			SUM(number*weight*(items.recycle)) AS Recycling,
-			SUM(number*weight*(1-items.recycle)) AS Trash, 
-			items.Item AS Item
-			FROM tally, items, Collector
-			WHERE tally.iid = items.iid AND
-					items.Iid = tally.Iid
-			GROUP BY items.Item
-			ORDER BY Trash DESC LIMIT 10";
-  $res2 = $this->db->query($sql);
-  $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-  while ($row2 = $res2->fetch(PDO::FETCH_ASSOC)) {
-	echo "<tr><td>" . $row2['Item'] . "</td>";
-		echo '<td class="right">' . round($row2['Total'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
-		$plot_data[] = array($row2['Item'],round($row2['Total'],2),round($row2['Trash'],2),round($row2['Recycling'],2));
+  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $sql = "SELECT item, iid 
+             FROM items";
+  $result = $this->db->query($sql);
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $name = $row["item"];
+    $iid = $row["iid"];
+    $sql = "SELECT SUM(number*weight)
+                    FROM tally, items, Collector, Categories
+                    WHERE (items.iid = '$iid') AND
+                    tally.iid = items.iid AND
+                    items.recycle IS FALSE";
+    $sql .= $sort_string;
+    $res2 = $this->db->query($sql);
+    $row2 = $res2->fetch(PDO::FETCH_ASSOC);
+    $trash = is_null($row2["SUM(number*weight)"]) ?
+      0 : $row2["SUM(number*weight)"] ;
+    $sql = "SELECT SUM(number*weight)
+                    FROM tally, items, Collector, Categories
+                    WHERE (items.iid = '$iid') AND
+                    tally.iid = items.iid AND
+                    items.recycle IS TRUE";
+    $sql .= $sort_string;
+    $res2 = $this->db->query($sql);
+    $row2 = $res2->fetch(PDO::FETCH_ASSOC);
+    $recycle = is_null($row2["SUM(number*weight)"]) ?
+      0 : $row2["SUM(number*weight)"] ;
+	if (round($trash,2) > 0 || round($recycle,2) > 0 ) {
+		echo "<tr><td>" . $name . "</td>";
+		echo '<td class="right">' . round($trash,2) . "</td>";
+		echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+		$plot_data[] = array($name,round($trash,2),round($recycle,2));
+	  }
   } 
   echo "</table><br>";
   $plot = new PHPlot();
@@ -433,8 +469,8 @@ function itemTable($sub,$subsub) {
   $plot->SetPlotType('bars');
   $plot->SetDataType('text-data');
 //  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
-  $plot->SetDataColors(array('SkyBlue', 'maroon', 'DarkGreen'));
+  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
   $plot->SetDataValues($plot_data);
   $plot->SetFailureImage(False); // No error images
   $plot->SetPrintImage(False); // No automatic output
@@ -483,7 +519,7 @@ function locationTable($sub,$subsub) {
 	}
   }
   echo '<table class="volemail"> <tr> <th>Place</th>';
-  echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   // Create an associative array with entries for items weight
   // Last entry is "Other"
 
@@ -492,11 +528,10 @@ function locationTable($sub,$subsub) {
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
-    $Places["$name"] = array("Total" =>0, "Trash" => 0, "Recycle" => 0);
+    $Places["$name"] = array("Trash" => 0, "Recycle" => 0);
   }
-  $Places["Other"] = array("Total" =>0, "Trash" => 0, "Recycle" => 0);
+  $Places["Other"] = array("Trash" => 0, "Recycle" => 0);
 	$sql = "SELECT Collector.cid as CID, lat, lon, 
-				SUM(number*weight) AS Total,
 				SUM(number*weight*recycle) AS recycle_weight,
 				SUM(number*weight*(1-recycle)) AS trash_weight 
 				FROM Collector, tally, items, Categories
@@ -512,7 +547,6 @@ function locationTable($sub,$subsub) {
     $cid = $row["CID"];
     $lat = $row["lat"];
     $lon = $row["lon"];
-    $total = $row["Total"];
     $trash = $row["trash_weight"];
     $recycle = $row["recycle_weight"];
 
@@ -536,7 +570,6 @@ function locationTable($sub,$subsub) {
       $pname = "Other" ;
     }
 //    echo "Place name is " . $pname . "<br>" ;
-    $Places["$pname"]["Total"] += $total;
     $Places["$pname"]["Trash"] += $trash;
     $Places["$pname"]["Recycle"] += $recycle; 
 /*
@@ -577,15 +610,13 @@ function locationTable($sub,$subsub) {
       0 : $row2["SUM(total_weight)"] ;
     echo '<td class="right">' . round($recycle,2) . "</td></tr>"; */
   }
-  ksort($Places);
   foreach ($Places as $name => $results) {
 	  if ($results["Trash"] > 0 || $results["Recycle"]>0 ) {
 		echo "<tr><td>" . $name . "</td>";
-		echo "<td>" . round($results["Total"],2) . "</td>";
 		echo "<td>" . round($results["Trash"],2) . "</td>";
 		echo "<td>" . round($results["Recycle"],2) . "</td>";
 		echo "</tr>";
-		$plot_data[] = array($name,round($results["Total"],2),round($results["Trash"],2),round($results["Recycle"],2));
+		$plot_data[] = array($name,round($results["Trash"],2),round($results["Recycle"],2));
 	  }
   } 
   echo "</table><br>";
@@ -595,15 +626,15 @@ function locationTable($sub,$subsub) {
   $plot->SetPlotType('bars');
   $plot->SetDataType('text-data');
 //  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
-  $plot->SetDataColors(array('SkyBlue', 'maroon', 'DarkGreen'));
+  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
   $plot->SetDataValues($plot_data);
   $plot->SetFailureImage(False); // No error images
   $plot->SetPrintImage(False); // No automatic output
 
 
   # Main plot title:
-  $plot->SetTitle('Total, Trash and Recycling for each Location');
+  $plot->SetTitle('Trash and Recycling for each Location');
 
   # Make a legend for the 3 data sets plotted:  
   $plot->SetLegend(array('Trash', 'Recycling'));
@@ -616,85 +647,6 @@ function locationTable($sub,$subsub) {
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
   $this->write_csv("Place",$plot_data);
-}
-
-/**
- * Display the Amount table
- *
- */
-function amountTable($sub,$subsub) {
-
-  if ( $subsub != "" ) {
-	if ( $sub == "By Category" ) {
-	  $sort_string = " AND Categories.name = '$subsub' 
-						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Date" ) {
-	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Name" ) {
-	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Location" ) {
-	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
-	}
-  }
-  global $plot_data ;
-  echo '<table class="volemail"> <tr> <th>User Name</th><th>Total Weight</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
-  $name = $row["item"];
-  $iid = $row["iid"];
-  $sql = "SELECT SUM(number*weight) AS Total,
-			SUM(number*weight*(items.recycle)) AS Recycling,
-			SUM(number*weight*(1-items.recycle)) AS Trash, 
-			Collector.name AS UserName
-			FROM tally, items, Collector
-			WHERE tally.iid = items.iid AND
-					tally.cid = Collector.cid
-			GROUP BY Collector.name
-			ORDER BY Trash DESC";
-  $res2 = $this->db->query($sql);
-  $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-  while ($row2 = $res2->fetch(PDO::FETCH_ASSOC)) {
-	echo "<tr><td>" . $row2['UserName'] . "</td>";
-		echo '<td class="right">' . round($row2['Total'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
-		$plot_data[] = array($row2['UserName'],round($row2['Total'],2),round($row2['Trash'],2),round($row2['Recycling'],2));
-  } 
-  echo "</table><br>";
-/*  $plot = new PHPlot();
-  $plot->SetImageBorderType('plain');
-
-  $plot->SetPlotType('bars');
-  $plot->SetDataType('text-data');
-//  $plot->SetUseTTF(TRUE);
-//  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
-  $plot->SetDataColors(array('SkyBlue', 'peru', 'DarkGreen'));
-  $plot->SetDataValues($plot_data);
-  $plot->SetFailureImage(False); // No error images
-  $plot->SetPrintImage(False); // No automatic output
-
-
-  # Main plot title:
-  $plot->SetTitle('Total, Trash and Recycling for the top 10');
-
-  # Make a legend for the 3 data sets plotted:  
-  $plot->SetLegend(array('Total', 'Trash', 'Recycling'));
-
-  # Turn off X tick labels and ticks because they don't apply here:
-  $plot->SetXTickLabelPos('none');
-  $plot->SetXTickPos('none');
-
-  $plot->DrawGraph();
-
-  echo "<img src='" . $plot->EncodeImage() . "'>";*/
-  $this->write_csv("Item",$plot_data);
 }
 
 function write_csv($title,$data) {

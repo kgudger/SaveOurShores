@@ -17,8 +17,9 @@ function sosapp_index() {
 /**
  * starts app
  */
-include_once("wp-content/plugins/sosapp/www/index.html");
-
+//include_once("wp-content/plugins/sosapp/www/index.html");
+echo "<iframe src='/wp-content/plugins/sosapp/www/index.html' width='100%' height='1200px'></iframe>";
+//echo "<script> var timeout = setTimeout('onAppReady()', 15000);</script>";
 }
 
 

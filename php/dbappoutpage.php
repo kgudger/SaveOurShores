@@ -36,9 +36,9 @@ class dbAppOutPage extends MainPage {
  * @param $uid is user id passed by reference.
  */
 function processData(&$uid) {
-  $radiolist = array("Unsorted"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
+  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
   global $radiolist2;
-  $uid = array($this->formL->getValue("cat"),$this->formL->getValue("sortstart"),$this->formL->getValue("sortend"));
+  $uid = array($this->formL->getValue("cat"));
   if ( isset($this->formL->getValue("getFile")[0]) && 
 			$this->formL->getValue("getFile")[0] == "yes" ) {
 	  $this->sessnp = "yes";
@@ -69,12 +69,9 @@ function showContent($title, &$uid) {
 <br>
 <table>
 <tr> <th>Sort By</th>
-	 <th>Limit Start</th>
-     <th>Limit End</th></tr>
-<tr>
 <td class="inputcell">
 <?php
-  $radiolist = array("Unsorted"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
+  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
   echo $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");?>
 </td>
 </tr>
@@ -83,7 +80,8 @@ function showContent($title, &$uid) {
 </td>
 <td></td><td>
 	<?php echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
-?></td></tr>
+?></td>
+</tr>
 </table>
 </fieldset>
 
@@ -94,8 +92,8 @@ function showContent($title, &$uid) {
 
   if ( $uid[0] > 0 ) {
     switch ($uid[0]) {
-      case $radiolist["Unsorted"]: // Unsorted
-         $this->UnsortTable($uid[1],$uid[2]);
+      case $radiolist["Name"]: // Name
+         $this->nameTable($uid[1],$uid[2]);
        break;
       case $radiolist["Date"]: // Date
          $this->dateTable($uid[1],$uid[2]);
@@ -124,13 +122,13 @@ $this->formL->finish();
  * Display the tables unsorted
  *
  */
-function UnsortTable($sub,$subsub) {
+function nameTable($sub,$subsub) {
 
 $sort_string = "" ;
 // "Top Names"=>1,"Most Recent Date"=>2,"Category"=>3,"Top Items"=>4,"Top Locations"
   echo '<table class="volemail"><tr><th>Name</th><th>Date</th><th>Place</th>';
   echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY tdate DESC";
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
@@ -393,149 +391,18 @@ $sort_string = "" ;
  */
 function itemTable($sub,$subsub) {
 
-  if ( $subsub != "" ) {
-	if ( $sub == "By Category" ) {
-	  $sort_string = " AND Categories.name = '$subsub' 
-						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Date" ) {
-	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Name" ) {
-	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Location" ) {
-	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
-	}
-  }
   global $plot_data ;
-  echo '<table class="volemail"> <tr> <th>Item</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
-  $sql = "SELECT item, iid 
-             FROM items";
-  $result = $this->db->query($sql);
-  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-    $name = $row["item"];
-    $iid = $row["iid"];
-    $sql = "SELECT SUM(number*weight)
-                    FROM tally, items, Collector, Categories
-                    WHERE (items.iid = '$iid') AND
-                    tally.iid = items.iid AND
-                    items.recycle IS FALSE";
-    $sql .= $sort_string;
-    $res2 = $this->db->query($sql);
-    $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-    $trash = is_null($row2["SUM(number*weight)"]) ?
-      0 : $row2["SUM(number*weight)"] ;
-    $sql = "SELECT SUM(number*weight)
-                    FROM tally, items, Collector, Categories
-                    WHERE (items.iid = '$iid') AND
-                    tally.iid = items.iid AND
-                    items.recycle IS TRUE";
-    $sql .= $sort_string;
-    $res2 = $this->db->query($sql);
-    $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-    $recycle = is_null($row2["SUM(number*weight)"]) ?
-      0 : $row2["SUM(number*weight)"] ;
-	if (round($trash,2) > 0 || round($recycle,2) > 0 ) {
-		echo "<tr><td>" . $name . "</td>";
-		echo '<td class="right">' . round($trash,2) . "</td>";
-		echo '<td class="right">' . round($recycle,2) . "</td></tr>";
-		$plot_data[] = array($name,round($trash,2),round($recycle,2));
-	  }
-  } 
-  echo "</table><br>";
-  $plot = new PHPlot();
-  $plot->SetImageBorderType('plain');
-
-  $plot->SetPlotType('bars');
-  $plot->SetDataType('text-data');
-//  $plot->SetUseTTF(TRUE);
-  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
-  $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
-  $plot->SetDataValues($plot_data);
-  $plot->SetFailureImage(False); // No error images
-  $plot->SetPrintImage(False); // No automatic output
-
-
-  # Main plot title:
-  $plot->SetTitle('Trash and Recycling for each Item');
-
-  # Make a legend for the 3 data sets plotted:  
-  $plot->SetLegend(array('Trash', 'Recycling'));
-
-  # Turn off X tick labels and ticks because they don't apply here:
-  $plot->SetXTickLabelPos('none');
-  $plot->SetXTickPos('none');
-
-  $plot->DrawGraph();
-
-  echo "<img src='" . $plot->EncodeImage() . "'>";
-  $this->write_csv("Item",$plot_data);
-}
-/**
- * Display the Location table
- *
- */
-function locationTable($sub,$subsub) {
-
-  global $plot_data ;
-  $sort_string = "" ;
-  if ( $subsub != "" ) {
-	if ( $sub == "By Date" ) {
-	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Name" ) {
-	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Item" ) {
-	  $sort_string = " AND items.item = '$subsub'";
-	  echo "Sorted by Item '$subsub'<br><br>";
-	}
-	else if ( $sub == "By Category" ) {
-	  $sort_string = " AND Categories.name = '$subsub' 
-						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
-	}
-  }
-  echo '<table class="volemail"> <tr> <th>Place</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
-  // Create an associative array with entries for items weight
-  // Last entry is "Other"
-
-  $Places = array();
-  $sql = "SELECT name FROM Places";
+  $ItemsA = array();
+  echo '<table class="volemail"><tr><th>Item</th><th>Amount</th><th>Name</th><th>Date</th><th>Place</th>';
+  echo '<th>Latitude</th><th>Longitude</th></tr>';
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
-    $Places["$name"] = array("Trash" => 0, "Recycle" => 0);
-  }
-  $Places["Other"] = array("Trash" => 0, "Recycle" => 0);
-	$sql = "SELECT Collector.cid as CID, lat, lon, 
-				SUM(number*weight*recycle) AS recycle_weight,
-				SUM(number*weight*(1-recycle)) AS trash_weight 
-				FROM Collector, tally, items, Categories
-				WHERE tally.cid = Collector.cid
-				AND tally.iid = items.iid";
-    $sql .= $sort_string;
-	$sql .= " GROUP BY Collector.cid"; 
-/*  $sql = "SELECT name, lat, lon
-             FROM Places";*/
-  $result = $this->db->query($sql);
-  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-//    $name = $row["name"];
-    $cid = $row["CID"];
-    $lat = $row["lat"];
-    $lon = $row["lon"];
-    $trash = $row["trash_weight"];
-    $recycle = $row["recycle_weight"];
+    $cdate = $row["tdate"];
+    $lat   = $row["lat"];
+    $lon   = $row["lon"];
+    $cid   = $row["cid"];  // cid for next query.
 
 	$sql = "SELECT DISTINCT Places.name AS pname, 
 				( 3959 * acos( cos( radians('$lat') ) 
@@ -551,94 +418,123 @@ function locationTable($sub,$subsub) {
 				LIMIT 1";
     $res2 = $this->db->query($sql);
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-    
     $pname = $row2["pname"];
     if ( $pname == "" ) {
       $pname = "Other" ;
     }
-//    echo "Place name is " . $pname . "<br>" ;
-    $Places["$pname"]["Trash"] += $trash;
-    $Places["$pname"]["Recycle"] += $recycle; 
-/*
-    echo "<tr><td>" . $name . "</td>";
-    $sql = "SELECT SUM(total_weight) FROM (
-                SELECT (number*weight) AS total_weight,
-                ( 3959 * acos( cos( radians(Collector.lat) ) 
-                     * cos( radians( '$lat' ) ) * 
-                cos( radians( '$lon' ) - radians(Collector.lon) ) + 
-                     sin( radians(Collector.lat) ) * 
-                sin( radians( '$lat' ) ) ) ) 
+    
+    $sql = "SELECT items.item AS name, tally.number AS number 
+                    FROM tally, items
+                    WHERE tally.cid = $cid AND
+                    tally.iid = items.iid";
+    $res3 = $this->db->query($sql);
+	while ($row3 = $res3->fetch(PDO::FETCH_ASSOC)) {
+		$item = $row3["name"];
+		$amt  = $row3["number"];
+		$ItemsA[] = array('Place' => $pname, 'Name' => $name, 'Date' => $cdate,
+						'lat' => $lat, 'lon' => $lon, 'Item' => $item, 
+						'Amount' => $amt );
+		$plot_data[] = array($item, $amt, $name, $cdate , $pname, $lat, $lon);
+	}
+  } 
+
+  usort($ItemsA, function ($item1, $item2) {
+    return strcmp($item1['Item'],$item2['Item']);
+  }) ;
+
+  foreach($ItemsA as $value) {
+		echo "<tr><td>" . $value['Item'] . "</td>";
+		echo "<td>" . $value['Amount'] . "</td>";
+		echo "<td>" . $value['Name'] . "</td>";
+		echo "<td>" . $value['Date'] . "</td>";
+		echo "<td>" . $value['Place'] . "</td>";
+		echo "<td>" . $value['lat'] . "</td>";
+		echo "<td>" . $value['lon'] . "</td></tr>";
+  }
+  echo "</table><br>";
+  $title = array("Item", "Amount", "Name", "Date", "Place", "Latitude", "Longitude" );
+
+  $this->write_csv($title,$plot_data);
+}
+/**
+ * Display the Location table
+ *
+ */
+function locationTable($sub,$subsub) {
+
+  global $plot_data ;
+  $Places = array();
+  $sort_string = "" ;
+  echo '<table class="volemail"><tr><th>Name</th><th>Date</th><th>Place</th>';
+  echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
+
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
+  $result = $this->db->query($sql);
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $name = $row["name"];
+    $cdate = $row["tdate"];
+    $lat   = $row["lat"];
+    $lon   = $row["lon"];
+    $cid   = $row["cid"];  // cid for next query.
+
+	$sql = "SELECT DISTINCT Places.name AS pname, 
+				( 3959 * acos( cos( radians('$lat') ) 
+                     * cos( radians( Places.lat ) ) * 
+                cos( radians( Places.lon ) - radians('$lon') ) + 
+                     sin( radians('$lat') ) * 
+                sin( radians( Places.lat ) ) ) ) 
                 AS distance 
-                FROM tally, items, Collector
-                WHERE tally.iid = items.iid AND
-                Collector.cid = tally.cid AND
-                items.recycle IS FALSE
-                HAVING distance < 0.5) AS temp
-		ORDER BY distance LIMIT 1"; 
-    $trash = is_null($row2["SUM(total_weight)"]) ?
-      0 : $row2["SUM(total_weight)"] ;
-    echo '<td class="right">' . round($trash,2) . "</td>";
-    $sql = "SELECT SUM(total_weight) FROM (
-                SELECT (number*weight) AS total_weight,
-                ( 3959 * acos( cos( radians(Collector.lat) ) 
-                     * cos( radians( '$lat' ) ) * 
-                cos( radians( '$lon' ) - radians(Collector.lon) ) + 
-                     sin( radians(Collector.lat) ) * 
-                sin( radians( '$lat' ) ) ) ) 
-                AS distance 
-                FROM tally, items, Collector
-                WHERE tally.iid = items.iid AND
-                Collector.cid = tally.cid AND
-                items.recycle IS TRUE
-                HAVING distance < 0.5) AS temp";
+                FROM Places, Collector
+				WHERE Collector.cid = '$cid'
+				HAVING distance < 1.0
+				ORDER BY distance
+				LIMIT 1";
     $res2 = $this->db->query($sql);
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
-    $recycle = is_null($row2["SUM(total_weight)"]) ?
-      0 : $row2["SUM(total_weight)"] ;
-    echo '<td class="right">' . round($recycle,2) . "</td></tr>"; */
+    $pname = $row2["pname"];
+    if ( $pname == "" ) {
+      $pname = "Other" ;
+    }
+    
+    $Places[] = array('Place' => $pname, 'Name' => $name, 'Date' => $cdate,
+						'lat' => $lat, 'lon' => $lon, 'CID' => $cid);
   }
-  foreach ($Places as $name => $results) {
-	  if ($results["Trash"] > 0 || $results["Recycle"]>0 ) {
-		echo "<tr><td>" . $name . "</td>";
-		echo "<td>" . round($results["Trash"],2) . "</td>";
-		echo "<td>" . round($results["Recycle"],2) . "</td>";
-		echo "</tr>";
-		$plot_data[] = array($name,round($results["Trash"],2),round($results["Recycle"],2));
-	  }
+  
+  usort($Places, function ($item1, $item2) {
+    return strcmp($item1['Place'],$item2['Place']);
+  }) ;
+  
+  foreach($Places as $value) {
+
+	$cid = $value['CID'];
+    $sql = "SELECT items.item AS name, tally.number AS number 
+                    FROM tally, items
+                    WHERE tally.cid = $cid AND
+                    tally.iid = items.iid";
+    $res3 = $this->db->query($sql);
+	while ($row3 = $res3->fetch(PDO::FETCH_ASSOC)) {
+		$item = $row3["name"];
+		$amt  = $row3["number"];
+		echo "<tr><td>" . $value['Place'] . "</td>";
+		echo "<td>" . $value['Name'] . "</td>";
+		echo "<td>" . $value['Date'] . "</td>";
+		echo "<td>" . $value['lat'] . "</td>";
+		echo "<td>" . $value['lon'] . "</td>";
+		echo "<td>" . $item . "</td>";
+		echo "<td>" . $amt . "</td></tr>";
+		$plot_data[] = array($value['Place'], $value['Date'] , $value['Name'],
+								$value['lat'], $value['lon'], $item, $amt);
+		$value['Name'] = $value['Date'] = $value['Place'] = $value['lat'] = $value['lon'] = "";
+	}
   } 
   echo "</table><br>";
-  $plot = new PHPlot();
-  $plot->SetImageBorderType('plain');
+  $title = array("Place", "Name", "Date", "Latitude", "Longitude", "Item", "Amount");
 
-  $plot->SetPlotType('bars');
-  $plot->SetDataType('text-data');
-//  $plot->SetUseTTF(TRUE);
-  $plot->SetDefaultTTFont('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
-  $plot->SetDataColors(array('SkyBlue', 'DarkGreen'));
-  $plot->SetDataValues($plot_data);
-  $plot->SetFailureImage(False); // No error images
-  $plot->SetPrintImage(False); // No automatic output
-
-
-  # Main plot title:
-  $plot->SetTitle('Trash and Recycling for each Location');
-
-  # Make a legend for the 3 data sets plotted:  
-  $plot->SetLegend(array('Trash', 'Recycling'));
-
-  # Turn off X tick labels and ticks because they don't apply here:
-  $plot->SetXTickLabelPos('none');
-  $plot->SetXTickPos('none');
-
-  $plot->DrawGraph();
-
-  echo "<img src='" . $plot->EncodeImage() . "'>";
-  $this->write_csv("Place",$plot_data);
+  $this->write_csv($title,$plot_data);
 }
 
 function write_csv($title,$data) {
-
-    $myfile = fopen("output.csv","w") or die("Unable to open file");
+	$myfile = fopen("output.csv","w") or die("Unable to open file");
     fputcsv($myfile, $title,";",'"');
     foreach ($data as $fields) {
        fputcsv($myfile,$fields,";",'"');

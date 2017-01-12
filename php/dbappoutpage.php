@@ -38,7 +38,9 @@ class dbAppOutPage extends MainPage {
 function processData(&$uid) {
   $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
   global $radiolist2;
-  $uid = array($this->formL->getValue("cat"));
+  $uid = array($this->formL->getValue("cat"),
+				$this->formL->getValue("startd"),
+				$this->formL->getValue("endd"));
   if ( isset($this->formL->getValue("getFile")[0]) && 
 			$this->formL->getValue("getFile")[0] == "yes" ) {
 	  $this->sessnp = "yes";
@@ -72,14 +74,25 @@ function showContent($title, &$uid) {
 <td class="inputcell">
 <?php
   $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
-  echo $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");?>
+  $dates = array(); 
+  $sql = "SELECT DISTINCT tdate FROM Collector ORDER BY tdate DESC";
+  $result = $this->db->query($sql);
+  $n = 0;
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $dates[$row["tdate"]] = $n++;
+  }  
+  echo $this->formL->makeSelect('cat', $radiolist/*, "", "id='mainsort' onchange='newSort()'"*/); 
+  echo "</td><td>from " . $this->formL->makeSelect('startd', $dates, $n-1);
+  echo "</td><td>to " . $this->formL->makeSelect('endd', $dates, 0);
+?>
 </td>
 </tr>
 <tr><td>
 <input class="subbutton" type="submit" name="Submit" value="Submit">
 </td>
 <td></td><td>
-	<?php echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
+<?php
+  echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
 ?></td>
 </tr>
 </table>
@@ -93,16 +106,16 @@ function showContent($title, &$uid) {
   if ( $uid[0] > 0 ) {
     switch ($uid[0]) {
       case $radiolist["Name"]: // Name
-         $this->nameTable($uid[1],$uid[2]);
+         $this->nameTable($uid[1],$uid[2],$dates);
        break;
       case $radiolist["Date"]: // Date
-         $this->dateTable($uid[1],$uid[2]);
+         $this->dateTable($uid[1],$uid[2],$dates);
        break;
       case $radiolist["Item"]: 
-         $this->itemTable($uid[1],$uid[2]);
+         $this->itemTable($uid[1],$uid[2],$dates);
        break;
       case $radiolist["Location"]: 
-         $this->locationTable($uid[1],$uid[2]);
+         $this->locationTable($uid[1],$uid[2],$dates);
        break;
       default:
         echo $uid[0];
@@ -122,13 +135,18 @@ $this->formL->finish();
  * Display the tables unsorted
  *
  */
-function nameTable($sub,$subsub) {
+function nameTable($sub,$subsub,$dates) {
 
 $sort_string = "" ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
 // "Top Names"=>1,"Most Recent Date"=>2,"Category"=>3,"Top Items"=>4,"Top Locations"
   echo '<table class="volemail"><tr><th>Name</th><th>Date</th><th>Place</th>';
   echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
+  $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
+  $sql.= " ORDER BY name ASC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
@@ -212,12 +230,18 @@ $sort_string = "" ;
  * Display the date table
  *
  */
-function dateTable($sub,$subsub) {
+function dateTable($sub,$subsub,$dates) {
 
 $sort_string = "" ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
+  
   echo '<table class="volemail"><tr><th>Date</th><th>Name</th><th>Place</th>';
   echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY tdate DESC";
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
+  $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
+  $sql.= " ORDER BY tdate DESC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
@@ -389,13 +413,19 @@ $sort_string = "" ;
  * Display the Item table
  *
  */
-function itemTable($sub,$subsub) {
+function itemTable($sub,$subsub,$dates) {
 
   global $plot_data ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
+
   $ItemsA = array();
   echo '<table class="volemail"><tr><th>Item</th><th>Amount</th><th>Name</th><th>Date</th><th>Place</th>';
   echo '<th>Latitude</th><th>Longitude</th></tr>';
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
+  $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
+  $sql.= " ORDER BY name ASC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
@@ -460,15 +490,20 @@ function itemTable($sub,$subsub) {
  * Display the Location table
  *
  */
-function locationTable($sub,$subsub) {
+function locationTable($sub,$subsub,$dates) {
 
   global $plot_data ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
   $Places = array();
   $sort_string = "" ;
-  echo '<table class="volemail"><tr><th>Name</th><th>Date</th><th>Place</th>';
+  echo '<table class="volemail"><tr><th>Place</th><th>Name</th><th>Date</th>';
   echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
 
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector ORDER BY name ASC";
+  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
+  $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
+  $sql.= " ORDER BY name ASC";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];

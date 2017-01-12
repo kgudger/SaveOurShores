@@ -471,6 +471,9 @@ function itemTable($sub,$subsub,$dates) {
   usort($ItemsA, function ($item1, $item2) {
     return strcmp($item1['Item'],$item2['Item']);
   }) ;
+  usort($plot_data, function ($item1, $item2) {
+    return strcmp($item1[0],$item2[0]);
+  }) ;
 
   foreach($ItemsA as $value) {
 		echo "<tr><td>" . $value['Item'] . "</td>";
@@ -557,7 +560,7 @@ function locationTable($sub,$subsub,$dates) {
 		echo "<td>" . $value['lon'] . "</td>";
 		echo "<td>" . $item . "</td>";
 		echo "<td>" . $amt . "</td></tr>";
-		$plot_data[] = array($value['Place'], $value['Date'] , $value['Name'],
+		$plot_data[] = array($value['Place'], $value['Name'], $value['Date'] ,
 								$value['lat'], $value['lon'], $item, $amt);
 		$value['Name'] = $value['Date'] = $value['Place'] = $value['lat'] = $value['lon'] = "";
 	}

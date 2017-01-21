@@ -36,7 +36,7 @@ class dbAppOutPage extends MainPage {
  * @param $uid is user id passed by reference.
  */
 function processData(&$uid) {
-  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
+  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4,"Location Batched"=>5);
   global $radiolist2;
   $uid = array($this->formL->getValue("cat"),
 				$this->formL->getValue("startd"),
@@ -73,7 +73,7 @@ function showContent($title, &$uid) {
 <tr> <th>Sort By</th>
 <td class="inputcell">
 <?php
-  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4);
+  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4,"Location Batched"=>5);
   $dates = array(); 
   $sql = "SELECT DISTINCT tdate FROM Collector ORDER BY tdate DESC";
   $result = $this->db->query($sql);
@@ -116,6 +116,9 @@ function showContent($title, &$uid) {
        break;
       case $radiolist["Location"]: 
          $this->locationTable($uid[1],$uid[2],$dates);
+       break;
+      case $radiolist["Location Batched"]: 
+         $this->locBatchTable($uid[1],$uid[2],$dates);
        break;
       default:
         echo $uid[0];
@@ -471,9 +474,6 @@ function itemTable($sub,$subsub,$dates) {
   usort($ItemsA, function ($item1, $item2) {
     return strcmp($item1['Item'],$item2['Item']);
   }) ;
-  usort($plot_data, function ($item1, $item2) {
-    return strcmp($item1[0],$item2[0]);
-  }) ;
 
   foreach($ItemsA as $value) {
 		echo "<tr><td>" . $value['Item'] . "</td>";
@@ -560,13 +560,96 @@ function locationTable($sub,$subsub,$dates) {
 		echo "<td>" . $value['lon'] . "</td>";
 		echo "<td>" . $item . "</td>";
 		echo "<td>" . $amt . "</td></tr>";
-		$plot_data[] = array($value['Place'], $value['Name'], $value['Date'] ,
+		$plot_data[] = array($value['Place'], $value['Date'] , $value['Name'],
 								$value['lat'], $value['lon'], $item, $amt);
 		$value['Name'] = $value['Date'] = $value['Place'] = $value['lat'] = $value['lon'] = "";
 	}
   } 
   echo "</table><br>";
   $title = array("Place", "Name", "Date", "Latitude", "Longitude", "Item", "Amount");
+
+  $this->write_csv($title,$plot_data);
+}
+
+/**
+ * Display the Location by batch table
+ *
+ */
+function locBatchTable($sub,$subsub,$dates) {
+
+  global $plot_data ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
+  $Places = array();
+  $sort_string = "" ;
+  echo '<table class="volemail"><tr><th>Place</th><<th>Date</th>';
+  echo '<th>Name</th><th>Item</th><th>Amount</th></tr>';
+
+  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate, C.name
+		(   SELECT DISTINCT Places.name AS pname
+                FROM Places
+				ORDER BY 
+				( 3959 * acos( cos( radians(C.lat) ) * 
+                cos( radians( Places.lat ) ) * 
+                cos( radians( Places.lon ) - radians(C.lon) ) + 
+                     sin( radians(C.lat) ) * 
+                sin( radians( Places.lat ) ) ) ) 
+				LIMIT 1 ) AS pname,
+            items.item AS Iname,
+            SUM(tally.number)
+            FROM Collector AS C, items, tally
+            WHERE tally.cid = C.cid" ;
+  $sql.= empty($startd) ? "" : " AND `C.tdate` >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND `C.tdate` <= '" . $endd . "' " ;
+  $sql.= "  AND items.iid = tally.iid
+            GROUP BY pname, C.tdate, Iname" ;
+
+  $result = $this->db->query($sql);
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $name = $row["name"];
+    $cdate = $row["tdate"];
+    $lat   = $row["lat"];
+    $lon   = $row["lon"];
+    $cid   = $row["cid"];  // cid for next query.
+    $pname = $row2["pname"];
+    if ( $pname == "" ) {
+      $pname = "Other" ;
+    }
+	$tally = $row2["SUM(tally.number)"];
+	$iname = $row2["Iname"];
+    $Places[] = array('Place' => $pname, 'Date' => $cdate, 'Name' => $name,
+						'lat' => $lat, 'lon' => $lon, 'Item' => $iname, 'amt' => $tally);
+  }
+/*  
+  usort($Places, function ($item1, $item2) {
+    return strcmp($item1['Place'],$item2['Place']);
+  }) ;
+  
+   	$sql = "SELECT Collector.cid as CID, lat, lon, 
+				SUM(number*weight*recycle) AS recycle_weight,
+				SUM(number*weight*(1-recycle)) AS trash_weight 
+				FROM Collector, tally, items, Categories
+				WHERE tally.cid = Collector.cid
+				AND tally.iid = items.iid";
+    $sql .= $sort_string;
+	$sql .= " GROUP BY Collector.cid"; 
+*/
+  
+  foreach($Places as $value) {
+
+		$amt  = $row3["number"];
+		echo "<tr><td>" . $value['Place'] . "</td>";
+		echo "<td>" . $value['Date'] . "</td>";
+		echo "<td>" . $value['Name'] . "</td>";
+		echo "<td>" . $value['Item'] . "</td>";
+		echo "<td>" . $value['amt'] . "</td>";
+		echo "</tr>";
+		$plot_data[] = array($value['Place'], $value['Date'] , 
+								$value['Name'], $value['Item'], $value['amt']);
+//		$value['Name'] = $value['Date'] = $value['Place'] = $value['lat'] = $value['lon'] = "";
+  } 
+  echo "</table><br>";
+  $title = array("Place", "Date", "Name", "Item", "Amount");
 
   $this->write_csv($title,$plot_data);
 }

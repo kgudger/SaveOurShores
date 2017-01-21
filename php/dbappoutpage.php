@@ -583,9 +583,9 @@ function locBatchTable($sub,$subsub,$dates) {
   $Places = array();
   $sort_string = "" ;
   echo '<table class="volemail"><tr><th>Place</th><th>Date</th>';
-  echo '<th>Name</th><th>Item</th><th>Amount</th></tr>';
+  echo '<th>Item</th><th>Amount</th></tr>';
 
-  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate, C.name,
+  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate,
 		(   SELECT DISTINCT Places.name AS pname
                 FROM Places
 				ORDER BY 
@@ -607,10 +607,8 @@ function locBatchTable($sub,$subsub,$dates) {
   $result = $this->db->query($sql);
   $oldPlace = "";
   $oldDate  = "";
-  $oldName  = "";
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 //	print_r($row);
-    $name = $row["name"];
     $cdate = $row["tdate"];
     $lat   = $row["lat"];
     $lon   = $row["lon"];
@@ -621,18 +619,15 @@ function locBatchTable($sub,$subsub,$dates) {
     }
 	$tally = $row["SUM(tally.number)"];
 	$iname = $row["Iname"];
-	if ( ($name == $oldName) &&
-			($cdate == $oldDate) &&
+	if ( ($cdate == $oldDate) &&
 			($pname == $oldPlace) ) {
-				$name  = "" ;
 				$pname = "" ;
 				$cdate = "" ;
 			} else {
-				$oldName  = $name ;
 				$oldPlace = $pname ;
 				$oldDate  = $cdate ;
 			}
-    $Places[] = array('Place' => $pname, 'Date' => $cdate, 'Name' => $name,
+    $Places[] = array('Place' => $pname, 'Date' => $cdate,
 						'lat' => $lat, 'lon' => $lon, 'Item' => $iname, 'amt' => $tally);
   }
   
@@ -641,12 +636,11 @@ function locBatchTable($sub,$subsub,$dates) {
 		$amt  = $row3["number"];
 		echo "<tr><td>" . $value['Place'] . "</td>";
 		echo "<td>" . $value['Date'] . "</td>";
-		echo "<td>" . $value['Name'] . "</td>";
 		echo "<td>" . $value['Item'] . "</td>";
 		echo "<td>" . $value['amt'] . "</td>";
 		echo "</tr>";
 		$plot_data[] = array($value['Place'], $value['Date'] , 
-								$value['Name'], $value['Item'], $value['amt']);
+								$value['Item'], $value['amt']);
   } 
   echo "</table><br>";
   $title = array("Place", "Date", "Name", "Item", "Amount");

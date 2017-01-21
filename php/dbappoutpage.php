@@ -582,10 +582,10 @@ function locBatchTable($sub,$subsub,$dates) {
   $endd = array_search($subsub,$dates);
   $Places = array();
   $sort_string = "" ;
-  echo '<table class="volemail"><tr><th>Place</th><<th>Date</th>';
+  echo '<table class="volemail"><tr><th>Place</th><th>Date</th>';
   echo '<th>Name</th><th>Item</th><th>Amount</th></tr>';
 
-  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate, C.name
+  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate, C.name,
 		(   SELECT DISTINCT Places.name AS pname
                 FROM Places
 				ORDER BY 
@@ -599,41 +599,42 @@ function locBatchTable($sub,$subsub,$dates) {
             SUM(tally.number)
             FROM Collector AS C, items, tally
             WHERE tally.cid = C.cid" ;
-  $sql.= empty($startd) ? "" : " AND `C.tdate` >= '" . $startd . "' ";
-  $sql.= empty($endd) ? "" : " AND `C.tdate` <= '" . $endd . "' " ;
+  $sql.= empty($startd) ? "" : " AND C.tdate >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND C.tdate <= '" . $endd . "' " ;
   $sql.= "  AND items.iid = tally.iid
             GROUP BY pname, C.tdate, Iname" ;
-
+//  echo $sql ;
   $result = $this->db->query($sql);
+  $oldPlace = "";
+  $oldDate  = "";
+  $oldName  = "";
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+//	print_r($row);
     $name = $row["name"];
     $cdate = $row["tdate"];
     $lat   = $row["lat"];
     $lon   = $row["lon"];
     $cid   = $row["cid"];  // cid for next query.
-    $pname = $row2["pname"];
+    $pname = $row["pname"];
     if ( $pname == "" ) {
       $pname = "Other" ;
     }
-	$tally = $row2["SUM(tally.number)"];
-	$iname = $row2["Iname"];
+	$tally = $row["SUM(tally.number)"];
+	$iname = $row["Iname"];
+	if ( ($name == $oldName) &&
+			($cdate == $oldDate) &&
+			($pname == $oldPlace) ) {
+				$name  = "" ;
+				$pname = "" ;
+				$cdate = "" ;
+			} else {
+				$oldName  = $name ;
+				$oldPlace = $pname ;
+				$oldDate  = $cdate ;
+			}
     $Places[] = array('Place' => $pname, 'Date' => $cdate, 'Name' => $name,
 						'lat' => $lat, 'lon' => $lon, 'Item' => $iname, 'amt' => $tally);
   }
-/*  
-  usort($Places, function ($item1, $item2) {
-    return strcmp($item1['Place'],$item2['Place']);
-  }) ;
-  
-   	$sql = "SELECT Collector.cid as CID, lat, lon, 
-				SUM(number*weight*recycle) AS recycle_weight,
-				SUM(number*weight*(1-recycle)) AS trash_weight 
-				FROM Collector, tally, items, Categories
-				WHERE tally.cid = Collector.cid
-				AND tally.iid = items.iid";
-    $sql .= $sort_string;
-	$sql .= " GROUP BY Collector.cid"; 
-*/
   
   foreach($Places as $value) {
 
@@ -646,7 +647,6 @@ function locBatchTable($sub,$subsub,$dates) {
 		echo "</tr>";
 		$plot_data[] = array($value['Place'], $value['Date'] , 
 								$value['Name'], $value['Item'], $value['amt']);
-//		$value['Name'] = $value['Date'] = $value['Place'] = $value['lat'] = $value['lon'] = "";
   } 
   echo "</table><br>";
   $title = array("Place", "Date", "Name", "Item", "Amount");

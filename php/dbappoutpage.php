@@ -60,6 +60,94 @@ function showContent($title, &$uid) {
   global $radiolist2;
 ?>
 <script src="http://www.saveourshores.org/js/app2.js"></script>     
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=
+AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
+<script>
+	function initialise() {
+		
+		var myLatlng = new google.maps.LatLng(36.962,-122.001); // Add the coordinates
+		var mapOptions = {
+			zoom: 10, // The initial zoom level when your map loads (0-20)
+			zoomControl:true, // Set to true if using zoomControlOptions below, or false to remove all zoom controls.
+			zoomControlOptions: {
+  				style:google.maps.ZoomControlStyle.DEFAULT // Change to SMALL to force just the + and - buttons.
+			},
+			center: myLatlng, // Centre the Map to our coordinates variable
+			mapTypeId: google.maps.MapTypeId.ROADMAP, // Set the type of Map
+			scrollwheel: false, // Disable Mouse Scroll zooming (Essential for responsive sites!)
+			// All of the below are set to true by default, so simply remove if set to true:
+			panControl:false, // Set to false to disable
+			mapTypeControl:false, // Disable Map/Satellite switch
+			scaleControl:false, // Set to false to hide scale
+			streetViewControl:false, // Set to disable to hide street view
+			overviewMapControl:false, // Set to false to remove overview control
+			rotateControl:false // Set to false to disable rotate control
+	  	}
+		var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions); // Render our map within the empty div
+<?php 
+	$sql = "SELECT Places.name, Places.lat, Places.lon, COALESCE(PN.Sum, 0 ) AS CSum FROM Places
+LEFT JOIN ( SELECT C.lat, C.lon, SUM(tally.number) AS Sum,
+(   SELECT DISTINCT Places.name AS pname
+                FROM Places
+		ORDER BY 
+		( 3959 * acos( cos( radians(C.lat) ) * 
+                cos( radians( Places.lat ) ) * 
+                cos( radians( Places.lon ) - radians(C.lon) ) + 
+                     sin( radians(C.lat) ) * 
+                sin( radians( Places.lat ) ) ) ) 
+		LIMIT 1 ) AS placename
+                FROM Collector AS C, tally
+                WHERE tally.cid = C.cid
+                GROUP BY placename) AS PN
+ON Places.name = placename
+ORDER BY CSum DESC";
+  $result = $this->db->query($sql);
+  $n = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		$pname = $row['name'];
+		$plat  = $row['lat'];
+		$plon  = $row['lon'];
+		$psum  = $row['CSum'];
+		if ( $n == 0 ) {
+			$thirds2 = 2*$psum/3 ;
+			$thirds1 = $psum/3 ;
+		}
+		echo "myLatlng = new google.maps.LatLng(" . $plat . "," . $plon . ");\n";
+		echo "var marker" . $n . "= new google.maps.Marker({ \n" ;
+		echo "position: myLatlng, \n";
+		echo "map: map, \n" ;
+		if ( $psum >= $thirds2 ) 
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
+		else if ( $psum >= $thirds1 )
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
+		else 
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
+		echo 'title: "' . $pname . '" });' . "\n" ;
+		$n++ ;
+	}
+?>
+/*		var marker = new google.maps.Marker({ // Set the marker
+			position: myLatlng, // Position marker to coordinates
+			map: map, // assign the marker to our map variable
+			icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',
+			title: 'Twin Lakes State Beach' // Marker ALT Text
+		}); */
+		
+		// 	google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker 
+		//		window.location='http://www.snowdonrailway.co.uk/shop_and_cafe.php'; // URL to Link Marker to (i.e Google Places Listing)
+		// 	});
+		
+		var infowindow = new google.maps.InfoWindow({ // Create a new InfoWindow
+  			content:"<h3>Snowdown Summit Cafe</h3><p>Railway Drive-through available.</p>" // HTML contents of the InfoWindow
+  		});
+		google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker
+  			infowindow.open(map,marker); // Open our InfoWindow
+  		});
+		
+		google.maps.event.addDomListener(window, 'resize', function() { map.setCenter(myLatlng); }); // Keeps the Pin Central when resizing the browser on responsive sites
+	}
+	google.maps.event.addDomListener(window, 'load', initialise); // Execute our 'initialise' function once the page has loaded. 
+</script>
 <div class="preamble" id="SOS-preamble" role="article">
 <h3>Select type of Data Base Sort.</h3><p></p>
 <?php
@@ -131,6 +219,10 @@ function showContent($title, &$uid) {
 
 <?php
 $this->formL->finish();
+?>
+<h3>Neediest Beaches Map</h3>
+<div id="map-canvas" style="height:400px; width:600px;"></div>
+<?php
 //mysql_free_result($result);
 }
 
@@ -582,7 +674,7 @@ function locBatchTable($sub,$subsub,$dates) {
   $endd = array_search($subsub,$dates);
   $Places = array();
   $sort_string = "" ;
-  echo '<table class="volemail"><tr><th>Place</th><th>Date</th>';
+  echo '<table class="volemail"><tr><th>Date</th><th>Place</th>';
   echo '<th>Item</th><th>Amount</th></tr>';
 
   $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate,
@@ -602,7 +694,8 @@ function locBatchTable($sub,$subsub,$dates) {
   $sql.= empty($startd) ? "" : " AND C.tdate >= '" . $startd . "' ";
   $sql.= empty($endd) ? "" : " AND C.tdate <= '" . $endd . "' " ;
   $sql.= "  AND items.iid = tally.iid
-            GROUP BY pname, C.tdate, Iname" ;
+            GROUP BY C.tdate, pname, Iname
+            ORDER BY C.tdate DESC" ;
 //  echo $sql ;
   $result = $this->db->query($sql);
   $oldPlace = "";
@@ -634,16 +727,16 @@ function locBatchTable($sub,$subsub,$dates) {
   foreach($Places as $value) {
 
 		$amt  = $row3["number"];
-		echo "<tr><td>" . $value['Place'] . "</td>";
-		echo "<td>" . $value['Date'] . "</td>";
+		echo "<tr><td>" . $value['Date'] . "</td>";
+		echo "<td>" . $value['Place'] . "</td>";
 		echo "<td>" . $value['Item'] . "</td>";
 		echo "<td>" . $value['amt'] . "</td>";
 		echo "</tr>";
-		$plot_data[] = array($value['Place'], $value['Date'] , 
+		$plot_data[] = array($value['Date'], $value['Place'] , 
 								$value['Item'], $value['amt']);
   } 
   echo "</table><br>";
-  $title = array("Place", "Date", "Name", "Item", "Amount");
+  $title = array("Date", "Place", "Item", "Amount");
 
   $this->write_csv($title,$plot_data);
 }

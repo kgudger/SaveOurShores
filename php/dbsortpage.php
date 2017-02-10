@@ -58,6 +58,91 @@ function showContent($title, &$uid) {
   global $radiolist2;
 ?>
 <script src="http://www.saveourshores.org/js/app2.js"></script>     
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=
+AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
+<script>
+	function initialise() {
+		
+		var myLatlng = new google.maps.LatLng(36.962,-122.001); // Add the coordinates
+		var mapOptions = {
+			zoom: 10, // The initial zoom level when your map loads (0-20)
+			zoomControl:true, // Set to true if using zoomControlOptions below, or false to remove all zoom controls.
+			zoomControlOptions: {
+  				style:google.maps.ZoomControlStyle.DEFAULT // Change to SMALL to force just the + and - buttons.
+			},
+			center: myLatlng, // Centre the Map to our coordinates variable
+			mapTypeId: google.maps.MapTypeId.ROADMAP, // Set the type of Map
+			scrollwheel: false, // Disable Mouse Scroll zooming (Essential for responsive sites!)
+			// All of the below are set to true by default, so simply remove if set to true:
+			panControl:false, // Set to false to disable
+			mapTypeControl:false, // Disable Map/Satellite switch
+			scaleControl:false, // Set to false to hide scale
+			streetViewControl:false, // Set to disable to hide street view
+			overviewMapControl:false, // Set to false to remove overview control
+			rotateControl:false // Set to false to disable rotate control
+	  	}
+		var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions); // Render our map within the empty div
+<?php 
+	$sql = "SELECT Places.name, Places.lat, Places.lon, COALESCE(PN.Max, 0 ) AS Maxdate FROM Places
+LEFT JOIN (SELECT C.cid AS cid,C.lat, C.lon, C.tdate, MAX(C.tdate) AS Max,
+(   SELECT DISTINCT Places.name AS pname
+                FROM Places
+		ORDER BY 
+		( 3959 * acos( cos( radians(C.lat) ) * 
+                cos( radians( Places.lat ) ) * 
+                cos( radians( Places.lon ) - radians(C.lon) ) + 
+                     sin( radians(C.lat) ) * 
+                sin( radians( Places.lat ) ) ) ) 
+		LIMIT 1 ) AS pname
+                FROM Collector AS C
+                GROUP BY pname) AS PN
+ON Places.name=pname
+GROUP by Places.name";
+  $result = $this->db->query($sql);
+  $tdate = time(); // current Unix Time
+  $t4week = $tdate - (4 * 7 * 24 * 60 * 60);
+  $t8week = $tdate - (8 * 7 * 24 * 60 * 60);
+//  echo "console.log('t4 is ' + " . $t4week . " + ' t8 is ' + " . $t8week . ");\n" ;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		$pname = $row['name'];
+		$plat  = $row['lat'];
+		$plon  = $row['lon'];
+		$pdate  = strtotime($row['Maxdate']);
+		echo "myLatlng = new google.maps.LatLng(" . $plat . "," . $plon . ");\n";
+		echo "var marker" . $n . "= new google.maps.Marker({ \n" ;
+		echo "position: myLatlng, \n";
+		echo "map: map, \n" ;
+		if ( $pdate <= $t8week ) 
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
+		else if ( $pdate <= $t4week )
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
+		else 
+			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
+		echo 'title: "' . $pname . '" });' . "\n" ;
+	}
+?>
+/*		var marker = new google.maps.Marker({ // Set the marker
+			position: myLatlng, // Position marker to coordinates
+			map: map, // assign the marker to our map variable
+			icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',
+			title: 'Twin Lakes State Beach' // Marker ALT Text
+		}); */
+		
+		// 	google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker 
+		//		window.location='http://www.snowdonrailway.co.uk/shop_and_cafe.php'; // URL to Link Marker to (i.e Google Places Listing)
+		// 	});
+		
+		var infowindow = new google.maps.InfoWindow({ // Create a new InfoWindow
+  			content:"<h3>Snowdown Summit Cafe</h3><p>Railway Drive-through available.</p>" // HTML contents of the InfoWindow
+  		});
+		google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker
+  			infowindow.open(map,marker); // Open our InfoWindow
+  		});
+		
+		google.maps.event.addDomListener(window, 'resize', function() { map.setCenter(myLatlng); }); // Keeps the Pin Central when resizing the browser on responsive sites
+	}
+	google.maps.event.addDomListener(window, 'load', initialise); // Execute our 'initialise' function once the page has loaded. 
+</script>
 <div class="preamble" id="SOS-preamble" role="article">
 <?php
 	echo $this->formL->reportErrors();
@@ -102,9 +187,13 @@ function showContent($title, &$uid) {
   echo ($this->formL->getValue("getFile")[0]);
 ?>
 </div>
-
 <?php
 $this->formL->finish();
+?>
+<h3>Neediest Beaches Map</h3>
+<div id="map-canvas" style="height:400px; width:600px;"></div>
+
+<?php
 //mysql_free_result($result);
 }
 

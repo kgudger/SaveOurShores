@@ -192,8 +192,8 @@ $this->formL->finish();
 ?>
 <h3>Neediest Beaches Map</h3>
 <div id="map-canvas" style="height:400px; width:600px;"></div>
-<div> Legend: <span style="color:green;">Green</span> beaches cleaned in the last 4 weeks, <br>
-<span style="color:yellow;">Yellow</span> beaches cleaned 4 to 8 weeks ago,<br>
+<div> Legend:<br><span style="color:green;">Green</span> beaches cleaned in the last 4 weeks, <br>
+<span style="color:yellow;background:rgb(153, 204, 255)">Yellow</span> beaches cleaned 4 to 8 weeks ago,<br>
 <span style="color:red;">Red</span> beaches have not been cleaned in over 8 weeks.</div>
 
 <?php

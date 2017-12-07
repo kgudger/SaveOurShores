@@ -149,7 +149,7 @@ GROUP by Places.name";
 	echo $this->formL->start('POST', "", 'name="databasesort"');
 ?>
 <fieldset>
-<legend>Please Select how you would like to sort the data.</legend>
+<legend>Please select how you would like to sort the data.</legend>
 <br>
 <?php
   $radiolist = array("Total Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
@@ -228,7 +228,7 @@ $sort_string = "" ;
 	  echo "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table class="volemail"> <tr> <th>Name</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
   echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT DISTINCT name FROM Collector ORDER BY tdate DESC";
   $result = $this->db->query($sql);
@@ -319,7 +319,7 @@ $sort_string = "" ;
 	  echo "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table class="volemail"> <tr> <th>Date</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Date</th>';
   echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT DISTINCT CAST(`tdate` AS DATE) AS dateonly 
              FROM Collector ORDER BY date DESC";
@@ -350,6 +350,7 @@ $sort_string = "" ;
       0 : $row2["SUM(number*weight)"] ;
 	
 	if (round($trash,2) > 0 || round($recycle,2) > 0 ) {
+		$date = date("F j, Y", strtotime($date));
 		echo "<tr><td>" . $date . "</td>";
 		echo '<td class="right">' . round($trash,2) . "</td>";
 		echo '<td class="right">' . round($recycle,2) . "</td></tr>";
@@ -413,7 +414,7 @@ $sort_string = "" ;
 	  echo "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table class="volemail"> <tr> <th>Category</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Category</th>';
   echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT name, catid 
              FROM Categories ";
@@ -504,7 +505,7 @@ function itemTable($sub,$subsub) {
 	}
   }
   global $plot_data ;
-  echo '<table class="volemail"> <tr> <th>Item</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Item</th>';
   echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT SUM(number*weight) AS Total,
 			SUM(number*weight*(items.recycle)) AS Recycling,
@@ -582,7 +583,7 @@ function locationTable($sub,$subsub) {
 	  echo "Sorted by Category '$subsub'<br><br>";
 	}
   }
-  echo '<table class="volemail"> <tr> <th>Place</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Location</th>';
   echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
   // Create an associative array with entries for items weight
   // Last entry is "Other"
@@ -747,7 +748,7 @@ function amountTable($sub,$subsub) {
 	}
   }
   global $plot_data ;
-  echo '<table class="volemail"> <tr> <th>User Name</th><th>Total Weight</th>';
+  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
   echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $name = $row["item"];
   $iid = $row["iid"];

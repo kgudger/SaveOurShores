@@ -17,9 +17,9 @@ function dbsort_leaderboard() {
 /**
  * dbstart.php opens the database and gets the user variables
  */
-require_once("includes/dbstart.php");
+require_once("/home3/lauren/public_html/includes/dbstart.php");
 
-include_once("wp-content/plugins/leaderboard/includes/dbsortpage.php");
+include_once("/home3/lauren/public_html/wp-content/plugins/leaderboard/includes/dbsortpage.php");
 
 /**
  * The checkArray defines what checkForm does so you don't
@@ -29,7 +29,7 @@ $checkArray = array();
 /// a new instance of the derived class (from MainPage)
 $dbsort = new dbSortPage($db,$sessvar,$checkArray) ;
 /// and ... start it up!  
-$dbsort->main("SOS Leaderboard", $uid, "", "dfile.php");
+$dbsort->main("Thanks for helping us keep our shores clean.", $uid, "", "dfile.php");
 /**
  * There are 2 choices for redirection dependent on the sessvar
  * above which one gets taken.

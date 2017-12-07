@@ -12,9 +12,9 @@
  * @note CIS-165PH  Final Project
  */
 
-include_once "includes/redirect.php";
-include_once "includes/formlib.php";
-include_once "includes/util.php";
+include_once "/home3/lauren/public_html/includes/redirect.php";
+include_once "/home3/lauren/public_html/includes/formlib.php";
+include_once "/home3/lauren/public_html/includes/util.php";
 
 /**
  * Parent class used for all form pages.
@@ -68,7 +68,7 @@ class MainPage {
 				}
 			}
 		}
-    	include "includes/header.php";	// same header for every page
+//    	include "includes/header.php";	// same header for every page
     	$this->showContent($title, $uid);
     	include "includes/footer.php";  // same footer for every page
 	}

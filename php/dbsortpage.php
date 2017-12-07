@@ -15,9 +15,9 @@
 * 
 */
 
-require_once("wp-content/plugins/leaderboard/includes/mainpage.php");
+require_once("/home3/lauren/public_html/wp-content/plugins/leaderboard/includes/mainpage.php");
 include_once "includes/util.php";
-require_once 'includes/phplot-6.2.0/phplot.php';
+require_once '/home3/lauren/public_html/includes/phplot-6.2.0/phplot.php';
 $plot_data = array();
 
 /**
@@ -186,11 +186,11 @@ GROUP by Places.name";
   else echo "No sort selected.";
   echo ($this->formL->getValue("getFile")[0]);
 ?>
-</div>
+
 <?php
 $this->formL->finish();
 ?>
-<h3>Neediest Beaches Map</h3>
+<h3>Beach Status Map</h3>
 <div id="map-canvas" style="height:400px; width:600px;"></div>
 <div> Legend:<br><span style="color:green;">Green</span> beaches cleaned in the last 4 weeks, <br>
 <span style="color:yellow;background:rgb(153, 204, 255)">Yellow</span> beaches cleaned 4 to 8 weeks ago,<br>
@@ -262,6 +262,7 @@ $sort_string = "" ;
 	$plot_data[] = array($name,round($trash,2),round($recycle,2));
   } 
   echo "</table><br>";
+/*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
@@ -288,6 +289,7 @@ $sort_string = "" ;
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
+*/
   $this->write_csv("Name",$plot_data);
 }
 /**
@@ -355,6 +357,7 @@ $sort_string = "" ;
 	}
   } 
   echo "</table><br>";
+/*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
@@ -381,6 +384,7 @@ $sort_string = "" ;
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
+*/
   $this->write_csv("Date",$plot_data);
 }
 /**
@@ -443,6 +447,7 @@ $sort_string = "" ;
 	$plot_data[] = array($name,round($trash,2),round($recycle,2));
   } 
   echo "</table><br>";
+/*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
@@ -469,6 +474,7 @@ $sort_string = "" ;
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
+*/
   $this->write_csv("Category",$plot_data);
 }
 /**
@@ -519,6 +525,7 @@ function itemTable($sub,$subsub) {
 		$plot_data[] = array($row2['Item'],round($row2['Total'],2),round($row2['Trash'],2),round($row2['Recycling'],2));
   } 
   echo "</table><br>";
+/*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
@@ -545,6 +552,7 @@ function itemTable($sub,$subsub) {
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
+*/
   $this->write_csv("Item",$plot_data);
 }
 /**
@@ -681,6 +689,7 @@ function locationTable($sub,$subsub) {
 	  }
   } 
   echo "</table><br>";
+/*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
@@ -707,6 +716,7 @@ function locationTable($sub,$subsub) {
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";
+*/
   $this->write_csv("Place",$plot_data);
 }
 

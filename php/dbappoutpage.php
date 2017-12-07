@@ -220,7 +220,7 @@ ORDER BY CSum DESC";
 <?php
 $this->formL->finish();
 ?>
-<h3>Neediest Beaches Map</h3>
+<h3>Beach Status Map</h3>
 <div id="map-canvas" style="height:400px; width:600px;"></div>
 <?php
 //mysql_free_result($result);

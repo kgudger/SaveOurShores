@@ -347,6 +347,7 @@ $(document).on("pagecontainerbeforeshow", function () {
 		});
         tbl = document.getElementById("summaryData");
         myHTML = "<table width=95%>" ;
+//		console.log( obj );
         var i = 0;
 		for (var Key in obj) {
 			for (var innerKey in obj[Key]) {
@@ -354,11 +355,16 @@ $(document).on("pagecontainerbeforeshow", function () {
 					if ( innerKey == "name-in" ) {
 						myHTML+= "<tr><td>" + "User Name" +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "datein" ) {
+//						console.log( "In datein" );
+						myHTML+= "<tr><td>" + "Date" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					} else if ( innerKey == "emailin" ) {
 						myHTML+= "<tr><td>" + "Email" +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>" +
 							"<tr><th>Item</th><th class='fright'>Amount</tr>";
 					} else if ( i > 5 ) {
+						console.log("i is " + i);
 						myHTML+= "<tr><td>" + innerKey.replace(/-/g, ' ') +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					}

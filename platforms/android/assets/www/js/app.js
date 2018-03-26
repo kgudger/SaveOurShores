@@ -347,6 +347,7 @@ $(document).on("pagecontainerbeforeshow", function () {
 		});
         tbl = document.getElementById("summaryData");
         myHTML = "<table width=95%>" ;
+//		console.log( obj );
         var i = 0;
 		for (var Key in obj) {
 			for (var innerKey in obj[Key]) {
@@ -354,11 +355,16 @@ $(document).on("pagecontainerbeforeshow", function () {
 					if ( innerKey == "name-in" ) {
 						myHTML+= "<tr><td>" + "User Name" +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "datein" ) {
+//						console.log( "In datein" );
+						myHTML+= "<tr><td>" + "Date" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					} else if ( innerKey == "emailin" ) {
 						myHTML+= "<tr><td>" + "Email" +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>" +
 							"<tr><th>Item</th><th class='fright'>Amount</tr>";
 					} else if ( i > 5 ) {
+						console.log("i is " + i);
 						myHTML+= "<tr><td>" + innerKey.replace(/-/g, ' ') +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					}
@@ -443,8 +449,12 @@ function sendfunc(params) {
           }
 	}
 //	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
-	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
-	xmlhttp.send(null);
+/*	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
+	xmlhttp.send(null);*/
+	xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
+	xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+ 	xmlhttp.send(params);
+
     }
 }; // sendfunc
 
@@ -492,7 +502,7 @@ function fillForm(rList) {
 /*			myHTML+= '<li class="item_field"> <label for "' + iVal + '"> <input data-role="none" type="number" class="right25" id="' + iVal + '" value="0" name="' + iVal + '" >' + innerKey + '<a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></label></li>';*/
 //			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iVal + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iVal + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iVal + "'" + ')"></a></div></div></div>';
 			iValNew = innerKey.replace(/ /g, "-") ;
-			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" id="' + iValNew + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iValNew + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iValNew + "'" + ')"></a></div></div></div>';
+			myHTML+= '<div class="item_field"><div class="item_name">'+ innerKey + '</div><div class="fright"><div class="fleft"> <input class="left25" data-role="none" type="number" onclick="this.select()" id="' + iValNew + '" value="0" name="' + iVal + '" ></div><div class="fright item_right"><a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="minus_one(' + "'" + iValNew + "'" + ')"></a> <a href="#" class="blue_back button_right ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="plus_one(' + "'" + iValNew + "'" + ')"></a></div></div></div>';
 		}
 //				document.getElementById('formData').innerHTML+= myHTML;
     /*} else {

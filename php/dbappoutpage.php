@@ -726,7 +726,7 @@ function locBatchTable($sub,$subsub,$dates) {
   
   foreach($Places as $value) {
 
-		$amt  = $row3["number"];
+		//$amt  = $row3["number"];
 		echo "<tr><td>" . $value['Date'] . "</td>";
 		echo "<td>" . $value['Place'] . "</td>";
 		echo "<td>" . $value['Item'] . "</td>";
@@ -743,6 +743,8 @@ function locBatchTable($sub,$subsub,$dates) {
 
 function write_csv($title,$data) {
 	$myfile = fopen("output.csv","w") or die("Unable to open file");
+	$sep = array("sep=;");
+	fputcsv($myfile,$sep);
     fputcsv($myfile, $title,";",'"');
     foreach ($data as $fields) {
        fputcsv($myfile,$fields,";",'"');

@@ -405,8 +405,9 @@ function sendfunc(params) {
 	if (xmlhttp) {
         xmlhttp.onreadystatechange=function()
 		{
-		  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-          {
+		  if (xmlhttp.readyState==4)
+		  {  if (xmlhttp.status==200)
+            {
               returnedList = (xmlhttp.responseText);
               if ( returnedList != "Collector Entered" ) {
                   returnedList = JSON.parse(xmlhttp.responseText);
@@ -446,14 +447,17 @@ function sendfunc(params) {
                       checkAndHide();
                   }
               }
-          }
-	}
+            } else { // in case there is an internet failure
+			  alert("We don't seem to have internet, please turn on Wifi or cellular data");
+		  }
+		}
+	  }
 //	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
 /*	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
 	xmlhttp.send(null);*/
-	xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
-	xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
- 	xmlhttp.send(params);
+	  xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
+	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+ 	  xmlhttp.send(params);
 
     }
 }; // sendfunc

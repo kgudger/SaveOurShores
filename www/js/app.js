@@ -406,7 +406,7 @@ function sendfunc(params) {
         xmlhttp.onreadystatechange=function()
 		{
 		  if (xmlhttp.readyState==4)
-		  {  if (xmlhttp.status==200)
+		  {  if ( (xmlhttp.status==200) )
             {
               returnedList = (xmlhttp.responseText);
               if ( returnedList != "Collector Entered" ) {

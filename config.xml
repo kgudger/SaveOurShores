@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="http://*/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -18,6 +19,9 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="5000" />
     <preference name="android-minSdkVersion" value="14" />
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
     <platform name="android">
         <allow-intent href="market:*" />
         <icon platform="android" qualifier="xxhdpi" src="www/images/SOSlogo144.png" />
@@ -53,7 +57,7 @@
         <splash height="1024" platform="ios" src="www/images/SOSlogo768x1024.png" width="768" />
         <splash height="2048" platform="ios" src="www/images/SOSlogo1536x2048.png" width="1536" />
     </platform>
+    <plugin name="cordova-plugin-whitelist" spec="1" />
     <engine name="android" spec="~6.2.3" />
     <engine name="ios" spec="~3.9.2" />
-    <plugin name="cordova-plugin-whitelist" spec="1" />
 </widget>

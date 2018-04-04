@@ -5,11 +5,9 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>${PRODUCT_NAME}</string>
+    <string>Save Our Shores</string>
     <key>CFBundleExecutable</key>
     <string>${EXECUTABLE_NAME}</string>
-    <key>CFBundleIconFile</key>
-    <string>icon.png</string>
     <key>CFBundleIcons</key>
     <dict/>
     <key>CFBundleIcons~ipad</key>
@@ -30,6 +28,25 @@
     <string>1.1.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>NSMainNibFile</key>
+    <string/>
+    <key>NSMainNibFile~ipad</key>
+    <string/>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UIRequiresFullScreen</key>
+    <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
@@ -37,15 +54,5 @@
     </dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string/>
-    <key>NSMainNibFile~ipad</key>
-    <string/>
-    <key>UILaunchStoryboardName</key>
-    <string>SOSlogo1536x2048</string>
-    <key>UIRequiredDeviceCapabilities</key>
-    <array>
-      <string>gamekit</string>
-    </array>
-    <key>UIRequiresFullScreen</key>
-    <true/>
   </dict>
 </plist>

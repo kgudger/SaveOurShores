@@ -1,21 +1,24 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.phonegap.saveourshores"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.phonegap.saveourshores"
     },
-    "installed_plugins": {
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
-        }
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.phonegap.saveourshores"
     },
-    "dependent_plugins": {}
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.phonegap.saveourshores"
+    }
+  },
+  "dependent_plugins": {}
 }

@@ -43,6 +43,18 @@ function onAppReady() {
     ready();
 }
 
+document.addEventListener('deviceready', function () {
+  if (navigator.notification) { // Override default HTML alert with native dialog
+      window.alert = function (message) {
+          navigator.notification.alert(
+              message,    // message
+              null,       // callback
+              "Warning", // title
+              'OK'        // buttonName
+          );
+      };
+  }
+}, false);
 
 document.addEventListener("app.Ready", onAppReady, false) ;
 /*
@@ -303,6 +315,12 @@ function sendData() {
     var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
+/*	  navigator.notification.alert(
+	    "Please enter your name before submitting, thanks.",  // message
+	    null,         // callback
+	    'Alert',            // title
+	    'OK'                  // buttonName
+	);*/
         alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
@@ -406,11 +424,15 @@ function sendfunc(params) {
         xmlhttp.onreadystatechange=function()
 		{
 		  if (xmlhttp.readyState==4)
-		  {  if ( (xmlhttp.status==200) )
+		  {  if ( (xmlhttp.status==200) || (xmlhttp.status==0) )
             {
               returnedList = (xmlhttp.responseText);
               if ( returnedList != "Collector Entered" ) {
-                  returnedList = JSON.parse(xmlhttp.responseText);
+				  if (returnedList == undefined || 
+						returnedList == null || returnedList == "") {
+					returnedList = '{}';
+				  }
+                  returnedList = JSON.parse(returnedList);
                   if (typeof (returnedList["trash"]) !== 'undefined') {
                     var val = document.getElementById("trash")
                     val.value = returnedList["trash"];
@@ -448,7 +470,7 @@ function sendfunc(params) {
                   }
               }
             } else { // in case there is an internet failure
-			  alert("We don't seem to have internet, please turn on Wifi or cellular data");
+//			  alert("We don't seem to have internet, please turn on Wifi or cellular data");
 		  }
 		}
 	  }
@@ -456,7 +478,7 @@ function sendfunc(params) {
 //	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
 //	xmlhttp.send(null);
 	  xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
-//      xmlhttp.setRequestHeader ("Accept", "text/plain");
+      xmlhttp.setRequestHeader ("Accept", "text/plain");
 	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xmlhttp.send(params);
 
@@ -492,7 +514,10 @@ function fillForm(rList) {
     var myHTML = '<ul data-role="collapsible-set">';
     var option;
 //	var newHtml = "<div>" ;
-    for (var topKey in rList) {
+	if (Object.keys(rList).length === 0 && rList.constructor === Object) {
+		alert("We don't seem to have internet, please turn on Wifi or cellular data");
+	} else {
+      for (var topKey in rList) {
 		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="catheader">' + topKey + '</h2>';
 //		if ( topKey == "OTHER" ) {
 /*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
@@ -528,9 +553,10 @@ function fillForm(rList) {
     }*/
 		myHTML += "</li>";
 //		document.getElementById('formData').innerHTML+= newHtml;
+	  }
+	  myHTML += "</ul>";
+	  document.getElementById('formData').innerHTML+= myHTML;
 	}
-	myHTML += "</ul>";
-	document.getElementById('formData').innerHTML+= myHTML;
 }
 // fillForm
 

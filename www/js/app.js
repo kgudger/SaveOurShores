@@ -303,13 +303,13 @@ function sendData() {
     var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
-	  navigator.notification.alert(
+/*	  navigator.notification.alert(
 	    "Please enter your name before submitting, thanks.",  // message
 	    null,         // callback
 	    'Alert',            // title
 	    'OK'                  // buttonName
-	);
-//        alert("Please enter your name before submitting, thanks.");
+	);*/
+        alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
     } else if ( event == "0" ) {
@@ -462,7 +462,7 @@ function sendfunc(params) {
 //	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
 //	xmlhttp.send(null);
 	  xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
-//      xmlhttp.setRequestHeader ("Accept", "text/plain");
+      xmlhttp.setRequestHeader ("Accept", "text/plain");
 	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xmlhttp.send(params);
 

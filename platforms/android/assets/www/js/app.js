@@ -303,6 +303,12 @@ function sendData() {
     var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
+/*	  navigator.notification.alert(
+	    "Please enter your name before submitting, thanks.",  // message
+	    null,         // callback
+	    'Alert',            // title
+	    'OK'                  // buttonName
+	);*/
         alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
 		alert("Please select a location before submitting, thanks.");
@@ -392,7 +398,7 @@ function reallySendData() {
 }
 /**
  *	"Ajax" function that sends and processes xmlhttp request
- *	@param params is GET request string
+ *	@param params is POST request string
  */
 function sendfunc(params) {
     var xmlhttp;
@@ -406,7 +412,7 @@ function sendfunc(params) {
         xmlhttp.onreadystatechange=function()
 		{
 		  if (xmlhttp.readyState==4)
-		  {  if (xmlhttp.status==200)
+		  {  if ( (xmlhttp.status==200) )
             {
               returnedList = (xmlhttp.responseText);
               if ( returnedList != "Collector Entered" ) {
@@ -447,17 +453,18 @@ function sendfunc(params) {
                       checkAndHide();
                   }
               }
-            } else {
-			  alert("We don't seem to have internet, please turn on Wifi or cellular data");
+            } else { // in case there is an internet failure
+//			  alert("We don't seem to have internet, please turn on Wifi or cellular data");
 		  }
 		}
 	  }
 //	xmlhttp.open("GET","http://home.loosescre.ws/~keith/SOS/server.php" + '?' + params, true);
-/*	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
-	xmlhttp.send(null);*/
+//	xmlhttp.open("GET","http://www.saveourshores.org/server.php" + '?' + params, true);
+//	xmlhttp.send(null);
 	  xmlhttp.open("POST","http://www.saveourshores.org/server.php", true);
+      xmlhttp.setRequestHeader ("Accept", "text/plain");
 	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
- 	  xmlhttp.send(params);
+      xmlhttp.send(params);
 
     }
 }; // sendfunc

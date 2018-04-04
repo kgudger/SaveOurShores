@@ -54,7 +54,7 @@ class DB
 				$stmt->execute(array($lastId,$value,$key));
 			}
 		}
-		$this->getTally($nam);
+		$this->getTally($email);
     }
 
 	function getTally($name)

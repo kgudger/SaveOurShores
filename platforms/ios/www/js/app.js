@@ -37,7 +37,7 @@ function onAppReady() {
     fillName("name-field");
 
     queryString = "command=getCats";
-    sendfunc(queryString);
+    sendfunc(queryString,true);
     queryString = "command=getEvent";
     sendfunc(queryString);
     ready();
@@ -412,7 +412,10 @@ function reallySendData() {
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is POST request string
  */
-function sendfunc(params) {
+function sendfunc(params,test) {
+    if (test === undefined) {
+        test = false;
+    }
     var xmlhttp;
 	try {
 	   xmlhttp=new XMLHttpRequest();
@@ -462,7 +465,8 @@ function sendfunc(params) {
                   else {
 //                      alert(returnedList["Top Items"]);
 						if (Object.keys(returnedList).length === 0 && 
-								returnedList.constructor === Object) {
+								returnedList.constructor === Object &&
+								test) {
 							alert("We don't seem to have internet, please turn on Wifi or cellular data");
 						} else {
 
@@ -471,7 +475,8 @@ function sendfunc(params) {
 						  } // moved to here so splashscreen stays until really ready
                           fillForm(returnedList);
                           cats_done = true;
-                          checkAndHide();
+                          if (test)
+                              checkAndHide();
                         }  
                   }
               }

@@ -1,20 +1,20 @@
 {
-  "name": "com.phonegap.saveourshores",
-  "version": "1.1.0",
-  "displayName": "Save Our Shores",
-  "cordova": {
-    "platforms": [
-      "android",
-      "ios"
-    ],
-    "plugins": {
-      "cordova-plugin-whitelist": {}
+    "name": "com.phonegap.saveourshores",
+    "version": "1.1.0",
+    "displayName": "Save Our Shores",
+    "cordova": {
+        "platforms": [
+            "android",
+            "ios"
+        ],
+        "plugins": {
+            "cordova-plugin-whitelist": {}
+        }
+    },
+    "dependencies": {
+        "cordova-android": "~6.2.3",
+        "cordova-ios": "^4.4.0",
+        "cordova-plugin-dialogs": "^2.0.1",
+        "cordova-plugin-whitelist": "1"
     }
-  },
-  "dependencies": {
-    "cordova-android": "~6.2.3",
-    "cordova-ios": "^4.5.4",
-    "cordova-plugin-dialogs": "^2.0.1",
-    "cordova-plugin-whitelist": "1"
-  }
 }

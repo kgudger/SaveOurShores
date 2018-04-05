@@ -37,7 +37,7 @@ function onAppReady() {
     fillName("name-field");
 
     queryString = "command=getCats";
-    sendfunc(queryString);
+    sendfunc(queryString,true);
     queryString = "command=getEvent";
     sendfunc(queryString);
     ready();
@@ -49,7 +49,7 @@ document.addEventListener('deviceready', function () {
           navigator.notification.alert(
               message,    // message
               null,       // callback
-              "Warning", // title
+              "Notice", // title
               'OK'        // buttonName
           );
       };
@@ -412,7 +412,7 @@ function reallySendData() {
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is POST request string
  */
-function sendfunc(params) {
+function sendfunc(params,test=false) {
     var xmlhttp;
 	try {
 	   xmlhttp=new XMLHttpRequest();
@@ -461,12 +461,19 @@ function sendfunc(params) {
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);
-						if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
+						if (Object.keys(returnedList).length === 0 && 
+								returnedList.constructor === Object &&
+								test) {
+							alert("We don't seem to have internet, please turn on Wifi or cellular data");
+						} else {
+
+						  if( navigator.splashscreen && navigator.splashscreen.hide ) {   // Cordova API detected
 							navigator.splashscreen.hide() ;
-						} // moved to here so splashscreen stays until really ready
-                      fillForm(returnedList);
-                      cats_done = true;
-                      checkAndHide();
+						  } // moved to here so splashscreen stays until really ready
+                          fillForm(returnedList);
+                          cats_done = true;
+                          checkAndHide();
+                        }  
                   }
               }
             } else { // in case there is an internet failure
@@ -514,10 +521,7 @@ function fillForm(rList) {
     var myHTML = '<ul data-role="collapsible-set">';
     var option;
 //	var newHtml = "<div>" ;
-	if (Object.keys(rList).length === 0 && rList.constructor === Object) {
-		alert("We don't seem to have internet, please turn on Wifi or cellular data");
-	} else {
-      for (var topKey in rList) {
+    for (var topKey in rList) {
 		myHTML+= '<li data-role="collapsible" data-inset="false" data-iconpos="right" class="setwidth"><h2 class="catheader">' + topKey + '</h2>';
 //		if ( topKey == "OTHER" ) {
 /*			myHTML += '<div class="item_field"> <label for "' + topKey + '"> <input data-role="none" type="number" class="right25" oninput = "other_change('+"'"+topKey+"'"+')" id="' + topKey + '" value="0" name="' + topKey + '" > <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-minus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_minus_one(' + "'" + topKey + "'" + ')"></a> <a href="#" class="blue_back ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-notext ui-btn-b ui-mini" onclick="other_plus_one(' + "'" + topKey + "'" + ')"></a>';
@@ -553,10 +557,9 @@ function fillForm(rList) {
     }*/
 		myHTML += "</li>";
 //		document.getElementById('formData').innerHTML+= newHtml;
-	  }
-	  myHTML += "</ul>";
-	  document.getElementById('formData').innerHTML+= myHTML;
 	}
+	myHTML += "</ul>";
+	document.getElementById('formData').innerHTML+= myHTML;
 }
 // fillForm
 

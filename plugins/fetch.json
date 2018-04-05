@@ -1,34 +1,34 @@
 {
-  "cordova-plugin-whitelist": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-whitelist@1"
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-geolocation": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-geolocation@2.4.3"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-splashscreen": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-splashscreen"
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-dialogs": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-dialogs"
-    },
-    "is_top_level": true,
-    "variables": {}
-  }
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs@^2.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
 }

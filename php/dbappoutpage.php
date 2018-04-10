@@ -515,19 +515,23 @@ function itemTable($sub,$subsub,$dates) {
   $endd = array_search($subsub,$dates);
 
   $ItemsA = array();
-  echo '<table class="volemail"><tr><th>Item</th><th>Amount</th><th>Name</th><th>Date</th><th>Place</th>';
-  echo '<th>Latitude</th><th>Longitude</th></tr>';
-  $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
-  $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
+  echo '<table class="volemail"><tr><th>Item</th><th>Amount</th><th>Place</th></tr>';
+  $sql = "SELECT T.iid AS item, lat, lon, sum(number) as total FROM Collector, tally AS T " ;
+  $sql.= "WHERE Collector.cid = T.cid";
+//  $sql = "SELECT items.item AS item, sum(number) as total, Collector.lat AS lat, Collector.lon AS lon" ;
+//  $sql.= "FROM `items` AS I INNER JOIN `tally` AS T ON `T.iid` = `I.iid` ";
+//  $sql.= "INNER JOIN `Collector` AS CO ON `CO,cid` = `T.cid` ";
+//  $sql.= " WHERE tally.iid = items.iid CO.cid = tally.cid";
+//  $sql.= "WHERE items.iid = tally.iid AND Collector.cid = tally.cid ";
+  $sql.= empty($startd) ? "" : " AND `tdate` >= '" . $startd . "' ";
   $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
-  $sql.= " ORDER BY name ASC";
+  $sql.= " GROUP BY lat, lon, item";
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-    $name = $row["name"];
-    $cdate = $row["tdate"];
     $lat   = $row["lat"];
     $lon   = $row["lon"];
-    $cid   = $row["cid"];  // cid for next query.
+    $total = $row["total"];
+    $item  = $row["item"];
 
 	$sql = "SELECT DISTINCT Places.name AS pname, 
 				( 3959 * acos( cos( radians('$lat') ) 
@@ -536,8 +540,7 @@ function itemTable($sub,$subsub,$dates) {
                      sin( radians('$lat') ) * 
                 sin( radians( Places.lat ) ) ) ) 
                 AS distance 
-                FROM Places, Collector
-				WHERE Collector.cid = '$cid'
+                FROM Places
 				HAVING distance < 1.0
 				ORDER BY distance
 				LIMIT 1";
@@ -548,36 +551,27 @@ function itemTable($sub,$subsub,$dates) {
       $pname = "Other" ;
     }
     
-    $sql = "SELECT items.item AS name, tally.number AS number 
-                    FROM tally, items
-                    WHERE tally.cid = $cid AND
-                    tally.iid = items.iid";
+    $sql = "SELECT item FROM items WHERE iid = $item";
     $res3 = $this->db->query($sql);
-	while ($row3 = $res3->fetch(PDO::FETCH_ASSOC)) {
-		$item = $row3["name"];
-		$amt  = $row3["number"];
-		$ItemsA[] = array('Place' => $pname, 'Name' => $name, 'Date' => $cdate,
-						'lat' => $lat, 'lon' => $lon, 'Item' => $item, 
-						'Amount' => $amt );
-		$plot_data[] = array($item, $amt, $name, $cdate , $pname, $lat, $lon);
+    $row3 = $res3->fetch(PDO::FETCH_ASSOC);
+    $item = $row3["item"];
+    
+	$ItemsA[] = array('Place' => $pname, 'Item' => $item, 
+						'Amount' => $total );
+		$plot_data[] = array($item, $total , $pname);
 	}
-  } 
-
+/*
   usort($ItemsA, function ($item1, $item2) {
     return strcmp($item1['Item'],$item2['Item']);
   }) ;
-
+*/
   foreach($ItemsA as $value) {
 		echo "<tr><td>" . $value['Item'] . "</td>";
 		echo "<td>" . $value['Amount'] . "</td>";
-		echo "<td>" . $value['Name'] . "</td>";
-		echo "<td>" . $value['Date'] . "</td>";
-		echo "<td>" . $value['Place'] . "</td>";
-		echo "<td>" . $value['lat'] . "</td>";
-		echo "<td>" . $value['lon'] . "</td></tr>";
+		echo "<td>" . $value['Place'] . "</td></tr>";
   }
   echo "</table><br>";
-  $title = array("Item", "Amount", "Name", "Date", "Place", "Latitude", "Longitude" );
+  $title = array("Item", "Amount", "Place" );
 
   $this->write_csv($title,$plot_data);
 }

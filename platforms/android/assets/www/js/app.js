@@ -412,7 +412,10 @@ function reallySendData() {
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is POST request string
  */
-function sendfunc(params,test=false) {
+function sendfunc(params,test) {
+    if (test === undefined) {
+        test = false;
+    }
     var xmlhttp;
 	try {
 	   xmlhttp=new XMLHttpRequest();
@@ -472,7 +475,8 @@ function sendfunc(params,test=false) {
 						  } // moved to here so splashscreen stays until really ready
                           fillForm(returnedList);
                           cats_done = true;
-                          checkAndHide();
+                          if (test)
+                              checkAndHide();
                         }  
                   }
               }

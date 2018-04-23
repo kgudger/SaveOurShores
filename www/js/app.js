@@ -7,7 +7,7 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.2
+ * @version    Release: 1.2.4
  * @package    SaveOurShores
  *
  */

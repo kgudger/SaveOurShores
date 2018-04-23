@@ -331,8 +331,8 @@ $sort_string = "" ;
   $startd = array_search($sub,$dates);
   $endd = array_search($subsub,$dates);
   
-  echo '<table class="volemail"><tr><th>Date</th><th>Name</th><th>Place</th>';
-  echo '<th>Latitude</th><th>Longitude</th><th>Item</th><th>Amount</th></tr>';
+  echo '<table class="volemail"><tr><th>Date</th><th>Place</th><th>Name</th>';
+  echo '<th>Item</th><th>Amount</th></tr>';
   $sql = "SELECT cid, name, tdate, lat, lon FROM Collector " ;
   $sql.= empty($startd) ? "" : " WHERE `tdate` >= '" . $startd . "' ";
   $sql.= empty($endd) ? "" : " AND `tdate` <= '" . $endd . "' " ;
@@ -373,14 +373,12 @@ $sort_string = "" ;
 		$item = $row3["name"];
 		$amt  = $row3["number"];
 		echo "<tr><td>" . $cdate . "</td>";
-		echo "<td>" . $name . "</td>";
 		echo "<td>" . $pname . "</td>";
-		echo "<td>" . $lat . "</td>";
-		echo "<td>" . $lon . "</td>";
+		echo "<td>" . $name . "</td>";
 		echo "<td>" . $item . "</td>";
 		echo "<td>" . $amt . "</td></tr>";
-		$plot_data[] = array($cdate, $name,	$pname, $lat, $lon, $item, $amt);
-		$name = $cdate = $pname = $lat = $lon = "";
+		$plot_data[] = array($cdate, $pname, $name, $item, $amt);
+//		$name = $cdate = $pname = $lat = $lon = "";
 /*    echo '<td class="right">' . round($trash,2) . "</td>";
     echo '<td class="right">' . round($recycle,2) . "</td></tr>";*/
 	}
@@ -412,7 +410,7 @@ $sort_string = "" ;
   $plot->DrawGraph();
 
   echo "<img src='" . $plot->EncodeImage() . "'>";*/
-  $title = array("Date", "Name", "Place", "Latitude", "Longitude", "Item", "Amount");
+  $title = array("Date", "Place", "Name", "Item", "Amount");
 
   $this->write_csv($title,$plot_data);
 }
@@ -560,11 +558,15 @@ function itemTable($sub,$subsub,$dates) {
 						'Amount' => $total );
 		$plot_data[] = array($item, $total , $pname);
 	}
-/*
+
   usort($ItemsA, function ($item1, $item2) {
     return strcmp($item1['Item'],$item2['Item']);
   }) ;
-*/
+
+  usort($ItemsA, function ($item1, $item2) {
+    return strcmp($item1['Place'],$item2['Place']);
+  }) ;
+
   foreach($ItemsA as $value) {
 		echo "<tr><td>" . $value['Item'] . "</td>";
 		echo "<td>" . $value['Amount'] . "</td>";
@@ -668,7 +670,7 @@ function locBatchTable($sub,$subsub,$dates) {
   $endd = array_search($subsub,$dates);
   $Places = array();
   $sort_string = "" ;
-  echo '<table class="volemail"><tr><th>Date</th><th>Place</th>';
+  echo '<table class="volemail"><tr><th>Place</th><th>Date</th>';
   echo '<th>Item</th><th>Amount</th></tr>';
 
   $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate,
@@ -706,14 +708,14 @@ function locBatchTable($sub,$subsub,$dates) {
     }
 	$tally = $row["SUM(tally.number)"];
 	$iname = $row["Iname"];
-	if ( ($cdate == $oldDate) &&
+/*	if ( ($cdate == $oldDate) &&
 			($pname == $oldPlace) ) {
 				$pname = "" ;
 				$cdate = "" ;
 			} else {
 				$oldPlace = $pname ;
 				$oldDate  = $cdate ;
-			}
+			}*/
     $Places[] = array('Place' => $pname, 'Date' => $cdate,
 						'lat' => $lat, 'lon' => $lon, 'Item' => $iname, 'amt' => $tally);
   }
@@ -721,16 +723,16 @@ function locBatchTable($sub,$subsub,$dates) {
   foreach($Places as $value) {
 
 		//$amt  = $row3["number"];
-		echo "<tr><td>" . $value['Date'] . "</td>";
-		echo "<td>" . $value['Place'] . "</td>";
+		echo "<tr><td>" . $value['Place'] . "</td>";
+		echo "<td>" . $value['Date'] . "</td>";
 		echo "<td>" . $value['Item'] . "</td>";
 		echo "<td>" . $value['amt'] . "</td>";
 		echo "</tr>";
-		$plot_data[] = array($value['Date'], $value['Place'] , 
+		$plot_data[] = array($value['Place'] , $value['Date'], 
 								$value['Item'], $value['amt']);
   } 
   echo "</table><br>";
-  $title = array("Date", "Place", "Item", "Amount");
+  $title = array("Place", "Date", "Item", "Amount");
 
   $this->write_csv($title,$plot_data);
 }

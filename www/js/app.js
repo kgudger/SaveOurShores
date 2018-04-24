@@ -42,7 +42,7 @@ function onAppReady() {
     sendfunc(queryString);
     ready();
 }
-
+/*
 document.addEventListener('deviceready', function () {
   if (navigator.notification) { // Override default HTML alert with native dialog
       window.alert = function (message) {
@@ -55,7 +55,7 @@ document.addEventListener('deviceready', function () {
       };
   }
 }, false);
-
+*/
 document.addEventListener("app.Ready", onAppReady, false) ;
 /*
 if(typeof intel === 'undefined') {

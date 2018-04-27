@@ -42,7 +42,7 @@
     <key>NSLocationUsageDescription</key>
     <string>We would like to know where you Saved Our Shores. We do not use personal data for clean-up reporting.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string/>
+    <string>We would like to know where you Saved Our Shores. We do not use personal data for clean-up reporting.</string>
     <key>NSMainNibFile</key>
     <string/>
     <key>NSMainNibFile~ipad</key>

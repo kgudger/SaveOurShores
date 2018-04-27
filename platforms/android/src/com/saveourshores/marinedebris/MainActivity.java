@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.phonegap.saveourshores;
+package com.saveourshores.marinedebris;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

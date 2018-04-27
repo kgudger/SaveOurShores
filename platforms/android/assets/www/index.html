@@ -10,7 +10,7 @@
     <!-- see http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<!-- Enable all requests, inline styles, and eval() -->
-	<meta http-equiv="Content-Security-Policy" content="default-src *; img-src * data: ; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+	<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; img-src * data: ; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="./css/style.css">
@@ -22,7 +22,7 @@
         @-ms-viewport { user-zoom: fixed ; }           @viewport { user-zoom: fixed ; }
     </style>
 
-    <script src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
 	<script src="./js/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/jquery.plugin.min.js"></script> 

@@ -7,11 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.1
+ * @version    Release: 1.2.4
  * @package    SaveOurShores
  *
  */
-	var Version = "1.1";
+	var Version = "1.2.4";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -42,7 +42,7 @@ function onAppReady() {
     sendfunc(queryString);
     ready();
 }
-
+/*
 document.addEventListener('deviceready', function () {
   if (navigator.notification) { // Override default HTML alert with native dialog
       window.alert = function (message) {
@@ -55,7 +55,7 @@ document.addEventListener('deviceready', function () {
       };
   }
 }, false);
-
+*/
 document.addEventListener("app.Ready", onAppReady, false) ;
 /*
 if(typeof intel === 'undefined') {
@@ -315,19 +315,45 @@ function sendData() {
     var event = document.getElementById("event-field").value;
 //    alert("Location selection is " + place);
     if ( out == "" ) {
-/*	  navigator.notification.alert(
+  	if (navigator.notification) { // Override default HTML alert with native dialog
+          navigator.notification.alert(
 	    "Please enter your name before submitting, thanks.",  // message
-	    null,         // callback
-	    'Alert',            // title
-	    'OK'                  // buttonName
-	);*/
-        alert("Please enter your name before submitting, thanks.");
+              null,       // callback
+              "Notice", // title
+              'OK'        // buttonName
+          );
+        } else
+          alert("Please enter your name before submitting, thanks.");
     } else if ( place == "Please Choose" ) {
+        if (navigator.notification) { // Override default HTML alert with native dialog
+            navigator.notification.alert(
+                                         "Please select a location before submitting, thanks.",  // message
+                                         null,       // callback
+                                         "Notice", // title
+                                         'OK'        // buttonName
+                                         );
+        } else
 		alert("Please select a location before submitting, thanks.");
     } else if ( event == "0" ) {
+        if (navigator.notification) { // Override default HTML alert with native dialog
+            navigator.notification.alert(
+                                         "Please select an Event type before submitting, thanks.",  // message
+                                         null,       // callback
+                                         "Notice", // title
+                                         'OK'        // buttonName
+                                         );
+        } else
 		alert("Please select an Event type before submitting, thanks.");
 		console.log("Event type is " + event);
 	} else if ( eml == "" ) {
+        if (navigator.notification) { // Override default HTML alert with native dialog
+            navigator.notification.alert(
+                                         "Please enter your email before submitting, thanks.",  // message
+                                         null,       // callback
+                                         "Notice", // title
+                                         'OK'        // buttonName
+                                         );
+        } else
 		alert("Please enter your email before submitting, thanks.");
 	} else {
         var val = document.getElementById("event-field").value;
@@ -467,6 +493,14 @@ function sendfunc(params,test) {
 						if (Object.keys(returnedList).length === 0 && 
 								returnedList.constructor === Object &&
 								test) {
+                            if (navigator.notification) { // Override default HTML alert with native dialog
+                                navigator.notification.alert(
+                                                             "We don't seem to have internet, please turn on Wifi or cellular data",  // message
+                                                             null,       // callback
+                                                             "Notice", // title
+                                                             'OK'        // buttonName
+                                                             );
+                            } else
 							alert("We don't seem to have internet, please turn on Wifi or cellular data");
 						} else {
 

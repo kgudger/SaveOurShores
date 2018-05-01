@@ -8,13 +8,14 @@
             "ios"
         ],
         "plugins": {
-            "cordova-plugin-whitelist": {}
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-dialogs": {}
         }
     },
     "dependencies": {
         "cordova-android": "~6.2.3",
         "cordova-ios": "^4.4.0",
-        "cordova-plugin-dialogs": "^2.0.1",
+        "cordova-plugin-dialogs": "2.0.1",
         "cordova-plugin-whitelist": "1"
     }
 }

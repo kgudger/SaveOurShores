@@ -161,7 +161,7 @@ ORDER BY CSum DESC";
 <tr> <th>Sort By</th>
 <td class="inputcell">
 <?php
-  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4,"Location Batched"=>5);
+  $radiolist = array("Name"=>1,"Date"=>2,"Item"=>3,"Location"=>4,"Location Batched"=>5,"Location Batched Spread Sheet"=>6);
   $dates = array(); 
   $sql = "SELECT DISTINCT tdate FROM Collector ORDER BY tdate DESC";
   $result = $this->db->query($sql);
@@ -207,6 +207,9 @@ ORDER BY CSum DESC";
        break;
       case $radiolist["Location Batched"]: 
          $this->locBatchTable($uid[1],$uid[2],$dates);
+       break;
+      case $radiolist["Location Batched Spread Sheet"]: 
+         $this->locBatchTableSS($uid[1],$uid[2],$dates);
        break;
       default:
         echo $uid[0];
@@ -737,6 +740,232 @@ function locBatchTable($sub,$subsub,$dates) {
   $this->write_csv($title,$plot_data);
 }
 
+/**
+ * Display the Location by batch table for SpreadSheets
+ *
+ */
+function locBatchTableSS($sub,$subsub,$dates) {
+
+  global $plot_data ;
+  $startd = array_search($sub,$dates);
+  $endd = array_search($subsub,$dates);
+  $sort_string = "" ;
+  $thead = $this->ssHead();
+  echo '<table class="volemail"><tr>';
+  foreach ($thead as $hd) {
+	  echo "<th>" . $hd . "</th>";
+  }
+  echo '</tr>';
+
+  $sql = "SELECT cid, name, lat, lon, tdate, date, email,
+		(   SELECT DISTINCT Places.name AS pname
+                FROM Places
+				ORDER BY 
+				( 3959 * acos( cos( radians(C.lat) ) * 
+                cos( radians( Places.lat ) ) * 
+                cos( radians( Places.lon ) - radians(C.lon) ) + 
+                     sin( radians(C.lat) ) * 
+                sin( radians( Places.lat ) ) ) ) 
+				LIMIT 1 ) AS pname
+			FROM `Collector` AS C 
+			WHERE cid " ;
+  $sql.= empty($startd) ? "" : " AND C.tdate >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : " AND C.tdate <= '" . $endd . "' " ;
+  $sql.= "  GROUP BY C.tdate, pname
+            ORDER BY C.tdate DESC" ;
+//  echo $sql ;
+  $result = $this->db->query($sql);
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+	$rData = array();
+//	print_r($row);
+    $cdate = $row["tdate"];
+    $date  = $row["date"];
+    $lat   = $row["lat"];
+    $lon   = $row["lon"];
+    $cid   = $row["cid"];  // cid for next query.
+    $pname = $row["pname"];
+    $nname = $row["name"];
+    $email = $row["email"];
+    if ( $pname == "" ) {
+      $pname = "Other" ;
+    }
+    $sql = "SELECT IT.item AS Item,
+			SUM(TA.number) AS Total
+			FROM `tally` AS TA, 
+			`items` AS IT
+			WHERE cid = $cid
+			AND TA.iid = IT.iid
+			GROUP BY IT.item";    
+    $result2 = $this->db->query($sql);
+    $itms = array();
+	while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) { //items
+		$itms[$row2["Item"]] = $row2["Total"];
+	}
+    
+	echo "<tr><td>" . $date . "</td>";
+	$rData[] = $date;
+	echo "<td>" . $email . "</td>";
+	$rData[] = $email;
+	echo "<td>" . $nname . "</td>";
+	$rData[] = $nname;
+	echo "<td>" . $cdate . "</td>";
+	$rData[] = $cdate;
+
+	// 
+	echo "<td>" . "</td>"; // 'What time did the event start?',
+	$rData[] = "";
+	echo "<td>" . "</td>"; // 'What time did the event end?'
+	$rData[] = "";
+
+	$sql = "SELECT CityCounty, City, County 
+				FROM `Places`, `CityCounty` AS CC
+				WHERE name = '$pname'
+				AND CityCounty = CC.cid";
+	$result3 = $this->db->query($sql);
+	while ($row3 = $result3->fetch(PDO::FETCH_ASSOC)) { //,'City/County where the event was held?*',
+		echo "<td>" . $row3["City"] . ", " . $row3["County"] . "</td>";
+		$rData[] = $row3["City"] . ", " . $row3["County"];
+	}
+	echo "<td>" . $pname . "</td>"; // 'Cleanup Site*',
+	$rData[] = $pname;
+	echo "<td>" . "</td>"; // 'Estimated Cleanup Area (in square miles)?*',
+	$rData[] = "";
+	echo "<td>1" . "</td>"; // 'Number of Adults*',
+	$rData[] = 1;
+	echo "<td>0" . "</td>"; // 'Number of Youth*',
+	$rData[] = "";
+	echo "<td>" . "</td>"; // 'Pounds of Trash Collected*',
+	$rData[] = "";
+	echo "<td>" . "</td>"; // 'Pounds of Recycling Collected*'
+	$rData[] = "";
+	$t = isset($itms["Cigarette Butts"]) ? 
+		$itms["Cigarette Butts"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic Pieces"]) ? 
+		$itms["Plastic Pieces"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic Food Wrappers"]) ? 
+		$itms["Plastic Food Wrappers"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Styrofoam pieces"]) ? $itms["Styrofoam pieces"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Paper Pieces"]) ? $itms["Paper Pieces"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic bags, grocery or shopping"]) ? 
+		$itms["Plastic bags, grocery or shopping"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Balloons or ribbon"]) ? $itms["Balloons or ribbon"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic bottles"]) ? $itms["Plastic bottles"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic Caps / Rings"]) ? 
+		$itms["Plastic Caps / Rings"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic Cups, plates etc."]) ? 
+		$itms["Plastic Cups, plates etc."] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Styrofoam cups, plates or bowls"]) ? 
+		$itms["Styrofoam cups, plates or bowls"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Styrofoam food containers"]) ? 
+		$itms["Styrofoam food containers"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic fishing line, lures, floats (non-commercial)"]) ?
+		$itms["Plastic fishing line, lures, floats (non-commercial)"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Plastic straws or stirrers"]) ?
+		$itms["Plastic straws or stirrers"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Beach toys"]) ? $itms["Beach toys"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Glass Bottles"]) ? $itms["Glass Bottles"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Glass Pieces"]) ? $itms["Glass Pieces"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Cardboard, newspapers, magazines"]) ?
+		$itms["Cardboard, newspapers, magazines"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Paper food containers, cups, plates"]) ? 
+		$itms["Paper food containers, cups, plates"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	echo "<td>" . "</td>"; // "Newspapers/Magazines"
+	$rData[] = "";
+	$t = isset($itms["Metal Cans"]) ? $itms["Metal Cans"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Metal Caps / Pulls"]) ? $itms["Metal Caps / Pulls"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	echo "<td>" . "</td>"; // "’Can Pulls/Tabs'"
+	$t = isset($itms["Metal fishing hooks or lures"]) ? 
+		$itms["Metal fishing hooks or lures"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Nails"]) ? 
+		$itms["Nails"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	echo "<td>" . "</td>"; // "Soda Cans"
+	$rData[] = "";
+	$t = isset($itms["Bandaids or bandages"]) ? 
+		$itms["Bandaids or bandages"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Batteries"]) ? $itms["Batteries"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Condoms"]) ? $itms["Condoms"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Diapers"]) ? $itms["Diapers"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Disposable cigarette lighters"]) ? 
+		$itms["Disposable cigarette lighters"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Feminine products"]) ? 
+		$itms["Feminine products"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Syringes or needles"]) ? 
+		$itms["Syringes or needles"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Other, small"]) ? $itms["Other, small"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$rData[] = ""; //General Comments about the Cleanup:
+
+	echo "</tr>";
+	$plot_data[] = $rData;
+  }
+  
+  echo "</table><br>";
+
+
+  $this->write_csv($thead,$plot_data);
+}
+
 function write_csv($title,$data) {
 	$myfile = fopen("output.csv","w") or die("Unable to open file");
 	$sep = array("sep=;");
@@ -746,6 +975,10 @@ function write_csv($title,$data) {
        fputcsv($myfile,$fields,";",'"');
     }
     fclose($myfile);
+}
+function ssHead () {
+    $head = array('Timestamp','First Name*','Last Name*','What was the date of the event?*','What time did the event start?','What time did the event end?','City/County where the event was held?*','Cleanup Site*','Estimated Cleanup Area (in square miles)?*','Number of Adults*','Number of Youth*','Pounds of Trash Collected*','Pounds of Recycling Collected*','Cigarette Butts','Plastic Pieces (larger than 5mm)','Plastic Food Wrappers','Polystyrene Pieces (Styrofoam)','Paper Pieces','Bags (shopping variety)','Balloons','Bottles','Bottle Caps/Rings','Cups, Lids, Plates, Utensils','Polystyrene Cups, Plates, Bowls ','Polystyrene Food "To-Go" Containers','Fishing Line','Straws/Stirrers','Toys','Bottles','Pieces/Chunks','Cardboard ','Food Containers/Cups/Plates/Bowls','Newspapers/Magazines','Beer Cans','Bottle Caps','Can Pulls/Tabs','Fishing Hooks/Lures','Nails','Soda Cans','Band-Aids  ','Batteries','Condoms','Diapers','Disposable Lighters','Feminine Hygiene','Syringes/Needles','Other Items (Please list items below)','General Comments about the Cleanup:');
+    return $head;
 }
 }
 ?>

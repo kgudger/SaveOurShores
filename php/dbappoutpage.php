@@ -771,8 +771,7 @@ function locBatchTableSS($sub,$subsub,$dates) {
 			WHERE cid " ;
   $sql.= empty($startd) ? "" : " AND C.tdate >= '" . $startd . "' ";
   $sql.= empty($endd) ? "" : " AND C.tdate <= '" . $endd . "' " ;
-  $sql.= "  GROUP BY C.tdate, pname
-            ORDER BY C.tdate DESC" ;
+  $sql.= "  ORDER BY C.tdate DESC" ;
 //  echo $sql ;
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -790,12 +789,11 @@ function locBatchTableSS($sub,$subsub,$dates) {
       $pname = "Other" ;
     }
     $sql = "SELECT IT.item AS Item,
-			SUM(TA.number) AS Total
+			TA.number AS Total
 			FROM `tally` AS TA, 
 			`items` AS IT
 			WHERE cid = $cid
-			AND TA.iid = IT.iid
-			GROUP BY IT.item";    
+			AND TA.iid = IT.iid";    
     $result2 = $this->db->query($sql);
     $itms = array();
 	while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) { //items
@@ -819,8 +817,9 @@ function locBatchTableSS($sub,$subsub,$dates) {
 
 	$sql = "SELECT CityCounty, City, County 
 				FROM `Places`, `CityCounty` AS CC
-				WHERE name = '$pname'
-				AND CityCounty = CC.cid";
+				WHERE name = " ;
+	$sql.= 		'"' . $pname . '"' ; // there are "'" in places
+	$sql.=		"AND CityCounty = CC.cid";
 	$result3 = $this->db->query($sql);
 	while ($row3 = $result3->fetch(PDO::FETCH_ASSOC)) { //,'City/County where the event was held?*',
 		echo "<td>" . $row3["City"] . ", " . $row3["County"] . "</td>";

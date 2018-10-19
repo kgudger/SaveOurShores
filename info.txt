@@ -1,4 +1,4 @@
-Node version: v9.10.1
+Node version: v10.12.0
 
 Cordova version: 8.0.0
 
@@ -82,5 +82,8 @@ Android SDK is not set up properly. Make sure that the Android SDK 'tools' and '
 
 Error: android: Command failed with exit code ENOENT
 
-Error retrieving iOS platform information: Error: xcodebuild: Command failed with exit code ENOENT
+iOS platform:
+
+Xcode 10.0
+Build version 10A255
 

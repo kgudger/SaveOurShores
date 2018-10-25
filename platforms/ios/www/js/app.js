@@ -7,11 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.2.4
+ * @version    Release: 1.2.5
  * @package    SaveOurShores
  *
  */
-	var Version = "1.2.4";
+	var Version = "1.2.5";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options

@@ -425,6 +425,8 @@ $(document).on("pagecontainerbeforeshow", function () {
 	}
 });
 
+var window_alert = null; // window for alert after submit before return
+
 /**
  *	reallySendData function, called at final 'submit'
  */
@@ -432,6 +434,9 @@ function reallySendData() {
     queryString = "command=send&" + queryString;
     sendfunc(queryString);
     document.getElementById("trashform").reset()
+    window_alert = window.open('','','width=100,height=100')
+    window_alert.document.write('Data submit in process, please wait')
+    window_alert.focus() 
     splashclick('http://www.saveourshores.org/leaderboard/');
 }
 /**
@@ -467,6 +472,9 @@ function sendfunc(params,test) {
                     val.value = returnedList["trash"];
                     val = document.getElementById("recycle")
                     val.value = returnedList["recycle"];
+                    if (window_alert != null) {
+                      window_alert.close();
+                    }
                   }
                   else if (typeof (returnedList["place"]) !== 'undefined') {
 //                      alert("place is " + returnedList["place"] );

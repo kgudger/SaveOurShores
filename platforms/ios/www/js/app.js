@@ -433,10 +433,11 @@ var window_alert = null; // window for alert after submit before return
 function reallySendData() {
     queryString = "command=send&" + queryString;
     sendfunc(queryString);
-    document.getElementById("trashform").reset()
-    window_alert = window.open('','','width=100,height=100')
-    window_alert.document.write('Data submit in process, please wait')
-    window_alert.focus() 
+    document.getElementById("trashform").reset();
+    window_alert = window.open('','');
+    window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
+//    window_alert = window.open('images/App-Submit-Wait-Slide.png',"_self")
+    window_alert.focus() ;
     splashclick('http://www.saveourshores.org/leaderboard/');
 }
 /**

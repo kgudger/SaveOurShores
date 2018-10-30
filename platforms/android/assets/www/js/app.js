@@ -7,11 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.2.7
+ * @version    Release: 1.2.8
  * @package    SaveOurShores
  *
  */
-	var Version = "1.2.7";
+	var Version = "1.2.8";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -434,8 +434,8 @@ function reallySendData() {
     queryString = "command=send&" + queryString;
     sendfunc(queryString);
     document.getElementById("trashform").reset();
-    window_alert = window.open('','','width=100,height=100');
-    window_alert.document.write('<h1>Please wait while we send your data.</h1>');
+    window_alert = window.open('','');
+    window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
 //    window_alert = window.open('images/App-Submit-Wait-Slide.png',"_self")
     window_alert.focus() ;
     splashclick('http://www.saveourshores.org/leaderboard/');

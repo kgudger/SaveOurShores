@@ -8,6 +8,7 @@ class DB
 	function __construct()
 	{
     		$db = $this->connect();
+    		$debug = true;
 	}
 
 	function connect()
@@ -95,6 +96,15 @@ class DB
 		$output["trash"] = 0 ;
 		$output["recycle"] = 0;
 	  }
+	  if (true) {
+	      $my_file = 'mtlog.txt';
+	      $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file); //open file for writing
+	      $data = json_encode($output);
+	      fwrite($handle, $data);
+	      $data = "\n" . date("D, M d, Y H:i:s") . "\n";
+	      fwrite($handle, $data);
+	      fclose($handle);
+	  }
 	  echo json_encode($output) ;
     }
 
@@ -123,7 +133,8 @@ class DB
 		
 	function getCats()
 	{
-		$sql = "SELECT name, item, aname 
+		$sql = "SELECT name, item, aname, 
+			Categories.used AS Cused, items.used AS Iused
 			FROM `items`, `Categories` 
 			WHERE items.category = Categories.catid 
 			ORDER BY category, item";
@@ -131,14 +142,17 @@ class DB
 		$output = array();
 		$cname = "" ;
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			if ( $row[name] != $cname ) {
-				if ( $cname != "" ) {
-					$output[$cname] = $o2;
+			if ( $row['Cused'] ) { // only if category is used
+				if ( $row[name] != $cname ) {
+					if ( $cname != "" ) {
+						$output[$cname] = $o2; // output cat name if new and used
+					}
+					$o2 = array();
+					$cname = $row[name];
 				}
-				$o2 = array();
-				$cname = $row[name];
+				if ( $row['Iused'] ) // this item is used
+					$o2[$row[item]] = $row[aname];
 			}
-			$o2[$row[item]] = $row[aname];
 		}
 		$output[$cname] = $o2 ;
 		echo json_encode($output) ;

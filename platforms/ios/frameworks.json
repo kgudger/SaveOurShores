@@ -1,4 +1,8 @@
 {
-    "AudioToolbox.framework": 1,
-    "CoreLocation.framework": 1
+    "AudioToolbox.framework": 2,
+    "CoreLocation.framework": 1,
+    "SystemConfiguration.framework": 1,
+    "Security.framework": 1,
+    "CFNetwork.framework": 1,
+    "Speech.framework": 1
 }

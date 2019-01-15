@@ -7,15 +7,25 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
+        },
         "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
         },
         "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.phonegap.saveourshores"
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
+        },
+        "phonegap-plugin-speech-recognition": {
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.saveourshores.marinedebris"
+        }
+    }
 }

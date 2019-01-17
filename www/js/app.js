@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.0";
+	var Version = "1.3.1";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -164,7 +164,7 @@ function ready() {
 			var str = event.results[0][0].transcript;
 			var res = str.split(" "); // burst string into array
 			if (!IsNumeric(res[0])) { // if not a number, change it to one
-				res[0] = text2num(res[0]);
+				res[0] = text2num(res[0].toLowerCase());
 				console.log(res[0]);
 			}
 			if (!IsNumeric(res[0])) { // if still not numeric, abort
@@ -196,8 +196,13 @@ function ready() {
 						}
 					}
 				}
-				if ( imDone === "" ) 
+				if ( imDone === "" ) {
+					if ( str !== "" ) {
 						alert("I don't recognize " + str);
+					}
+					else
+						alert("I didn't understand what you said")
+				}
 			}
 		}
 		document.getElementById("spkbut").blur();

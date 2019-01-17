@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.saveourshores.marinedebris" version="1.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.saveourshores.marinedebris" version="1.3.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Save Our Shores</name>
     <description>
         Marine Debris Collection Data Input Application.
@@ -19,6 +19,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="5000" />
     <preference name="android-minSdkVersion" value="14" />
+    <preference name="apiKey" value="a4407cd44cbb557e314cdad66b16e554" />
     <feature name="Notification">
         <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
         <param name="ios-package" value="CDVNotification" />

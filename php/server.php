@@ -39,7 +39,13 @@
 	$dat= $_REQUEST['datein'];
 	$evnt= $_REQUEST['eventin'];
 	$emal= $_REQUEST['emailin'];
-	echo $db->send($lat,$lon,$nam,$dat,$evnt,$emal);
+	$hour= $_REQUEST['hoursin'];
+	$adul= $_REQUEST['adultsin'];
+	$yout= $_REQUEST['youthin'];
+	$area= $_REQUEST['areain'];
+	$ptrash= $_REQUEST['ptrashin'];
+	$precycle= $_REQUEST['precyclein'];
+	echo $db->send($lat,$lon,$nam,$dat,$evnt,$emal,$hour,$adul,$yout,$area,$ptrash,$precycle);
   }
   elseif ($command == "getTally") {
 	$name= $_REQUEST['emailin'];

@@ -30,14 +30,14 @@ class DB
 	    return $this->db ;
 	}
 
-	function send($lat,$lon,$nam,$dat,$evnt,$email) 
+	function send($lat,$lon,$nam,$dat,$evnt,$email,$hour,$adult,$youth,$area,$ptrash,$precycle) 
 	{
 		$nam = strtoupper($nam);
 		$sql = "INSERT INTO `Collector` 
-			(`name`, `lat`, `lon`, `tdate`, `eid`, `email`)
-			VALUES(?, ? , ?, ?, ?, ?) ";
+			(`name`, `lat`, `lon`, `tdate`, `eid`, `email`, `hour`, `adult`, `youth`, `area`, `pTrash`, `pRecycle`)
+			VALUES(?, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt,$email));
+		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt,$email,$hour,$adult,$youth,$area,$ptrash,$precycle));
 		$lastId = $this->db->lastInsertId();
 		$iid = 1;
 		
@@ -136,8 +136,10 @@ class DB
 		$sql = "SELECT name, item, aname, 
 			Categories.used AS Cused, items.used AS Iused
 			FROM `items`, `Categories` 
-			WHERE items.category = Categories.catid 
-			ORDER BY category, item";
+			WHERE items.category = Categories.catid
+            	AND Categories.used 
+                AND items.used
+			ORDER BY Categories.order, items.order";
 		$result = $this->db->query($sql);
 		$output = array();
 		$cname = "" ;
@@ -180,7 +182,8 @@ class DB
 		}
 		$temp = array();
 		$sql = "SELECT pid, name, lat, lon
-			FROM `Places`";
+			FROM `Places`
+			ORDER BY name";
 		$result = $this->db->query($sql);
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$temp[$row[name]] = array(pid=>$row[pid],lat=>$row[lat],lon=>$row[lon]);
@@ -257,7 +260,7 @@ class DB
 	{
 		$sql = "SELECT name, eid
 			FROM `Event`
-			ORDER BY eid";
+			ORDER BY name";
 		$result = $this->db->query($sql);
 		$output = array();
 		$output[Event] = "Event" ;

@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<!-- Enable all requests, inline styles, and eval() -->
 	<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; img-src * data: ; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" type="text/css" href="./css/smoothness.datepick.css"> 
@@ -69,6 +69,22 @@ $(document).bind('mobileinit',function(){
             <input type="email" class="right50" id="email-field" placeholder="your email" onblur="newEmail(this.id)">
             Your email
             </label>
+            <label for "hours-field">
+            <input type="number" class="right50" id="hours-field" placeholder="hours">
+            Total Cleanup Hours
+            </label>
+            <label for "adults-field">
+            <input type="number" class="right50" id="adults-field" placeholder="number">
+            Total Number of Adults
+            </label>
+            <label for "youth-field">
+            <input type="number" class="right50" id="youth-field" placeholder="number">
+            Total Number of Youth
+            </label>
+            <label for "area-field">
+            <input type="number" class="right50" id="area-field" placeholder="number">
+            Cleanup Area (sq. mi.)
+            </label>
             <label for "event-field" class="select">Type of Cleanup
             <select name="event-field" id="event-field" data-inline="true" >
 <!--				<option selected value="Public">Public</option>
@@ -94,9 +110,6 @@ $(document).bind('mobileinit',function(){
             <input type=number class="right25" id="trash">
                 Pounds of Trash Collected:
             </label>
-	    <br>
-		<button id="spkbut" class="blue_sub" onclick="recognition.start()">Click to speak</button>
-
         </div>
         <form id="trashform">
 			<input id="latin" type="hidden" name="lat" value="">
@@ -105,6 +118,12 @@ $(document).bind('mobileinit',function(){
 			<input id="datein" type="hidden" name="datein" value="">
 			<input id="eventin" type="hidden" name="eventin" value="">
 			<input id="emailin" type="hidden" name="emailin" value="">
+			<input id="hoursin" type="hidden" name="hoursin" value="">
+			<input id="adultsin" type="hidden" name="adultsin" value="">
+			<input id="youthin" type="hidden" name="youthin" value="">
+			<input id="areain" type="hidden" name="areain" value="">
+			<input id="ptrashin" type="hidden" name="ptrashin" value="">
+			<input id="precyclein" type="hidden" name="precyclein" value="">
             <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>
@@ -134,7 +153,6 @@ Santa Cruz, CA 95062</br>
 <a href=mailto:info@saveourshores.org>info@saveourshores.org</a></br></address>
 <a href="#" onclick="splashclick('tel: +18314625660')">Phone: 831.462.5660</a></br>
 <p>I acknowledge that by using this app I agree to the terms of Save Our Shores safety waiver, available <a href="#" onclick="splashclick('http://bit.ly/safetywaiver2016')"><b>here.</b></a></p>
-<p>Save Our Shores privacy policy is available <a href="#" onclick="splashclick('https://saveourshores.org/privacy-policy')"><b>here.</b></a></p>
 <p id="Version"></p>
 	</div><!-- /panel -->
 	

@@ -83,6 +83,10 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <string>Save Our Shores only used the location to connect beaches with trash</string>
         </config-file>
         
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
+            <string>Save Our Shores only used the location to connect beaches with trash</string>
+        </config-file>
+        
     </platform>
 
     <!-- blackberry10 -->

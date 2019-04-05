@@ -94,7 +94,8 @@ $(document).bind('mobileinit',function(){
             <input type=number class="right25" id="trash">
                 Pounds of Trash Collected:
             </label>
-	    <br>
+            <label for="" "xtrain"=""></label>
+            <div id="xtrain" class="ui-input-text ui-body-inherit"></div>
 		<button id="spkbut" class="blue_sub" onclick="recognition.start()">Click to speak</button>
 
         </div>
@@ -119,6 +120,8 @@ $(document).bind('mobileinit',function(){
         <p>Today's date will appear in the Date section.  Clicking the date will open a calendar.</p>
         <p>Click "+" or "-" to add (or subtract) each trash item as you find them. You can also enter a total number in the field next to the item's name.</p>
         <p>The most found items are at the top of the data card.  If you don't see a trash item there, scroll down to find it.</p>
+        <div class="header-field">New! Voice Recognition</div>
+        <p>You can enter data with your voice. Click on "Click to speak" and say a number followed by the item name.  An example is "3 paper pieces". Please wait a few seconds and you'll see the amount added to the current tally for that item. </p>
         <div class="header-field">IMPORTANT</div>
         <p>Please remember to click the <b>Submit</b> button once you have finished your cleanup.</p>
         <p>Your total pounds of trash and recyclables collected will automatically update with each submit.</p>

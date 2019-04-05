@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.1";
+	var Version = "1.3.2";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options

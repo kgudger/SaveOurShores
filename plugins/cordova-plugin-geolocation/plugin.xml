@@ -80,7 +80,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <framework src="CoreLocation.framework" />
         
         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
-            <string></string>
+            <string>Save Our Shores only used the location to connect beaches with trash</string>
         </config-file>
         
     </platform>

@@ -31,8 +31,10 @@
         "parents": {
           "NSLocationWhenInUseUsageDescription": [
             {
-              "xml": "<string />",
-              "count": 1
+              "xml": "<string>Save Our Shores uses the location to connect beaches with trash</string>",
+              "count": 1,
+              "mode": "merge",
+              "id": "config.xml"
             }
           ],
           "NSMicrophoneUsageDescription": [
@@ -43,7 +45,7 @@
           ],
           "NSSpeechRecognitionUsageDescription": [
             {
-              "xml": "<string> </string>",
+              "xml": "<string>Speech recognition only used to enter data</string>",
               "count": 1
             }
           ]

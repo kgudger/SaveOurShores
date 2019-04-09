@@ -19,6 +19,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="5000" />
     <preference name="android-minSdkVersion" value="14" />
+    <preference name="android-targetSdkVersion" value="26" />
     <preference name="apiKey" value="a4407cd44cbb557e314cdad66b16e554" />
     <feature name="Notification">
         <param name="android-package" value="org.apache.cordova.dialogs.Notification" />

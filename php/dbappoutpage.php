@@ -15,9 +15,9 @@
 * 
 */
 
-require_once("includes/mainpage.php");
-include_once "includes/util.php";
-require_once 'includes/phplot-6.2.0/phplot.php';
+require_once("/var/www/html/wp-content/plugins/app_output/includes/mainpage.php");
+include_once "/var/www/html/includes/util.php";
+require_once '/var/www/html/includes/phplot-6.2.0/phplot.php';
 $plot_data = array();
 
 /**
@@ -41,10 +41,11 @@ function processData(&$uid) {
   $uid = array($this->formL->getValue("cat"),
 				$this->formL->getValue("startd"),
 				$this->formL->getValue("endd"));
+/*
   if ( isset($this->formL->getValue("getFile")[0]) && 
 			$this->formL->getValue("getFile")[0] == "yes" ) {
 	  $this->sessnp = "yes";
-  }
+  }*/
     // Process the verified data here.
 }
 
@@ -59,7 +60,7 @@ function showContent($title, &$uid) {
 // Put HTML after the closing PHP tag
   global $radiolist2;
 ?>
-<script src="http://www.saveourshores.org/js/app2.js"></script>     
+<script src="https://www.saveourshores.org/js/app2.js"></script>     
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=
 AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
 <script>
@@ -117,11 +118,11 @@ ORDER BY CSum DESC";
 		echo "position: myLatlng, \n";
 		echo "map: map, \n" ;
 		if ( $psum >= $thirds2 ) 
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
+			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
 		else if ( $psum >= $thirds1 )
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
+			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
 		else 
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
+			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
 		echo 'title: "' . $pname . '" });' . "\n" ;
 		$n++ ;
 	}
@@ -180,8 +181,10 @@ ORDER BY CSum DESC";
 </td>
 <td></td><td>
 <?php
-  echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
-?></td>
+//  echo$this->formL->makeCheckBoxes('getFile',array('Download File?'=>'yes'));
+?>
+<a href="https://saveourshores.org/output.csv">Click here to download the data as output.csv</a>
+</td>
 </tr>
 </table>
 </fieldset>
@@ -757,7 +760,7 @@ function locBatchTableSS($sub,$subsub,$dates) {
   }
   echo '</tr>';
 
-  $sql = "SELECT cid, name, lat, lon, tdate, date, email,
+  $sql = "SELECT cid, name, lat, lon, tdate, date, email, hour, eid, adult, youth, pTrash, pRecycle,
 		(   SELECT DISTINCT Places.name AS pname
                 FROM Places
 				ORDER BY 
@@ -785,6 +788,12 @@ function locBatchTableSS($sub,$subsub,$dates) {
     $pname = $row["pname"];
     $nname = $row["name"];
     $email = $row["email"];
+    $hours = $row["hour"];
+    $teid  = $row["eid"];
+    $adult = $row["adult"];
+    $youth = $row["youth"];
+    $trash = $row["pTrash"];
+    $recyc = $row["pRecycle"];
     if ( $pname == "" ) {
       $pname = "Other" ;
     }
@@ -802,18 +811,29 @@ function locBatchTableSS($sub,$subsub,$dates) {
     
 	echo "<tr><td>" . $date . "</td>";
 	$rData[] = $date;
-	echo "<td>" . $email . "</td>";
-	$rData[] = $email;
-	echo "<td>" . $nname . "</td>";
-	$rData[] = $nname;
 	echo "<td>" . $cdate . "</td>";
 	$rData[] = $cdate;
-
-	// 
+	echo "<td>" . $pname . "</td>"; // 'Cleanup Site*',
+	$rData[] = $pname;
+	echo "<td>" . $email . "</td>"; // instead of first name
+	$rData[] = $email;
+	echo "<td>" . $nname . "</td>"; // instead of last name, whole name
+	$rData[] = $nname;
+	echo "<td>" . $hours . "</td>"; // hours total of cleanup
+	$rData[] = $hours;
 	echo "<td>" . "</td>"; // 'What time did the event start?',
 	$rData[] = "";
 	echo "<td>" . "</td>"; // 'What time did the event end?'
 	$rData[] = "";
+		
+	$sql = "SELECT name
+				FROM `Event`
+				WHERE eid = $teid";
+	$result4 = $this->db->query($sql);
+	while ($row4 = $result4->fetch(PDO::FETCH_ASSOC)) { // type of event
+		echo "<td>" . $row4["name"] . "</td>";
+		$rData[] = $row4["name"];
+	}
 
 	$sql = "SELECT CityCounty, City, County 
 				FROM `Places`, `CityCounty` AS CC
@@ -825,18 +845,19 @@ function locBatchTableSS($sub,$subsub,$dates) {
 		echo "<td>" . $row3["City"] . ", " . $row3["County"] . "</td>";
 		$rData[] = $row3["City"] . ", " . $row3["County"];
 	}
-	echo "<td>" . $pname . "</td>"; // 'Cleanup Site*',
-	$rData[] = $pname;
-	echo "<td>" . "</td>"; // 'Estimated Cleanup Area (in square miles)?*',
-	$rData[] = "";
-	echo "<td>1" . "</td>"; // 'Number of Adults*',
-	$rData[] = 1;
-	echo "<td>0" . "</td>"; // 'Number of Youth*',
-	$rData[] = "";
-	echo "<td>" . "</td>"; // 'Pounds of Trash Collected*',
-	$rData[] = "";
-	echo "<td>" . "</td>"; // 'Pounds of Recycling Collected*'
-	$rData[] = "";
+
+	// 
+
+/*	echo "<td>" . "</td>"; // 'Estimated Cleanup Area (in square miles)?*',
+	$rData[] = "";*/
+	echo "<td>" . $adult . "</td>"; // 'Number of Adults*',
+	$rData[] = $adult;
+	echo "<td>" . $youth . "</td>"; // 'Number of Youth*',
+	$rData[] = $youth;
+	echo "<td>" . $trash . "</td>"; // 'Pounds of Trash Collected*',
+	$rData[] = $trash;
+	echo "<td>" . $recyc . "</td>"; // 'Pounds of Recycling Collected*'
+	$rData[] = $recyc;
 	$t = isset($itms["Cigarette Butts"]) ? 
 		$itms["Cigarette Butts"] : 0;
 	echo "<td>" . $t . "</td>";
@@ -850,6 +871,9 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Styrofoam pieces"]) ? $itms["Styrofoam pieces"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = 0;		// Plastic To-Go Items
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Paper Pieces"]) ? $itms["Paper Pieces"] : 0;
@@ -869,22 +893,22 @@ function locBatchTableSS($sub,$subsub,$dates) {
 		$itms["Plastic Caps / Rings"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Plastic Cups, plates etc."]) ? 
+/*	$t = isset($itms["Plastic Cups, plates etc."]) ? 
 		$itms["Plastic Cups, plates etc."] : 0;
-	echo "<td>" . $t . "</td>";
+	echo "<td>" . $t . "</td>";*/
 	$rData[] = $t;
 	$t = isset($itms["Styrofoam cups, plates or bowls"]) ? 
 		$itms["Styrofoam cups, plates or bowls"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Styrofoam food containers"]) ? 
+/*	$t = isset($itms["Styrofoam food containers"]) ? 
 		$itms["Styrofoam food containers"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Plastic fishing line, lures, floats (non-commercial)"]) ?
 		$itms["Plastic fishing line, lures, floats (non-commercial)"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
+	$rData[] = $t;*/
 	$t = isset($itms["Plastic straws or stirrers"]) ?
 		$itms["Plastic straws or stirrers"] : 0;
 	echo "<td>" . $t . "</td>";
@@ -898,37 +922,36 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$t = isset($itms["Glass Pieces"]) ? $itms["Glass Pieces"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Cardboard, newspapers, magazines"]) ?
-		$itms["Cardboard, newspapers, magazines"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
 	$t = isset($itms["Paper food containers, cups, plates"]) ? 
 		$itms["Paper food containers, cups, plates"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
+	$t = isset($itms["Beer Cans"]) ? $itms["Beer Cans"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Soda Cans"]) ? $itms["Soda Cans"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Bottle Caps"]) ? $itms["Bottle Caps"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Bandaids"]) ? $itms["Bandaids"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+
+/*	$t = isset($itms["Cardboard, newspapers, magazines"]) ?
+		$itms["Cardboard, newspapers, magazines"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
 	echo "<td>" . "</td>"; // "Newspapers/Magazines"
 	$rData[] = "";
-	$t = isset($itms["Metal Cans"]) ? $itms["Metal Cans"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
-	$t = isset($itms["Metal Caps / Pulls"]) ? $itms["Metal Caps / Pulls"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
 	echo "<td>" . "</td>"; // "’Can Pulls/Tabs'"
-	$t = isset($itms["Metal fishing hooks or lures"]) ? 
-		$itms["Metal fishing hooks or lures"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
 	$t = isset($itms["Nails"]) ? 
 		$itms["Nails"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	echo "<td>" . "</td>"; // "Soda Cans"
 	$rData[] = "";
-	$t = isset($itms["Bandaids or bandages"]) ? 
-		$itms["Bandaids or bandages"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
 	$t = isset($itms["Batteries"]) ? $itms["Batteries"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
@@ -941,13 +964,32 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$t = isset($itms["Disposable cigarette lighters"]) ? 
 		$itms["Disposable cigarette lighters"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
-	$t = isset($itms["Feminine products"]) ? 
-		$itms["Feminine products"] : 0;
+	$rData[] = $t;*/
+	$t = isset($itms["Personal Hygiene"]) ? $itms["Personal Hygiene"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Syringes or needles"]) ? 
 		$itms["Syringes or needles"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Smoking, tobacco, vape items (not butts)"]) ? 
+	$itms["Smoking, tobacco, vape items (not butts)"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Wood pallets, pieces and processed wood"]) ? 
+	$itms["Wood pallets, pieces and processed wood"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Fishing gear (lures, nets, etc.)"]) ? 
+		$itms["Fishing gear (lures, nets, etc.)"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Clothes, cloth"]) ? 
+		$itms["Clothes, cloth"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+
+	$t = isset($itms["Other, large"]) ? $itms["Other, large"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Other, small"]) ? $itms["Other, small"] : 0;
@@ -976,7 +1018,8 @@ function write_csv($title,$data) {
     fclose($myfile);
 }
 function ssHead () {
-    $head = array('Timestamp','First Name*','Last Name*','What was the date of the event?*','What time did the event start?','What time did the event end?','City/County where the event was held?*','Cleanup Site*','Estimated Cleanup Area (in square miles)?*','Number of Adults*','Number of Youth*','Pounds of Trash Collected*','Pounds of Recycling Collected*','Cigarette Butts','Plastic Pieces (larger than 5mm)','Plastic Food Wrappers','Polystyrene Pieces (Styrofoam)','Paper Pieces','Bags (shopping variety)','Balloons','Bottles','Bottle Caps/Rings','Cups, Lids, Plates, Utensils','Polystyrene Cups, Plates, Bowls ','Polystyrene Food "To-Go" Containers','Fishing Line','Straws/Stirrers','Toys','Bottles','Pieces/Chunks','Cardboard ','Food Containers/Cups/Plates/Bowls','Newspapers/Magazines','Beer Cans','Bottle Caps','Can Pulls/Tabs','Fishing Hooks/Lures','Nails','Soda Cans','Band-Aids  ','Batteries','Condoms','Diapers','Disposable Lighters','Feminine Hygiene','Syringes/Needles','Other Items (Please list items below)','General Comments about the Cleanup:');
+//    $head = array('Timestamp','First Name*','Last Name*','What was the date of the event?*','What time did the event start?','What time did the event end?','City/County where the event was held?*','Cleanup Site*','Estimated Cleanup Area (in square miles)?*','Number of Adults*','Number of Youth*','Pounds of Trash Collected*','Pounds of Recycling Collected*','Cigarette Butts','Plastic Pieces (larger than 5mm)','Plastic Food Wrappers','Polystyrene Pieces (Styrofoam)','Paper Pieces','Bags (shopping variety)','Balloons','Bottles','Bottle Caps/Rings','Cups, Lids, Plates, Utensils','Polystyrene Cups, Plates, Bowls ','Polystyrene Food "To-Go" Containers','Fishing Line','Straws/Stirrers','Toys','Bottles','Pieces/Chunks','Cardboard ','Food Containers/Cups/Plates/Bowls','Newspapers/Magazines','Beer Cans','Bottle Caps','Can Pulls/Tabs','Fishing Hooks/Lures','Nails','Soda Cans','Band-Aids  ','Batteries','Condoms','Diapers','Disposable Lighters','Feminine Hygiene','Syringes/Needles','Other Items (Please list items below)','General Comments about the Cleanup:');
+    $head = array('Timestamp','Date of Cleanup Event/Fecha','Cleanup Site/Sitio de limpieza','FIRST Name (Site captain name/Nombre de coordinador)','LAST Name (Site captain name/Nombre de coordinador)','Total Cleanup Duration (hrs)','Cleanup Start Time','Cleanup End Time','Type of Cleanup','County where the event was held?','Adult Volunteers','Youth Volunteers','Pounds of Trash','Pounds of Recycling','Cigarette Butts/Colillas de Cigarrillo','Plastic Pieces/Pedazos de Plástico (>5mm)','Plastic Food Wrappers/Envoltorios de Comida','Polystyrene Pieces (i.e. foam)/Pedazos de Poliestireno (i.e. unicel)','Plastic To-Go Items/Envases de Comida “Para levar”/Plástico','Paper Pieces/Pedazos de Paper','shopping bags (plastic)/bolsas de comestibles (de plástico)','balloons/globos,bottles (plastic)/botellas (de plástico)','bottle caps and rings (plastic)/taparroscas y tapas de botellas (de plástico)','polystyrene foodware (foam)/vasos y platos de poliestireno (unicel)','straws and stirrers/popotes y mezcladores','toys & beach accessories (plastic)/juguetes y accesorios de playa (de plástico)','bottles (glass)/botellas de vidrio','pieces and chunks (glass)/pedazos y trozos de vidrio','cardboard/cartulinas','food containers (paper): cups, plates, bowls/envases de comida (de papel): vasos, platos','beer cans/latas de cerveza','soda cans/latas de refresco','bottle caps (metal)/corcholatas (de metal)','band-aids/curitas,batteries/baterías,personal hygiene/artículos de higiene personal','disposable lighters/encendedores','syringes, needles/jeringuilla','smoking, tobacco, vape items (NOT butts)/ artículos de fumar (tabaco, no colillas de cigarrillo)','wood pallets, pieces, and processed wood/paletas de madera, piezas trozos de madera','fishing gear (lures, nets, etc.)/avíos de pesca','clothes, cloth/ropa, paño','other, large/otros objetos grandes','other, small/otros objetos pequeños','Supplies lost/broken/used up?,Challenges or general feedback?','Issues with the location (e.g., parking, bathrooms, trash/recycling bins)?','Awe-inspiring moments, cute stories, heartwarming experiences?');
     return $head;
 }
 }

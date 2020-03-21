@@ -4,8 +4,8 @@
     "displayName": "Save Our Shores",
     "cordova": {
         "platforms": [
-            "android",
-            "ios"
+            "ios",
+            "android"
         ],
         "plugins": {
             "cordova-plugin-whitelist": {},
@@ -14,10 +14,11 @@
         }
     },
     "dependencies": {
-        "cordova-android": "^6.2.3",
-        "cordova-ios": "^4.4.0",
+        "cordova-android": "^8.1.0",
+        "cordova-ios": "^5.1.1",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-dialogs": "2.0.1",
+        "cordova-plugin-geolocation": "git+https://github.com/apache/cordova-plugin-geolocation.git",
         "cordova-plugin-whitelist": "1",
         "phonegap-plugin-speech-recognition": "git+https://github.com/macdonst/SpeechRecognitionPlugin.git",
         "release": "4.0.2"

@@ -31,10 +31,14 @@
         "parents": {
           "NSLocationWhenInUseUsageDescription": [
             {
-              "xml": "<string>Save Our Shores uses the location to connect beaches with trash</string>",
-              "count": 1,
-              "mode": "merge",
-              "id": "config.xml"
+              "xml": "<string>Save Our Shores only used the location to connect beaches with trash</string>",
+              "count": 1
+            }
+          ],
+          "NSLocationAlwaysUsageDescription": [
+            {
+              "xml": "<string>Save Our Shores only used the location to connect beaches with trash</string>",
+              "count": 1
             }
           ],
           "NSMicrophoneUsageDescription": [
@@ -45,7 +49,7 @@
           ],
           "NSSpeechRecognitionUsageDescription": [
             {
-              "xml": "<string>Speech recognition only used to enter data</string>",
+              "xml": "<string> </string>",
               "count": 1
             }
           ]
@@ -55,24 +59,24 @@
   },
   "installed_plugins": {
     "cordova-plugin-compat": {
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "cordova-plugin-dialogs": {
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "cordova-plugin-geolocation": {
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "phonegap-plugin-speech-recognition": {
       "MICROPHONE_USAGE_DESCRIPTION": "Microphone only used to enter data",
       "SPEECH_RECOGNITION_USAGE_DESCRIPTION": " ",
-      "PACKAGE_NAME": "com.saveourshores.marinedebris"
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     }
   },
   "dependent_plugins": {},

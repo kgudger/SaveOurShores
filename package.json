@@ -19,6 +19,7 @@
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-dialogs": "2.0.1",
         "cordova-plugin-whitelist": "1",
+        "org.apache.cordova.geolocation": "0.3.6",
         "phonegap-plugin-speech-recognition": "git+https://github.com/macdonst/SpeechRecognitionPlugin.git",
         "release": "4.0.2"
     }

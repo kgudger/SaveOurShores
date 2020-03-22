@@ -1,52 +1,60 @@
 {
-    "cordova-plugin-whitelist": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-whitelist@1"
-        },
-        "is_top_level": true,
-        "variables": {}
+  "cordova-plugin-whitelist": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-whitelist@1"
     },
-    "cordova-plugin-geolocation": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-geolocation@2.4.3"
-        },
-        "is_top_level": true,
-        "variables": {}
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-geolocation": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-geolocation@2.4.3"
     },
-    "cordova-plugin-splashscreen": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-splashscreen"
-        },
-        "is_top_level": true,
-        "variables": {}
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-splashscreen": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-splashscreen"
     },
-    "cordova-plugin-dialogs": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-dialogs@^2.0.1"
-        },
-        "is_top_level": true,
-        "variables": {}
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-dialogs": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-dialogs@^2.0.1"
     },
-    "phonegap-plugin-speech-recognition": {
-        "source": {
-            "type": "registry",
-            "id": "https://github.com/macdonst/SpeechRecognitionPlugin"
-        },
-        "is_top_level": true,
-        "variables": {
-            "MICROPHONE_USAGE_DESCRIPTION": "Microphone only used to enter data"
-        }
+    "is_top_level": true,
+    "variables": {}
+  },
+  "phonegap-plugin-speech-recognition": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/macdonst/SpeechRecognitionPlugin"
     },
-    "cordova-plugin-compat": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-compat@^1.0.0"
-        },
-        "is_top_level": false,
-        "variables": {}
+    "is_top_level": true,
+    "variables": {
+      "MICROPHONE_USAGE_DESCRIPTION": "Microphone only used to enter data"
     }
+  },
+  "cordova-plugin-compat": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-compat@^1.0.0"
+    },
+    "is_top_level": false,
+    "variables": {}
+  },
+  "org.apache.cordova.geolocation": {
+    "source": {
+      "type": "registry",
+      "id": "org.apache.cordova.geolocation"
+    },
+    "is_top_level": true,
+    "variables": {}
+  }
 }

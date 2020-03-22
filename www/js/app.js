@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.4";
+	var Version = "1.3.5";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -516,6 +516,8 @@ function sendfunc(params,test) {
 	if (xmlhttp) {
         xmlhttp.onreadystatechange=function()
 		{
+		  console.log("readyState=" + xmlhttp.readyState + " status=" + 
+					xmlhttp.status + " message " + xmlhttp.statusText);
 		  if (xmlhttp.readyState==4)
 		  {  if ( (xmlhttp.status==200) || (xmlhttp.status==0) )
             {
@@ -592,8 +594,7 @@ function sendfunc(params,test) {
 	  xmlhttp.open("POST","https://saveourshores.org/server.php", false);
       xmlhttp.setRequestHeader ("Accept", "text/plain");
 	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xmlhttp.send(params);
-
+      xmlhttp.send(encodeURI(params));
     }
 }; // sendfunc
 
@@ -665,7 +666,9 @@ function fillForm(rList) {
 //		document.getElementById('formData').innerHTML+= newHtml;
 	}
 	myHTML += "</ul>";
-	document.getElementById('formData').innerHTML+= myHTML;
+	var fdata = document.getElementById('formData') ;
+	if (fdata) 
+		fdata.innerHTML+= myHTML;
 }
 // fillForm
 
@@ -764,7 +767,7 @@ function changeOther(field_name) {
 		function splashclick(url) {
 //            alert("Typeof is " + typeof(intel));
             if (typeof (intel) === 'undefined') 
-				window.open(url,'_system');
+				window.open(url,'_system', 'location=yes');
 			else
 				intel.xdk.device.launchExternal(url);
 		};

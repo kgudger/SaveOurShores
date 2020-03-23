@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.5";
+	var Version = "1.3.6";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -496,7 +496,7 @@ function reallySendData() {
     window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
 //    window_alert = window.open('images/App-Submit-Wait-Slide.png',"_self")
     window_alert.focus() ;
-    splashclick('http://www.saveourshores.org/leaderboard/');
+    splashclick('https://saveourshores.org/leaderboard/');
 }
 /**
  *	"Ajax" function that sends and processes xmlhttp request

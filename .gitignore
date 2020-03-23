@@ -4,3 +4,5 @@ platform
 platforms
 plugins
 node_modules
+release.txt
+SOS.keystore

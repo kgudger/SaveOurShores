@@ -498,7 +498,7 @@ function reallySendData() {
 //    window_alert.focus() ;
 //    setTimeout(() => window_alert.blur(), 3000);
     //window_alert.close();
-    setTimeout(splashclick('http://www.saveourshores.org/leaderboard/'),3000);
+    setTimeout(splashclick('https://saveourshores.org/leaderboard/'),3000);
 }
 /**
  *	"Ajax" function that sends and processes xmlhttp request

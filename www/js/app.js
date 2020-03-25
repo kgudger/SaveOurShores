@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.5";
+	var Version = "1.3.6";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -244,9 +244,9 @@ function showPosition(position) {
 function defaultPosition() {
 //	console.warn('ERROR(' + err.code + '): ' + err.message);
 	console.log('In defaultPosition');
-//	alert("defaultPosition");
+	alert("Geolocation failed. Please restart the app.");
     var queryString = "command=getPlace" + "&latin=" + currentLatitude + "&lonin=" + currentLongitude ;
-	sendfunc(queryString);
+//	sendfunc(queryString);
 }
 
 
@@ -492,11 +492,11 @@ function reallySendData() {
     queryString = "command=send&" + queryString;
     sendfunc(queryString);
     document.getElementById("trashform").reset();
-    window_alert = window.open('','');
-    window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
+//    window_alert = window.open('','');
+//    window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
 //    window_alert = window.open('images/App-Submit-Wait-Slide.png',"_self")
-    window_alert.focus() ;
-    splashclick('http://www.saveourshores.org/leaderboard/');
+//    window_alert.focus() ;
+    splashclick('https://saveourshores.org/leaderboard/');
 }
 /**
  *	"Ajax" function that sends and processes xmlhttp request

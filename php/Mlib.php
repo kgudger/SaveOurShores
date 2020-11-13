@@ -5,10 +5,11 @@
 class DB
 {
     private $db;
+    private $debug;
 	function __construct()
 	{
     		$db = $this->connect();
-    		$debug = true;
+    		$this->debug = false;
 	}
 
 	function connect()
@@ -40,6 +41,7 @@ class DB
 		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt,$email,$hour,$adult,$youth,$area,$ptrash,$precycle));
 		$lastId = $this->db->lastInsertId();
 		$iid = 1;
+		$data = array();
 		
 //		echo "Collector Entered";
 		$sql = "INSERT INTO `tally`
@@ -49,12 +51,23 @@ class DB
 				WHERE `aname` = ? )";
 		$stmt = $this->db->prepare($sql);
 		foreach ( $_REQUEST as $key => $value )
-		{	if ( is_numeric($value) & strpos($key,'-in') 
-				& ($value > 0))
-			{//	echo $key . " = " . $value ;
-				$stmt->execute(array($lastId,$value,$key));
+		{	if ( is_numeric($value) ) {
+				if ( strpos($key,'-in') ) {
+					if ($value > 0) 
+					{//	echo $key . " = " . $value ;
+						$data[] = array($key=>$value);
+						$stmt->execute(array($lastId,$value,$key));
+					}
+				}
 			}
 		}
+	  if ($this->debug) {
+	      $my_file = 'stlog.txt';
+	      $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file); //open file for writing
+	      $dataout = print_r($data,true);
+	      fwrite($handle, $dataout);
+	      fclose($handle);
+	  }
 		$this->getTally($email);
     }
 
@@ -96,7 +109,7 @@ class DB
 		$output["trash"] = 0 ;
 		$output["recycle"] = 0;
 	  }
-	  if (true) {
+	  if ($this->debug) {
 	      $my_file = 'mtlog.txt';
 	      $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file); //open file for writing
 	      $data = json_encode($output);
@@ -145,15 +158,15 @@ class DB
 		$cname = "" ;
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			if ( $row['Cused'] ) { // only if category is used
-				if ( $row[name] != $cname ) {
+				if ( $row['name'] != $cname ) {
 					if ( $cname != "" ) {
 						$output[$cname] = $o2; // output cat name if new and used
 					}
 					$o2 = array();
-					$cname = $row[name];
+					$cname = $row['name'];
 				}
 				if ( $row['Iused'] ) // this item is used
-					$o2[$row[item]] = $row[aname];
+					$o2[$row['item']] = $row['aname'];
 			}
 		}
 		$output[$cname] = $o2 ;
@@ -175,10 +188,10 @@ class DB
 		$stmt->execute(array($lat,$lon,$lat));
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
 		$output = array();
-		if ( is_null($result[pid]) ) {
-			$output[place] = 0 ;
+		if ( is_null($result['pid']) ) {
+			$output['place'] = 0 ;
 		} else {
-			$output[place]=$result[pid];
+			$output['place']=$result['pid'];
 		}
 		$temp = array();
 		$sql = "SELECT pid, name, lat, lon
@@ -186,9 +199,9 @@ class DB
 			ORDER BY name";
 		$result = $this->db->query($sql);
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[$row[name]] = array(pid=>$row[pid],lat=>$row[lat],lon=>$row[lon]);
+			$temp[$row['name']] = array('pid'=>$row['pid'],'lat'=>$row['lat'],'lon'=>$row['lon']);
 		}
-		$output[places] = $temp ;
+		$output['places'] = $temp ;
 		echo json_encode($output) ;
         }
 
@@ -199,12 +212,12 @@ class DB
 			ORDER BY name";
 		$result = $this->db->query($sql);
 		$output = array();
-		$output[Category] = "Category" ;
+		$output['Category'] = "Category" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[] = $row[name] ;
+			$temp[] = $row['name'] ;
 		}
-		$output[results] = $temp ;
+		$output['results'] = $temp ;
 		echo json_encode($output) ;
         }
 
@@ -215,12 +228,12 @@ class DB
 			ORDER BY name";
 		$result = $this->db->query($sql);
 		$output = array();
-		$output[Name] = "Name" ;
+		$output['Name'] = "Name" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[] = $row[name] ;
+			$temp[] = $row['name'] ;
 		}
-		$output[results] = $temp ;
+		$output['results'] = $temp ;
 		echo json_encode($output) ;
         }
 
@@ -231,12 +244,12 @@ class DB
 			ORDER BY dateonly";
 		$result = $this->db->query($sql);
 		$output = array();
-		$output[Date] = "Date" ;
+		$output['Date'] = "Date" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[] = $row[dateonly] ;
+			$temp[] = $row['dateonly'] ;
 		}
-		$output[results] = $temp ;
+		$output['results'] = $temp ;
 		echo json_encode($output) ;
         }
 
@@ -247,12 +260,12 @@ class DB
 			ORDER BY item";
 		$result = $this->db->query($sql);
 		$output = array();
-		$output[Item] = "Item" ;
+		$output['Item'] = "Item" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[] = $row[item] ;
+			$temp[] = $row['item'] ;
 		}
-		$output[results] = $temp ;
+		$output['results'] = $temp ;
 		echo json_encode($output) ;
         }
 
@@ -263,12 +276,12 @@ class DB
 			ORDER BY name";
 		$result = $this->db->query($sql);
 		$output = array();
-		$output[Event] = "Event" ;
+		$output['Event'] = "Event" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$temp[$row['eid']] = $row['name'] ;
 		}
-		$output[results] = $temp ;
+		$output['results'] = $temp ;
 		echo json_encode($output) ;
         }
 

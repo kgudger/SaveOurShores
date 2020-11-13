@@ -858,7 +858,17 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$rData[] = $trash;
 	echo "<td>" . $recyc . "</td>"; // 'Pounds of Recycling Collected*'
 	$rData[] = $recyc;
-	$t = isset($itms["Cigarette Butts"]) ? 
+    $sql = "SELECT item FROM `items` 
+				WHERE used = 1 AND items.order IS NOT NULL
+				ORDER BY items.category, items.order";
+	$result5 = $this->db->query($sql);
+	while ($row5 = $result5->fetch(PDO::FETCH_ASSOC)) { // get titles of used items
+		$t = isset($itms[$row5['item']]) ? 
+			$itms[$row5['item']] : 0;
+		echo "<td>" . $t . "</td>";
+		$rData[] = $t;
+	}	
+/*	$t = isset($itms["Cigarette Butts"]) ? 
 		$itms["Cigarette Butts"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
@@ -870,37 +880,37 @@ function locBatchTableSS($sub,$subsub,$dates) {
 		$itms["Plastic Food Wrappers"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Styrofoam pieces"]) ? $itms["Styrofoam pieces"] : 0;
+	$t = isset($itms["Polystyrene Pieces"]) ? $itms["Polystyrene Pieces"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = 0;		// Plastic To-Go Items
+	$t = isset($itms["Plastic To-Go Items"]) ? $itms["Plastic To-Go Items"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Paper Pieces"]) ? $itms["Paper Pieces"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Plastic bags, grocery or shopping"]) ? 
-		$itms["Plastic bags, grocery or shopping"] : 0;
+	$t = isset($itms["Shopping bags"]) ? 
+		$itms["Shopping bags"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Balloons or ribbon"]) ? $itms["Balloons or ribbon"] : 0;
+	$t = isset($itms["Balloons"]) ? $itms["Balloons"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Plastic bottles"]) ? $itms["Plastic bottles"] : 0;
+	$t = isset($itms["Plastic Bottles"]) ? $itms["Plastic Bottles"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Plastic Caps / Rings"]) ? 
-		$itms["Plastic Caps / Rings"] : 0;
+	$t = isset($itms["Bottle Caps and Rings"]) ? 
+		$itms["Bottle Caps and Rings"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
+	$rData[] = $t;*/
 /*	$t = isset($itms["Plastic Cups, plates etc."]) ? 
 		$itms["Plastic Cups, plates etc."] : 0;
-	echo "<td>" . $t . "</td>";*/
-	$rData[] = $t;
-	$t = isset($itms["Styrofoam cups, plates or bowls"]) ? 
-		$itms["Styrofoam cups, plates or bowls"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
+	$rData[] = $t;*/
+/*	$t = isset($itms["Polystyrene Foodware (foam)"]) ? 
+		$itms["Polystyrene Foodware (foam)"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;*/
 /*	$t = isset($itms["Styrofoam food containers"]) ? 
 		$itms["Styrofoam food containers"] : 0;
 	echo "<td>" . $t . "</td>";
@@ -909,21 +919,24 @@ function locBatchTableSS($sub,$subsub,$dates) {
 		$itms["Plastic fishing line, lures, floats (non-commercial)"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;*/
-	$t = isset($itms["Plastic straws or stirrers"]) ?
-		$itms["Plastic straws or stirrers"] : 0;
+/*	$t = isset($itms["Straws and stirrers"]) ?
+		$itms["Straws and stirrers"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Beach toys"]) ? $itms["Beach toys"] : 0;
+	$t = isset($itms["Toys and Beach Accessories"]) ? $itms["Toys and Beach Accessories"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Glass Bottles"]) ? $itms["Glass Bottles"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Glass Pieces"]) ? $itms["Glass Pieces"] : 0;
+	$t = isset($itms["Pieces and Chunks"]) ? $itms["Pieces and Chunks"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-	$t = isset($itms["Paper food containers, cups, plates"]) ? 
-		$itms["Paper food containers, cups, plates"] : 0;
+	$t = isset($itms["Cardboard"]) ? $itms["Cardboard"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Food containers, cups, plates, bowls"]) ? 
+		$itms["Food containers, cups, plates, bowls"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Beer Cans"]) ? $itms["Beer Cans"] : 0;
@@ -938,7 +951,10 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$t = isset($itms["Bandaids"]) ? $itms["Bandaids"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
-
+	$t = isset($itms["Batteries"]) ? $itms["Batteries"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+*/
 /*	$t = isset($itms["Cardboard, newspapers, magazines"]) ?
 		$itms["Cardboard, newspapers, magazines"] : 0;
 	echo "<td>" . $t . "</td>";
@@ -952,20 +968,17 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$rData[] = $t;
 	echo "<td>" . "</td>"; // "Soda Cans"
 	$rData[] = "";
-	$t = isset($itms["Batteries"]) ? $itms["Batteries"] : 0;
-	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
 	$t = isset($itms["Condoms"]) ? $itms["Condoms"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Diapers"]) ? $itms["Diapers"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
-	$t = isset($itms["Disposable cigarette lighters"]) ? 
-		$itms["Disposable cigarette lighters"] : 0;
-	echo "<td>" . $t . "</td>";
 	$rData[] = $t;*/
-	$t = isset($itms["Personal Hygiene"]) ? $itms["Personal Hygiene"] : 0;
+/*	$t = isset($itms["Personal Hygiene"]) ? $itms["Personal Hygiene"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Disposable lighters"]) ? 
+		$itms["Disposable lighters"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Syringes or needles"]) ? 
@@ -974,6 +987,14 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$rData[] = $t;
 	$t = isset($itms["Smoking, tobacco, vape items (not butts)"]) ? 
 	$itms["Smoking, tobacco, vape items (not butts)"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Bagged Pet Waste"]) ? 
+		$itms["Bagged Pet Waste"] : 0;
+	echo "<td>" . $t . "</td>";
+	$rData[] = $t;
+	$t = isset($itms["Personal Protective Equipment"]) ? 
+		$itms["Personal Protective Equipment"] : 0;
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;
 	$t = isset($itms["Wood pallets, pieces and processed wood"]) ? 
@@ -994,7 +1015,7 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	$rData[] = $t;
 	$t = isset($itms["Other, small"]) ? $itms["Other, small"] : 0;
 	echo "<td>" . $t . "</td>";
-	$rData[] = $t;
+	$rData[] = $t;*/
 	$rData[] = ""; //General Comments about the Cleanup:
 
 	echo "</tr>";
@@ -1019,7 +1040,64 @@ function write_csv($title,$data) {
 }
 function ssHead () {
 //    $head = array('Timestamp','First Name*','Last Name*','What was the date of the event?*','What time did the event start?','What time did the event end?','City/County where the event was held?*','Cleanup Site*','Estimated Cleanup Area (in square miles)?*','Number of Adults*','Number of Youth*','Pounds of Trash Collected*','Pounds of Recycling Collected*','Cigarette Butts','Plastic Pieces (larger than 5mm)','Plastic Food Wrappers','Polystyrene Pieces (Styrofoam)','Paper Pieces','Bags (shopping variety)','Balloons','Bottles','Bottle Caps/Rings','Cups, Lids, Plates, Utensils','Polystyrene Cups, Plates, Bowls ','Polystyrene Food "To-Go" Containers','Fishing Line','Straws/Stirrers','Toys','Bottles','Pieces/Chunks','Cardboard ','Food Containers/Cups/Plates/Bowls','Newspapers/Magazines','Beer Cans','Bottle Caps','Can Pulls/Tabs','Fishing Hooks/Lures','Nails','Soda Cans','Band-Aids  ','Batteries','Condoms','Diapers','Disposable Lighters','Feminine Hygiene','Syringes/Needles','Other Items (Please list items below)','General Comments about the Cleanup:');
-    $head = array('Timestamp','Date of Cleanup Event/Fecha','Cleanup Site/Sitio de limpieza','FIRST Name (Site captain name/Nombre de coordinador)','LAST Name (Site captain name/Nombre de coordinador)','Total Cleanup Duration (hrs)','Cleanup Start Time','Cleanup End Time','Type of Cleanup','County where the event was held?','Adult Volunteers','Youth Volunteers','Pounds of Trash','Pounds of Recycling','Cigarette Butts/Colillas de Cigarrillo','Plastic Pieces/Pedazos de Plástico (>5mm)','Plastic Food Wrappers/Envoltorios de Comida','Polystyrene Pieces (i.e. foam)/Pedazos de Poliestireno (i.e. unicel)','Plastic To-Go Items/Envases de Comida “Para levar”/Plástico','Paper Pieces/Pedazos de Paper','shopping bags (plastic)/bolsas de comestibles (de plástico)','balloons/globos,bottles (plastic)/botellas (de plástico)','bottle caps and rings (plastic)/taparroscas y tapas de botellas (de plástico)','polystyrene foodware (foam)/vasos y platos de poliestireno (unicel)','straws and stirrers/popotes y mezcladores','toys & beach accessories (plastic)/juguetes y accesorios de playa (de plástico)','bottles (glass)/botellas de vidrio','pieces and chunks (glass)/pedazos y trozos de vidrio','cardboard/cartulinas','food containers (paper): cups, plates, bowls/envases de comida (de papel): vasos, platos','beer cans/latas de cerveza','soda cans/latas de refresco','bottle caps (metal)/corcholatas (de metal)','band-aids/curitas,batteries/baterías,personal hygiene/artículos de higiene personal','disposable lighters/encendedores','syringes, needles/jeringuilla','smoking, tobacco, vape items (NOT butts)/ artículos de fumar (tabaco, no colillas de cigarrillo)','wood pallets, pieces, and processed wood/paletas de madera, piezas trozos de madera','fishing gear (lures, nets, etc.)/avíos de pesca','clothes, cloth/ropa, paño','other, large/otros objetos grandes','other, small/otros objetos pequeños','Supplies lost/broken/used up?,Challenges or general feedback?','Issues with the location (e.g., parking, bathrooms, trash/recycling bins)?','Awe-inspiring moments, cute stories, heartwarming experiences?');
+    $head = array('Timestamp',
+    'Date of Cleanup Event/Fecha',
+    'Cleanup Site/Sitio de limpieza',
+    'FIRST Name (Site captain name/Nombre de coordinador)',
+    'LAST Name (Site captain name/Nombre de coordinador)',
+    'Total Cleanup Duration (hrs)',
+    'Cleanup Start Time',
+    'Cleanup End Time',
+    'Type of Cleanup',
+    'County where the event was held?',
+    'Adult Volunteers',
+    'Youth Volunteers',
+    'Pounds of Trash',
+    'Pounds of Recycling');
+    $sql = "SELECT item FROM `items` 
+				WHERE used = 1 AND items.order IS NOT NULL
+				ORDER BY items.category, items.order";
+	$result = $this->db->query($sql);
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) { // get titles of used items
+		array_push($head, $row['item']);
+	} // should put all items in in order.
+/*    'Cigarette Butts/Colillas de Cigarrillo',
+    'Plastic Pieces/Pedazos de PlÇ­stico (>5mm)',
+    'Plastic Food Wrappers/Envoltorios de Comida',
+    'Polystyrene Pieces (i.e. foam)/Pedazos de Poliestireno (i.e. unicel)',
+    'Plastic To-Go Items/Envases de Comida Õ?Para levarÕ?/PlÇ­stico',
+    'Paper Pieces/Pedazos de Paper',
+    'shopping bags (plastic)/bolsas de comestibles (de plÇ­stico)',
+    'balloons/globos',
+    'Plastic bottles (plastic)/botellas (de plÇ­stico)',
+    'bottle caps and rings (plastic)/taparroscas y tapas de botellas (de plÇ­stico)',
+    'polystyrene foodware (foam)/vasos y platos de poliestireno (unicel)',
+    'straws and stirrers/popotes y mezcladores',
+    'toys & beach accessories (plastic)/juguetes y accesorios de playa (de plÇ­stico)',
+    'bottles (glass)/botellas de vidrio',
+    'pieces and chunks (glass)/pedazos y trozos de vidrio',
+    'cardboard/cartulinas',
+    'food containers (paper): cups, plates, bowls/envases de comida (de papel): vasos,platos',
+    'beer cans/latas de cerveza',
+    'soda cans/latas de refresco',
+    'bottle caps (metal)/corcholatas (de metal)',
+    'band-aids/curitas',
+    'batteries/baterÇðas',
+    'personal hygiene/artÇðculos de higiene personal',
+    'disposable lighters/encendedores',
+    'syringes, needles/jeringuilla',
+    'smoking, tobacco, vape items (NOT butts)/ artÇðculos de fumar (tabaco, no colillas de cigarrillo)',
+    'Bagged Pet Waste',
+    'Personal Protective Equipment',
+    'wood pallets, pieces, and processed wood/paletas de madera, piezas trozos de madera',
+    'fishing gear (lures, nets, etc.)/avÇðos de pesca', 
+    'clothes, cloth/ropa, paÇño',
+    'other. large/otros objetos grandes',
+    'other, small/otros objetos pequeÇños',*/
+    array_push($head,'Supplies lost/broken/used up?');
+    array_push($head,'Challenges or general feedback?');
+    array_push($head,'Issues with the location (e.g., parking, bathrooms, trash/recycling bins)?');
+    array_push($head,'Awe-inspiring moments, cute stories, heartwarming experiences?');
     return $head;
 }
 }

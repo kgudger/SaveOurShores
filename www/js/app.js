@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.6";
+	var Version = "1.3.8";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -420,7 +420,27 @@ function sendData() {
         val = document.getElementById("email-field").value;
         out = document.getElementById("emailin");
         out.value = val;
+        val = document.getElementById("hours-field").value;
+        out = document.getElementById("hoursin");
+        out.value = val;
+        val = document.getElementById("adults-field").value;
+        out = document.getElementById("adultsin");
+        out.value = val;
+        val = document.getElementById("youth-field").value;
+        out = document.getElementById("youthin");
+        out.value = val;
+        val = document.getElementById("area-field").value;
+        out = document.getElementById("areain");
+        out.value = val;
+/*        val = document.getElementById("recycle").value;
+        out = document.getElementById("precyclein");
+        out.value = val;
+        val = document.getElementById("trash").value;
+        out = document.getElementById("ptrashin");
+        out.value = val; */
         queryString = $('#trashform').serialize(); // now global variable
+        let tqueryString = "command=Calc&" + queryString;
+        sendfunc(tqueryString);
 //        console.log (queryString);
 		$.mobile.changePage("#summary", "fade");
 /*
@@ -451,6 +471,7 @@ $(document).on("pagecontainerbeforeshow", function () {
         myHTML = "<table width=95%>" ;
 //		console.log( obj );
         var i = 0;
+        let itemlist = true;
 		for (var Key in obj) {
 			for (var innerKey in obj[Key]) {
 				if ( obj[Key][innerKey] != 0 ) {
@@ -463,14 +484,29 @@ $(document).on("pagecontainerbeforeshow", function () {
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					} else if ( innerKey == "emailin" ) {
 						myHTML+= "<tr><td>" + "Email" +
-							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>" +
-							"<tr><th>Item</th><th class='fright'>Amount</tr>";
-					} else if ( i > 5 ) {
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "hoursin" ) {
+						myHTML+= "<tr><td>" + "Total Hours" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "adultsin" ) {
+						myHTML+= "<tr><td>" + "Adults" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "youthin" ) {
+						myHTML+= "<tr><td>" + "Youth" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "areain" ) {
+						myHTML+= "<tr><td>" + "Area Cleaned" +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey.includes("_") ) { // this is a problem waiting to happen
+						if (itemlist) {
+							myHTML+= "<tr><th>Item</th><th class='fright'>Amount</tr>";
+							itemlist = false;
+						}
 						console.log("i is " + i);
-						myHTML+= "<tr><td>" + innerKey.replace(/-/g, ' ') +
+						myHTML+= "<tr><td>" + innerKey.replace(/_/g, ' ') +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					}
-					console.log( innerKey.replace(/-/g, " ") + "=" + obj[Key][innerKey] );
+					console.log( innerKey.replace(/_/g, " ") + "=" + obj[Key][innerKey] );
 				}
 			}
 			i++ ;
@@ -489,15 +525,41 @@ var window_alert = null; // window for alert after submit before return
  *	reallySendData function, called at final 'submit'
  */
 function reallySendData() {
+    let val = document.getElementById("trash").value;
+    queryString += "&ptrashin=" + val;
+	val = document.getElementById("recycle").value;
+    queryString += "&precyclein=" + val;
     queryString = "command=send&" + queryString;
+    let pval = document.getElementById("endMessage");
+    pval.innerHTML = "<br>Please wait<br>while we send<br>your data.";
+	$.mobile.changePage("#pleasewait", "fade");
+    
     sendfunc(queryString);
     document.getElementById("trashform").reset();
-    window_alert = window.open('','');
+    extra_fields_reset(); // resets fields not in trashform
+/*    window_alert = window.open('','');
     window_alert.document.write('<h2 style="text-align: center;"><br>Please wait<br>while we send<br>your data.</h2>');
 //    window_alert = window.open('images/App-Submit-Wait-Slide.png',"_self")
-    window_alert.focus() ;
+    window_alert.focus() ;*/
+	
     splashclick('https://saveourshores.org/leaderboard/');
 }
+
+/**
+ *	extra_fields_reset function, called at final 'submit'
+ *  resets hours-field, adults-field, youth-field, area-field
+ */
+function extra_fields_reset() {
+    let val = document.getElementById("hours-field")
+    val.value = 0;
+    val = document.getElementById("adults-field");
+    val.value = 0;
+    val = document.getElementById("youth-field");
+    val.value = 0;
+    val = document.getElementById("area-field");
+    val.value = 0;
+}
+
 /**
  *	"Ajax" function that sends and processes xmlhttp request
  *	@param params is POST request string
@@ -536,6 +598,8 @@ function sendfunc(params,test) {
                     if (window_alert != null) {
                       window_alert.close();
                     }
+                    let pval = document.getElementById("endMessage");
+                    pval.innerHTML = "<br>Thank you<br>for keeping<br>our beaches clean!";
                   }
                   else if (typeof (returnedList["place"]) !== 'undefined') {
 //                      alert("place is " + returnedList["place"] );
@@ -556,6 +620,13 @@ function sendfunc(params,test) {
                     val = document.getElementById("name-field")
                     val.value = returnedList["uname"];
 
+				  }
+                  else if (typeof (returnedList["ctrash"]) !== 'undefined') {
+//                      alert("Event is " + returnedList["Event"] );
+                    var val = document.getElementById("trash")
+                    val.value = returnedList["ctrash"];
+                    val = document.getElementById("recycle")
+                    val.value = returnedList["crecycle"];
 				  }
                   else {
 //                      alert(returnedList["Top Items"]);

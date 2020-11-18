@@ -69,6 +69,22 @@ $(document).bind('mobileinit',function(){
             <input type="email" class="right50" id="email-field" placeholder="your email" onblur="newEmail(this.id)">
             Your email
             </label>
+            <label for "hours-field">
+            <input type="number" class="right50" id="hours-field" placeholder="hours">
+            Total Cleanup Hours
+            </label>
+            <label for "adults-field">
+            <input type="number" class="right50" id="adults-field" placeholder="number">
+            Total Number of Adults
+            </label>
+            <label for "youth-field">
+            <input type="number" class="right50" id="youth-field" placeholder="number">
+            Total Number of Youth
+            </label>
+            <label for "area-field">
+            <input type="number" class="right50" id="area-field" placeholder="number">
+            Cleanup Area (sq. mi.)
+            </label>
             <label for "event-field" class="select">Type of Cleanup
             <select name="event-field" id="event-field" data-inline="true" >
 <!--				<option selected value="Public">Public</option>
@@ -86,14 +102,6 @@ $(document).bind('mobileinit',function(){
             <label for "date-field">
             <input type=text class="right50" id="date-field">
                 Date</label>
-            <label for "recycle">
-            <input type=number class="right25" id="recycle">
-                Pounds of Recycling Collected:
-            </label>
-            <label for "trash">
-            <input type=number class="right25" id="trash">
-                Pounds of Trash Collected:
-            </label>
             <label for="" "xtrain"=""></label>
             <div id="xtrain" class="ui-input-text ui-body-inherit"></div>
 		<button id="spkbut" class="blue_sub" onclick="recognition.start()">Click to speak</button>
@@ -106,7 +114,11 @@ $(document).bind('mobileinit',function(){
 			<input id="datein" type="hidden" name="datein" value="">
 			<input id="eventin" type="hidden" name="eventin" value="">
 			<input id="emailin" type="hidden" name="emailin" value="">
-            <div id="formData"></div><p></p>
+			<input id="hoursin" type="hidden" name="hoursin" value="">
+			<input id="adultsin" type="hidden" name="adultsin" value="">
+			<input id="youthin" type="hidden" name="youthin" value="">
+			<input id="areain" type="hidden" name="areain" value="">
+           <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
         </form>
 	    </div>
@@ -149,15 +161,35 @@ Santa Cruz, CA 95062</br>
     </div>
 	<div role="main" class="ui-content">
         <div id="summaryData"></div><p></p>
-        <p>If this is correct, click Submit. To make changes click Back to Cleanup Card.</gr></p>
         <form id="summaryform">
+            <label for "trash">
+			<input id="trash" type=number class="right25" name="trash" value="">
+                Pounds of Trash Collected:
+            </label>
+            <label for "recycle">
+			<input id="recycle" type=number class="right25" name="recycle" value="">
+                 Pounds of Recycling Collected:
+            </label>
                 <a href="#" class="blue_sub" onclick="reallySendData()">Submit</a>
         </form>
+        <p>If this is correct, click Submit. To make changes click Back to Cleanup Card.</gr></p>
 		<p><a href="#dataCard" class="blue_sub">Back to Cleanup Card</a></p>
 	</div><!-- /content -->
 
 </div><!-- /page -->
 
+<div data-role="page" id="pleasewait">
+
+	<div data-role="header" class="kgheader">
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
+    </div>
+	<div role="main" class="ui-content">
+		<h2 id= "endMessage" style="text-align: center;"><br>
+			Please wait<br>while we send<br>your data.</h2>
+		<p><a href="#dataCard" class="blue_sub">Back to Cleanup Card</a></p>
+	</div><!-- /content -->
+
+</div><!-- /page -->
 
 </body>
 </html>

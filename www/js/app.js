@@ -152,62 +152,8 @@ function ready() {
     var dout = document.getElementById("date-field");
     out.value = dout.value = ndate ;
 
-    recognition = new SpeechRecognition();
-	/** function to process speech recognition result
-	*  event is returned data
-	*  returns nothing
-	*/
-	recognition.onresult = function(event) {
-		if (event.results.length > 0) {
-//			q.value = event.results[0][0].transcript;
-			console.log('Confidence: ' + event.results[0][0].confidence);
-			var str = event.results[0][0].transcript;
-			var res = str.split(" "); // burst string into array
-			if (!IsNumeric(res[0])) { // if not a number, change it to one
-				res[0] = text2num(res[0].toLowerCase());
-				console.log(res[0]);
-			}
-			if (!IsNumeric(res[0])) { // if still not numeric, abort
-				alert("First word must be a number");
-			} else {
-				for (var i = 1; i< res.length; i++) { // let's just test the first 3
-					res[i] = res[i].toLowerCase().substr(0,3);
-				}
-//				str = res.join(" "); // str is the rejoined string
-				console.log(str);
-//				alert(str);
-				var imDone = "" ;
-				for (var j = 0; j < inList.length; j++ ) { // inList is all items #ids
-					var splstr = inList[j].split("_"); // split into array of words
-					if ( ( imDone === "" ) && // we're not done
-							( typeof res[1] !== 'undefined' ) && // does first word match
-							( res[1] === splstr[0].toLowerCase().substr(0,3) ) ) {
-						if ( typeof res[2] === 'undefined') { // only 1 word and it matched
-							var val1 = parseInt(document.getElementById(inList[j]).value) ;
-							document.getElementById(inList[j]).value = val1 + parseInt(res[0]);
-							imDone = inList[j];
-						} else if ( (typeof splstr[1] !== 'undefined') &&
-							( res[2] === splstr[1].toLowerCase().substr(0,3) ) ) {
-							// second word matches, too
-//								alert("Found match at " + j + " " + inList[j]);
-								var val2 = parseInt(document.getElementById(inList[j]).value) ;
-								document.getElementById(inList[j]).value = val2 + parseInt(res[0]);
-								imDone = inList[j];
-						}
-					}
-				}
-				if ( imDone === "" ) {
-					if ( str !== "" ) {
-						alert("I don't recognize " + str);
-					}
-					else
-						alert("I didn't understand what you said")
-				}
-			}
-		}
-		document.getElementById("spkbut").blur();
-	}
-  }
+}
+
 	/**
 	 *	set date function for date field
 	 */

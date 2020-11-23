@@ -22,6 +22,7 @@
     <preference name="SplashScreenDelay" value="5000" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="android-targetSdkVersion" value="30" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="apiKey" value="a4407cd44cbb557e314cdad66b16e554" />
     <feature name="Notification">
         <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
@@ -64,5 +65,4 @@
     </platform>
     <plugin name="cordova-plugin-dialogs" spec="2.0.1" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
-    <plugin name="phonegap-plugin-speech-recognition" spec="https://github.com/macdonst/SpeechRecognitionPlugin" />
 </widget>

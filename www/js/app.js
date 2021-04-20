@@ -11,7 +11,7 @@
  * @package    SaveOurShores
  *
  */
-	var Version = "1.3.8";
+	var Version = "1.3.10";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -443,7 +443,7 @@ $(document).on("pagecontainerbeforeshow", function () {
 					} else if ( innerKey == "areain" ) {
 						myHTML+= "<tr><td>" + "Area Cleaned" +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
-					} else if ( innerKey.includes("_") ) { // this is a problem waiting to happen
+					} else if ( !(innerKey.endsWith("in")) ) { // this is a problem waiting to happen
 						if (itemlist) {
 							myHTML+= "<tr><th>Item</th><th class='fright'>Amount</tr>";
 							itemlist = false;

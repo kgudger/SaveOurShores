@@ -58,6 +58,12 @@ $(document).bind('mobileinit',function(){
         <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
         <a href="#info"><img src="images/icons-png/bars-black.png"</a>
         <a href="#help" class="ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon ui-btn-right ui-btn">Help</a>
+        <div class="ui-btn-right" style="margin-top: 35px;right: 0px;">
+        <select name="lang" id="langsel" class="ui-btn-right" onchange="changeLang(this.options[this.selectedIndex].value)">
+			<option value="english">English</option>
+			<option value="spanish">Español</option>
+		</select>
+		</div>
     </div>
 	<div role="main" class="ui-content">
         <div id="cardhead" class="ui-field-contain">
@@ -112,7 +118,7 @@ $(document).bind('mobileinit',function(){
 			<input id="youthin" type="hidden" name="youthin" value="">
 			<input id="areain" type="hidden" name="areain" value="">
            <div id="formData"></div><p></p>
-                <a href="#" class="blue_sub" onclick="sendData()">Submit</a>
+                <a href="#" class="blue_sub" id="sub1" onclick="sendData()">Submit</a>
         </form>
 	    </div>
 
@@ -150,7 +156,7 @@ Santa Cruz, CA 95062</br>
 	<div data-role="header" class="kgheader">
         <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
     </div>
-	<div role="main" class="ui-content">
+	<div role="main" class="ui-content" id="summaryPage">
         <div id="summaryData"></div><p></p>
         <form id="summaryform">
 			<div class="item_field">
@@ -191,7 +197,7 @@ Santa Cruz, CA 95062</br>
 	<div data-role="header" class="kgheader">
         <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
     </div>
-	<div role="main" class="ui-content">
+	<div role="main" class="ui-content" id="pleasewait">
 		<h2 id= "endMessage" style="text-align: center;"><br>
 			Please wait<br>while we send<br>your data.</h2>
 		<p><a href="#dataCard" class="blue_sub">Back to Cleanup Card</a></p>

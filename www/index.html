@@ -55,9 +55,9 @@ $(document).bind('mobileinit',function(){
 
 <div data-role="page" id="dataCard" class="ui-responsive-panel">
 	<div data-role="header" class="kgheader">
-        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</br>TARJETA DE LIMPIEZA</h2>
         <a href="#info"><img src="images/icons-png/bars-black.png"</a>
-        <a href="#help" class="ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon ui-btn-right ui-btn">Help</a>
+        <a href="#help" id= "helpi" class="ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-info ui-btn-icon-right ui-alt-icon ui-nodisc-icon ui-btn-right ui-btn">Help</a>
         <div class="ui-btn-right" style="margin-top: 35px;right: 0px;">
         <select name="lang" id="langsel" class="ui-btn-right" onchange="changeLang(this.options[this.selectedIndex].value)">
 			<option value="english">English</option>
@@ -91,17 +91,31 @@ $(document).bind('mobileinit',function(){
             <input type="number" class="right50" id="area-field" placeholder="number">
             Cleanup Area (sq. mi.)
             </label>
+            <label for "date-field">
+            <input type=text class="right50" id="date-field" data-datepick="name: 'date-field'">
+                Date
+            </label>
+        </div>
+        <div id="cardhead2" class="ui-field-contain">
+            <label for "percent-field" class="select">Percent Area Cleaned
+            <select name="percent-field" id="percent-field" data-inline="true" 
+					onchange="changeSel(this.options[this.selectedIndex].text,this.id)">
+			    <option value="100">100%</option>
+                <option value="75">75%</option>
+                <option value="50">50%</option>
+                <option value="25">25%</option>
+			</select>
+            </label>
             <label for "event-field" class="select">Type of Cleanup
-            <select name="event-field" id="event-field" data-inline="true" >
+            <select name="event-field" id="event-field" data-inline="true" 
+					onchange="changeSel(this.options[this.selectedIndex].value,this.id)">
 			</select>
             </label>
 			<label for "place-field" class="select">Your Location
-			<select name="place-field" id="place-field" data-inline="true" onchange="newPlace()">
+			<select name="place-field" id="place-field" data-inline="true" 
+					onchange="newPlace(this.options[this.selectedIndex].value,this.id)" >
+			</select>
 			</label>
-            <label for "date-field">
-            <input type=text class="right50" id="date-field">
-                Date
-            </label>
             <label for="" "xtrain"=""></label>
             <div id="xtrain" class="ui-input-text ui-body-inherit"></div>
 
@@ -117,6 +131,7 @@ $(document).bind('mobileinit',function(){
 			<input id="adultsin" type="hidden" name="adultsin" value="">
 			<input id="youthin" type="hidden" name="youthin" value="">
 			<input id="areain" type="hidden" name="areain" value="">
+			<input id="percentin" type="hidden" name="percentin" value="">
            <div id="formData"></div><p></p>
                 <a href="#" class="blue_sub" id="sub1" onclick="sendData()">Submit</a>
         </form>
@@ -154,7 +169,7 @@ Santa Cruz, CA 95062</br>
 <div data-role="page" id="summary">
 
 	<div data-role="header" class="kgheader">
-        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</br>TARJETA DE LIMPIEZA</h2>
     </div>
 	<div role="main" class="ui-content" id="summaryPage">
         <div id="summaryData"></div><p></p>
@@ -195,7 +210,7 @@ Santa Cruz, CA 95062</br>
 <div data-role="page" id="pleasewait">
 
 	<div data-role="header" class="kgheader">
-        <h2>SAVE OUR SHORES</br>CLEANUP CARD</h2>
+        <h2>SAVE OUR SHORES</br>CLEANUP CARD</br>TARJETA DE LIMPIEZA</h2>
     </div>
 	<div role="main" class="ui-content" id="pleasewait">
 		<h2 id= "endMessage" style="text-align: center;"><br>

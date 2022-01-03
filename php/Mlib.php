@@ -171,7 +171,67 @@ class DB
 		}
 		$output[$cname] = $o2 ;
 		echo json_encode($output) ;
-        }
+    }
+
+
+	function getCatLang($lang)
+	{
+		if ($lang == "english") { // PDO substitution with "AS" doesn't work
+			$lang1 = "name";
+			$lang2 = "item";
+		} else if ($lang == "spanish") { // so this is the only way to sanitize it
+			$lang1 = "c" . $lang ;
+			$lang2 = "i" . $lang ;
+		}
+		$sql = "SELECT " . $lang1 . " AS cname, " . $lang2 . " AS iitem, aname, 
+			C.used AS Cused, I.used AS Iused
+			FROM `items` AS I, `Categories` AS C
+			WHERE I.category = C.catid
+            	AND C.used 
+                AND I.used
+			ORDER BY C.order, I.order";
+		
+		$result = $this->db->query($sql);
+		$output = array();
+		$o2 = array();
+		$cname = "" ;
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$row = array_map('utf8_encode', $row);
+			if ( $row['Cused'] ) { // only if category is used
+				if ( $row['cname'] != $cname ) {
+					if ( $cname != "" ) {
+						$output[$cname] = $o2; // output cat name if new and used
+					}
+					$o2 = array();
+					$cname = $row['cname'];
+				}
+				if ( $row['Iused'] ) // this item is used
+					$o2[$row['iitem']] = $row['aname'];
+			}
+		}
+		$output[$cname] = $o2 ;
+		$output['language'] = $lang;
+		echo json_encode($output) ;
+    }
+
+	function getText($lang)
+	{
+		$output = array();
+		if (   ($lang == "english")  // PDO substitution with "AS" doesn't work
+			|| ($lang == "spanish") ) { // so this is the only way to sanitize it
+
+			$sql = "SELECT name, $lang FROM `text` ";
+			$result = $this->db->query($sql);
+			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+				$row = array_map('utf8_encode', $row);
+				if (($row['name'] == "SummaryWords" ) || 
+				   ( $row['name'] == "ErrorWords" ) )
+					$row[$lang] = json_decode($row[$lang]); // decode object first
+				$output[$row['name']] = $row[$lang] ;
+			}
+		}
+		echo json_encode($output) ;
+	}
 
 	function getPlace($lat,$lon)
 	{
@@ -269,9 +329,15 @@ class DB
 		echo json_encode($output) ;
         }
 
-	function getEvent()
+	function getEvent($lang)
 	{
-		$sql = "SELECT name, eid
+		if ($lang == "spanish") { // PDO substitution with "AS" doesn't work
+			$lang1 = "spanish";
+		} else {
+			$lang1 = "name" ;
+		}
+
+		$sql = "SELECT $lang1, eid
 			FROM `Event`
 			ORDER BY name";
 		$result = $this->db->query($sql);
@@ -279,7 +345,8 @@ class DB
 		$output['Event'] = "Event" ;
 		$temp = array();
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$temp[$row['eid']] = $row['name'] ;
+			$row = array_map('utf8_encode', $row);
+			$temp[$row['eid']] = $row[$lang1] ;
 		}
 		$output['results'] = $temp ;
 		echo json_encode($output) ;
@@ -305,6 +372,41 @@ class DB
 
         echo json_encode($output) ;
      }
+     
+     // calculates trash weight
+     function getCalc()
+     {
+		 $output  = array(); // output array
+		 $trash   = 0 ; // calculated trash
+		 $recycle = 0 ; // calculated recycle weight
+		 
+		$sql = "SELECT weight, recycle 
+					FROM `items` 
+					WHERE `aname` = ? ";
+		$stmt = $this->db->prepare($sql);
+		foreach ( $_REQUEST as $key => $value ) 
+		{	if ( is_numeric($value) ) {
+				if ( strpos($key,'-in') ) {
+					if ($value > 0) 
+					{//	echo $key . " = " . $value ;
+						$stmt->execute(array($key));
+						$row = $stmt->fetch(PDO::FETCH_ASSOC);
+						
+						if ($row["recycle"] == 0) { // trash 
+							$trash += is_null($row["weight"]) ?
+								0 : $row["weight"] * $value ;
+						} else {
+							$recycle += is_null($row["weight"]) ?
+								0 : $row["weight"] * $value ;
+						} // else is recycled value
+					}
+				}
+			}
+		}
+		$output["ctrash"]   = round($trash,   2, PHP_ROUND_HALF_UP);
+		$output["crecycle"] = round($recycle, 2, PHP_ROUND_HALF_UP);
+		echo json_encode($output) ;
+	}
 }
 /* Below is Haversine select for distance of 25 miles
  *
@@ -316,4 +418,30 @@ class DB
                 ORDER BY distance LIMIT 0 , 20;
  *
  */
+/* possible weight calculation
+ 		$sql = "SELECT SUM(number * weight) 
+					FROM tally, items
+					WHERE tally.cid = $lastId AND
+					tally.iid = items.iid AND
+					items.recycle IS FALSE";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute(array());
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		$trash = is_null($row["SUM(number * weight)"]) ?
+			0 : $row["SUM(number * weight)"] ;
+		$output["trash"] = round($trash, 0, PHP_ROUND_HALF_UP);
 
+		$sql = "SELECT SUM(number * weight) 
+					FROM tally, items
+					WHERE tally.cid = $lastId AND
+					tally.iid = items.iid AND
+					items.recycle IS TRUE";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute(array());
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		$recycle = is_null($row["SUM(number * weight)"]) ?
+			0 : $row["SUM(number * weight)"] ;
+		$output["recycle"] = round($recycle, 0, PHP_ROUND_HALF_UP);
+		echo json_encode($output) ;
+*/
+?>

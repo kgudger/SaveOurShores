@@ -7,11 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.2.8
+ * @version    Release: 1.5.0
  * @package    SaveOurShores
  *
  */
-	var Version = "1.4.0";
+	var Version = "1.5.0";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -29,7 +29,15 @@
         hours: "Total Hours",
         adults: "Adults",
         youth:  "Youth",
-        area:   "Area Cleaned"
+        area:   "Area Cleaned",
+        percent: "Percent Area Cleaned"
+    }; // object gets filled when language changes
+
+    var ErrorWords = {    // words for entry errors
+        name: "Please enter your name before submitting, thanks.",
+        email: "Please enter your email before submitting, thanks.",
+        event: "Please select an Event type before submitting, thanks.",
+        location: "Please select a location before submitting, thanks."
     }; // object gets filled when language changes
 
 	var cats_done = false;
@@ -331,44 +339,44 @@ function sendData() {
     if ( out == "" ) {
   	if (navigator.notification) { // Override default HTML alert with native dialog
           navigator.notification.alert(
-	    "Please enter your name before submitting, thanks.",  // message
+	          ErrorWords['name'],  // message
               null,       // callback
               "Notice", // title
               'OK'        // buttonName
           );
         } else
-          alert("Please enter your name before submitting, thanks.");
-    } else if ( place == "Please Choose" ) {
+          alert(ErrorWords['name']);
+    } else if ( place == "Please Choose / Por favor seleccione" ) {
         if (navigator.notification) { // Override default HTML alert with native dialog
             navigator.notification.alert(
-                                         "Please select a location before submitting, thanks.",  // message
+                                         ErrorWords['location'],  // message
                                          null,       // callback
                                          "Notice", // title
                                          'OK'        // buttonName
                                          );
         } else
-		alert("Please select a location before submitting, thanks.");
+		alert(ErrorWords['location']);
     } else if ( event == "0" ) {
         if (navigator.notification) { // Override default HTML alert with native dialog
             navigator.notification.alert(
-                                         "Please select an Event type before submitting, thanks.",  // message
+                                         ErrorWords['event'],  // message
                                          null,       // callback
                                          "Notice", // title
                                          'OK'        // buttonName
                                          );
         } else
-		alert("Please select an Event type before submitting, thanks.");
+		alert(ErrorWords['event']);
 		console.log("Event type is " + event);
 	} else if ( eml == "" ) {
         if (navigator.notification) { // Override default HTML alert with native dialog
             navigator.notification.alert(
-                                         "Please enter your email before submitting, thanks.",  // message
+                                         ErrorWords['email'],  // message
                                          null,       // callback
                                          "Notice", // title
                                          'OK'        // buttonName
                                          );
         } else
-		alert("Please enter your email before submitting, thanks.");
+		alert(ErrorWords['email']);
 	} else {
         var val = document.getElementById("event-field").value;
         var out = document.getElementById("eventin");
@@ -387,6 +395,9 @@ function sendData() {
         out.value = val;
         val = document.getElementById("area-field").value;
         out = document.getElementById("areain");
+        out.value = val;
+        val = document.getElementById("percent-field").value;
+        out = document.getElementById("percentin");
         out.value = val;
 /*        val = document.getElementById("recycle").value;
         out = document.getElementById("precyclein");
@@ -453,6 +464,9 @@ $(document).on("pagecontainerbeforeshow", function () {
 					} else if ( innerKey == "areain" ) {
 						myHTML+= "<tr><td>" + SummaryWords['area'] +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "percentin" ) {
+						myHTML+= "<tr><td>" + SummaryWords['percent'] +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "%</td></tr>";
 					} else if ( !(innerKey.endsWith("in")) ) { // this is a problem waiting to happen
 						if (itemlist) {
 							myHTML+= "<tr><th>" + SummaryWords['item'] + "</th><th class='fright'>" + SummaryWords['amount'] + "</tr>";
@@ -578,7 +592,6 @@ function sendfunc(params,test) {
 
 				  }
                   else if (typeof (returnedList["ctrash"]) !== 'undefined') {
-//                      alert("Event is " + returnedList["Event"] );
                     var val = document.getElementById("trash")
                     val.value = returnedList["ctrash"];
                     val = document.getElementById("recycle")
@@ -727,6 +740,7 @@ function fillPlace(rList) {
         document.getElementById('formData').innerHTML+= myHTML;*/
 //        }
     }
+	changeSel(select.value,'place-field');
 }
 // fillPlace
 
@@ -815,7 +829,7 @@ function hideSplash() {
 	/**
 	 *	onclick function for location select
 	 */
-	function newPlace() {
+	function newPlace(text,id) {
 		var select = document.getElementById('place-field');
 		var value = select.value;
 //		alert ("Selected value is " + value );
@@ -828,6 +842,7 @@ function hideSplash() {
 				lonid.value = Places[i].lon ;
 			}
 		}
+		changeSel(text,id);
 	}
 // newPlace
 
@@ -867,8 +882,37 @@ function changeLang(chosen) {
   queryString = "command=getEvent&lang=" + chosen;
   sendfunc(queryString);
   ready();
+  // let's setup all of the select fields in one loop
+  const array1 = ['percent-field', 'event-field'];
+  for (const id of array1) {
+    let sel = document.getElementById(id);
+    let index=sel.selectedIndex;
+    if (index < 0) index=0;
+    changeSel(sel.options[index].text,id)
+  }
+  if (chosen == "spanish")
+    document.getElementById("helpi").text = "Ayuda";
+  else
+    document.getElementById("helpi").text = "Help";
 }
 
+/** function to change the percentage area cleaned and display it
+ *  param is the percentage value from the select
+ */
+function changeSel(chosen,id) {
+  console.log(chosen);
+  id = id + "-button";
+  console.log(id);
+  let btn = document.getElementById(id);
+  if (btn != null) {
+	  let newspan = document.createElement("span");
+	  const sp1_content = document.createTextNode(chosen);
+	  newspan.appendChild(sp1_content); // created new span with new text
+	  let child = btn.childNodes[0];
+	  // Replace existing node sp2 with the new span element sp1
+	  btn.replaceChild(newspan, child);
+  }
+}
 /**
  *	Function to fill form with data from database
  *  after changing the language
@@ -926,6 +970,9 @@ function fillText(rList) {
         if ( topKey == "SummaryWords" ) {
             let sWords = rList['SummaryWords'];
             SummaryWords = sWords;
+        } else if ( topKey == "ErrorWords" ) {
+            let eWords = rList['ErrorWords'];
+            ErrorWords = eWords;
         } else {
             let textf = document.getElementById(topKey); // div element of text
             if (textf != null) {

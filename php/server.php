@@ -3,6 +3,9 @@
   require_once 'includes/Mlib.php';
   header('Content-type: application/json');
   header('Access-Control-Allow-Origin: *');
+  header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+  header('Access-Control-Allow-Headers: Authorization');
+
   $db = new DB();
 
   /* Removes everything past a space, fixes problem with iOS requests */
@@ -29,7 +32,9 @@
   
   // get the command
   $command = $_REQUEST['command'];
-
+  foreach ($_REQUEST as $key => $value) {
+	$_REQUEST[$key] = urldecode($value);
+  }
 
   // determine which command will be run
   if($command == "send") {
@@ -39,12 +44,12 @@
 	$dat= $_REQUEST['datein'];
 	$evnt= $_REQUEST['eventin'];
 	$emal= $_REQUEST['emailin'];
-	$hour= $_REQUEST['hoursin'];
-	$adul= $_REQUEST['adultsin'];
-	$yout= $_REQUEST['youthin'];
-	$area= $_REQUEST['areain'];
-	$ptrash= $_REQUEST['ptrashin'];
-	$precycle= $_REQUEST['precyclein'];
+	$hour= $_REQUEST['hoursin']?? '';
+	$adul= $_REQUEST['adultsin']?? '';
+	$yout= $_REQUEST['youthin']?? '';
+	$area= $_REQUEST['areain']?? '';
+	$ptrash= $_REQUEST['ptrashin']?? '';
+	$precycle= $_REQUEST['precyclein']?? '';
 	echo $db->send($lat,$lon,$nam,$dat,$evnt,$emal,$hour,$adul,$yout,$area,$ptrash,$precycle);
   }
   elseif ($command == "getTally") {
@@ -58,6 +63,14 @@
   }
   elseif ($command == "getCats") {
 	echo $db->getCats();
+  }
+  elseif ($command == "getCatLang") {
+	$lang= $_REQUEST['lang'];
+	echo $db->getCatLang($lang);
+  }
+  elseif ($command == "getText") {
+	$lang= $_REQUEST['lang'];
+	echo $db->getText($lang);
   }
   elseif($command == "getPlace") {
 	$lat= $_REQUEST['latin'];
@@ -77,7 +90,14 @@
 	echo $db->getItem();
   }
   elseif($command == "getEvent") {
-	echo $db->getEvent();
+	if (isset($_REQUEST['lang'])) {
+		echo $db->getEvent($_REQUEST['lang']);
+	} else {
+		echo $db->getEvent("");
+	}
+  }
+  elseif($command == "Calc") {
+	echo $db->getCalc();
   }
   else
     echo "command was not recognized";

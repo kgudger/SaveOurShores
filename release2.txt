@@ -1,4 +1,4 @@
- 2039  export $JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ 2039  export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
  2066  export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
  2071  export ANDROID_SDK_ROOT=/home/keith/Android/Sdk
  2078  cordova build --release android

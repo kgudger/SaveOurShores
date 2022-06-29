@@ -7,11 +7,11 @@
  * @author Keith Gudger
  * @copyright  (c) 2015, Keith Gudger, all rights reserved
  * @license    http://opensource.org/licenses/BSD-2-Clause
- * @version    Release: 1.5.0
+ * @version    Release: 1.5.1
  * @package    SaveOurShores
  *
  */
-	var Version = "1.5.0";
+	var Version = "1.5.1";
 	var currentLatitude = 0;
 	var currentLongitude = 0;
 	var options = {			// Intel GPS options
@@ -25,6 +25,7 @@
     var SummaryWords = {    // words for the summary page
         uname: "User Name",
         date:  "Date",
+        location: "Location",
         email: "Email",
         hours: "Total Hours",
         adults: "Adults",
@@ -393,9 +394,6 @@ function sendData() {
         val = document.getElementById("youth-field").value;
         out = document.getElementById("youthin");
         out.value = val;
-        val = document.getElementById("area-field").value;
-        out = document.getElementById("areain");
-        out.value = val;
         val = document.getElementById("percent-field").value;
         out = document.getElementById("percentin");
         out.value = val;
@@ -451,6 +449,9 @@ $(document).on("pagecontainerbeforeshow", function () {
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					} else if ( innerKey == "emailin" ) {
 						myHTML+= "<tr><td>" + SummaryWords['email'] +
+							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
+					} else if ( innerKey == "placein" ) {
+						myHTML+= "<tr><td>" + SummaryWords['location'] +
 							"</td><td class='fright'>" + obj[Key][innerKey] + "</td></tr>";
 					} else if ( innerKey == "hoursin" ) {
 						myHTML+= "<tr><td>" + SummaryWords['hours'] +
@@ -525,8 +526,6 @@ function extra_fields_reset() {
     val = document.getElementById("adults-field");
     val.value = 0;
     val = document.getElementById("youth-field");
-    val.value = 0;
-    val = document.getElementById("area-field");
     val.value = 0;
 }
 
@@ -741,6 +740,9 @@ function fillPlace(rList) {
 //        }
     }
 	changeSel(select.value,'place-field');
+	var val = document.getElementById("placein")
+    val.value = select.value;
+ 
 }
 // fillPlace
 
@@ -843,6 +845,8 @@ function hideSplash() {
 			}
 		}
 		changeSel(text,id);
+		var val = document.getElementById("placein")
+		val.value = select.value;
 	}
 // newPlace
 

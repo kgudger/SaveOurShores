@@ -7,4 +7,4 @@ node_modules
 release.txt
 SOS.keystore
 private_key.pepk
-
+build.json

@@ -8,17 +8,22 @@
     ],
     "plugins": {
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-speech-recognition": {}
+      "cordova-plugin-speech-recognition": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      }
     }
   },
   "dependencies": {
     "cordova-plugin-dialogs": "2.0.1",
-    "cordova-plugin-geolocation": "git+https://github.com/apache/cordova-plugin-geolocation.git",
     "release": "4.0.2"
   },
   "devDependencies": {
     "cordova-android": "^12.0.1",
     "cordova-browser": "^6.0.0",
-    "cordova-plugin-speech-recognition": "https://github.com/macdonst/SpeechRecognitionPlugin"
+    "cordova-plugin-geolocation": "github:apache/cordova-plugin-geolocation",
+    "cordova-plugin-speech-recognition": "https://github.com/macdonst/SpeechRecognitionPlugin",
+    "cordova-plugin-splashscreen": "^6.0.1"
   }
 }

@@ -8,11 +8,11 @@
     ],
     "plugins": {
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-speech-recognition": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
-      }
+      },
+      "phonegap-plugin-speech-recognition": {}
     }
   },
   "dependencies": {
@@ -20,10 +20,11 @@
     "release": "4.0.2"
   },
   "devDependencies": {
-    "cordova-android": "^12.0.1",
+    "cordova-android": "^13.0.0",
     "cordova-browser": "^6.0.0",
     "cordova-plugin-geolocation": "github:apache/cordova-plugin-geolocation",
     "cordova-plugin-speech-recognition": "https://github.com/macdonst/SpeechRecognitionPlugin",
-    "cordova-plugin-splashscreen": "^6.0.1"
+    "cordova-plugin-splashscreen": "^6.0.1",
+    "phonegap-plugin-speech-recognition": "github:macdonst/SpeechRecognitionPlugin"
   }
 }

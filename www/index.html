@@ -12,7 +12,6 @@
 	<!-- Enable all requests, inline styles, and eval() -->
 	<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; img-src * data: ; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" type="text/css" href="./css/smoothness.datepick.css"> 
 	<style>
@@ -24,9 +23,13 @@
 
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>          <!-- phantom library, needed for Cordova api calls, added during build -->
     <script src="xdk/init-dev.js"></script>     <!-- normalizes device and document ready events, see README for details -->
-	<script src="./js/jquery.min.js"></script>
+<!--	<script src="./js/jquery.min.js"></script> -->
+	<script type="text/javascript" src="./js/jquery.js"></script> 
+	<!--	<script type="text/javascript" src="./js/jquery.min.js"></script>  -->
 	<script type="text/javascript" src="./js/jquery.plugin.min.js"></script> 
 	<script type="text/javascript" src="./js/jquery.datepick.js"></script>
+	<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
+
 	
 <script>
 $(document).bind('mobileinit',function(){
@@ -34,10 +37,9 @@ $(document).bind('mobileinit',function(){
     $.mobile.hashListeningEnabled = false;
     $.mobile.pushStateEnabled = false;
 });</script>
-	<script src="./js/jquery.mobile-1.4.5.min.js"></script>
+<!--	<script src="./js/jquery.mobile-1.4.5.min.js"></script> -->
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBL_Mp0VJY5mOM1uGc-jT41FCN2z3XP5Z0">
     </script>
-    <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
 <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#nWXf1EtofKpuaSYvwkVM9XLQ1WBgQW3hzCvkT6aDq7M"></script> -->
 	</script>
 
@@ -218,4 +220,6 @@ Santa Cruz, CA 95062</br>
 </div><!-- /page -->
 
 </body>
+	<script type='text/javascript' src="./js/jquery.mobile-1.4.5.min.js" defer='defer'></script>
+    <script src="./js/app.js"></script>           <!-- recommended location of your JavaScript code relative to other JS files -->
 </html>

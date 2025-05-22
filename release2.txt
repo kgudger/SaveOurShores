@@ -1,7 +1,11 @@
  2039  export JAVA_HOME=/usr/lib/jvm/jdk-17.0.12-oracle-x64
  2066  export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
  2071  export ANDROID_SDK_ROOT=/home/keith/Android/Sdk
- export PATH=$ANDROID_HOME/tools/gradle-8.7-rc-1/bin:$PATH
+ export PATH=$ANDROID_HOME/tools/gradle-7.4.2/bin:$PATH
  2078  cordova build --release android
  2108  cd platforms/android/app/build/outputs/bundle/release/
  2115  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ~/Development/phonegap/SaveOurShores/SOS.keystore app-release.aab saveourshores
+ 
+ Page for required versions of tools for cordova:
+ https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html
+ 

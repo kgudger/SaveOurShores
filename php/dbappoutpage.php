@@ -15,9 +15,9 @@
 * 
 */
 
-require_once("/var/www/html/wp-content/plugins/app_output/includes/mainpage.php");
-include_once "/var/www/html/includes/util.php";
-require_once '/var/www/html/includes/phplot-6.2.0/phplot.php';
+require_once(ABSPATH . "wp-content/plugins/app_output/includes/mainpage.php");
+include_once ABSPATH . "includes/util.php";
+require_once ABSPATH . 'includes/phplot-6.2.0/phplot.php';
 $plot_data = array();
 
 /**
@@ -86,22 +86,35 @@ AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
 	  	}
 		var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions); // Render our map within the empty div
 <?php 
-	$sql = "SELECT Places.name, Places.lat, Places.lon, COALESCE(PN.Sum, 0 ) AS CSum FROM Places
-LEFT JOIN ( SELECT C.lat, C.lon, SUM(tally.number) AS Sum,
-(   SELECT DISTINCT Places.name AS pname
-                FROM Places
-		ORDER BY 
-		( 3959 * acos( cos( radians(C.lat) ) * 
-                cos( radians( Places.lat ) ) * 
-                cos( radians( Places.lon ) - radians(C.lon) ) + 
-                     sin( radians(C.lat) ) * 
-                sin( radians( Places.lat ) ) ) ) 
-		LIMIT 1 ) AS placename
-                FROM Collector AS C, tally
-                WHERE tally.cid = C.cid
-                GROUP BY placename) AS PN
+	$sql = "
+SELECT
+    Places.name,
+    Places.lat,
+    Places.lon,
+    COALESCE(PN.Sum, 0 ) AS CSum
+FROM Places
+LEFT JOIN (
+    SELECT
+        SUM(tally.number) AS Sum,
+        (
+            SELECT Places.name AS pname
+            FROM Places
+            ORDER BY 
+            	( 3959 * acos( cos( radians(C.lat) ) * 
+                    cos( radians( Places.lat ) ) * 
+                    cos( radians( Places.lon ) - radians(C.lon) ) + 
+                         sin( radians(C.lat) ) * 
+                    sin( radians( Places.lat ) ) )
+                ) 
+            LIMIT 1
+        ) AS placename
+    FROM Collector AS C, tally
+    WHERE tally.cid = C.cid
+    GROUP BY placename
+) AS PN
 ON Places.name = placename
-ORDER BY CSum DESC";
+ORDER BY CSum DESC;
+";
   $result = $this->db->query($sql);
   $n = 0;
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -140,9 +153,6 @@ ORDER BY CSum DESC";
 		
 		var infowindow = new google.maps.InfoWindow({ // Create a new InfoWindow
   			content:"<h3>Snowdown Summit Cafe</h3><p>Railway Drive-through available.</p>" // HTML contents of the InfoWindow
-  		});
-		google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker
-  			infowindow.open(map,marker); // Open our InfoWindow
   		});
 		
 		google.maps.event.addDomListener(window, 'resize', function() { map.setCenter(myLatlng); }); // Keeps the Pin Central when resizing the browser on responsive sites
@@ -679,25 +689,37 @@ function locBatchTable($sub,$subsub,$dates) {
   echo '<table class="volemail"><tr><th>Place</th><th>Date</th>';
   echo '<th>Item</th><th>Amount</th></tr>';
 
-  $sql = "SELECT C.cid AS cid,C.lat, C.lon, C.tdate,
-		(   SELECT DISTINCT Places.name AS pname
-                FROM Places
-				ORDER BY 
-				( 3959 * acos( cos( radians(C.lat) ) * 
+  $sql = "
+SELECT
+    C.lat,
+    C.lon,
+    C.tdate,
+    (
+        SELECT Places.name AS pname
+        FROM Places
+		ORDER BY 
+			( 3959 * acos( cos( radians(C.lat) ) * 
                 cos( radians( Places.lat ) ) * 
                 cos( radians( Places.lon ) - radians(C.lon) ) + 
                      sin( radians(C.lat) ) * 
-                sin( radians( Places.lat ) ) ) ) 
-				LIMIT 1 ) AS pname,
-            items.item AS Iname,
-            SUM(tally.number)
-            FROM Collector AS C, items, tally
-            WHERE tally.cid = C.cid" ;
-  $sql.= empty($startd) ? "" : " AND C.tdate >= '" . $startd . "' ";
-  $sql.= empty($endd) ? "" : " AND C.tdate <= '" . $endd . "' " ;
-  $sql.= "  AND items.iid = tally.iid
-            GROUP BY C.tdate, pname, Iname
-            ORDER BY C.tdate DESC" ;
+                sin( radians( Places.lat ) ) )
+            ) 
+		LIMIT 1
+    ) AS pname,
+	items.item AS Iname,
+	SUM(tally.number)
+FROM
+	Collector AS C,
+    items,
+    tally
+WHERE tally.cid = C.cid
+" ;
+  $sql.= empty($startd) ? "" : "    AND C.tdate >= '" . $startd . "' ";
+  $sql.= empty($endd) ? "" : "    AND C.tdate <= '" . $endd . "' " ;
+  $sql.= "
+    AND items.iid = tally.iid
+GROUP BY C.tdate, pname, Iname, C.lat, C.lon
+ORDER BY C.tdate DESC" ;
 //  echo $sql ;
   $result = $this->db->query($sql);
   $oldPlace = "";
@@ -707,7 +729,6 @@ function locBatchTable($sub,$subsub,$dates) {
     $cdate = $row["tdate"];
     $lat   = $row["lat"];
     $lon   = $row["lon"];
-    $cid   = $row["cid"];  // cid for next query.
     $pname = $row["pname"];
     if ( $pname == "" ) {
       $pname = "Other" ;
@@ -761,7 +782,7 @@ function locBatchTableSS($sub,$subsub,$dates) {
   echo '</tr>';
 
   $sql = "SELECT cid, name, lat, lon, tdate, date, email, hour, eid, adult, youth, pTrash, pRecycle,
-		(   SELECT DISTINCT Places.name AS pname
+		(   SELECT Places.name AS pname
                 FROM Places
 				ORDER BY 
 				( 3959 * acos( cos( radians(C.lat) ) * 
@@ -794,6 +815,8 @@ function locBatchTableSS($sub,$subsub,$dates) {
     $youth = $row["youth"];
     $trash = $row["pTrash"];
     $recyc = $row["pRecycle"];
+    $latit = $row["lat"];
+    $longi = $row["lon"];
     if ( $pname == "" ) {
       $pname = "Other" ;
     }
@@ -1017,6 +1040,8 @@ function locBatchTableSS($sub,$subsub,$dates) {
 	echo "<td>" . $t . "</td>";
 	$rData[] = $t;*/
 	$rData[] = ""; //General Comments about the Cleanup:
+	$rData[] = $latit;
+	$rData[] = $longi;
 
 	echo "</tr>";
 	$plot_data[] = $rData;
@@ -1098,6 +1123,8 @@ function ssHead () {
     array_push($head,'Challenges or general feedback?');
     array_push($head,'Issues with the location (e.g., parking, bathrooms, trash/recycling bins)?');
     array_push($head,'Awe-inspiring moments, cute stories, heartwarming experiences?');
+    array_push($head,'Latitude');
+    array_push($head,'Longitude');
     return $head;
 }
 }

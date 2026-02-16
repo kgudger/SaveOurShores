@@ -37,6 +37,7 @@ class DB
 		$sql = "INSERT INTO `Collector` 
 			(`name`, `lat`, `lon`, `tdate`, `eid`, `email`, `hour`, `adult`, `youth`, `area`, `pTrash`, `pRecycle`)
 			VALUES(?, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                if (!is_numeric($area)) $area = 0; // added to take care of area absence.
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array($nam,$lat,$lon,$dat,$evnt,$email,$hour,$adult,$youth,$area,$ptrash,$precycle));
 		$lastId = $this->db->lastInsertId();
@@ -196,7 +197,7 @@ class DB
 		$o2 = array();
 		$cname = "" ;
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$row = array_map('utf8_encode', $row);
+			$row = array_map(fn($item) => mb_convert_encoding($item, "UTF-8", mb_detect_encoding($item)), $row);
 			if ( $row['Cused'] ) { // only if category is used
 				if ( $row['cname'] != $cname ) {
 					if ( $cname != "" ) {

@@ -558,6 +558,7 @@ function sendfunc(params,test) {
 						returnedList == null || returnedList == "") {
 					returnedList = '{}';
 				  }
+				  console.log("returned list = " + returnedList);
                   returnedList = JSON.parse(returnedList);
                   if (typeof (returnedList["trash"]) !== 'undefined') {
                     var val = document.getElementById("trash")

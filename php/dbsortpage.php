@@ -15,9 +15,9 @@
 * 
 */
 
-require_once("/home3/lauren/public_html/wp-content/plugins/leaderboard/includes/mainpage.php");
-include_once "includes/util.php";
-require_once '/home3/lauren/public_html/includes/phplot-6.2.0/phplot.php';
+require_once(ABSPATH . "wp-content/plugins/leaderboard/includes/mainpage.php");
+include_once (ABSPATH . "includes/util.php");
+require_once (ABSPATH . 'includes/phplot-6.2.0/phplot.php');
 $plot_data = array();
 
 /**
@@ -27,6 +27,7 @@ $plot_data = array();
  */
   $radiolist = array("Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
   $radiolist2 = array(""=>0,"Top Names"=>1,"Most Recent Date"=>2,"Category"=>3,"Top Items"=>4,"Top Locations"=>5);
+  $rstring;
 
 class dbSortPage extends MainPage {
 
@@ -56,13 +57,15 @@ function showContent($title, &$uid) {
 // Put HTML after the closing PHP tag
   global $radiolist;
   global $radiolist2;
-?>
-<script src="http://www.saveourshores.org/js/app2.js"></script>     
+  global $rstring;
+
+  $rstring = <<<RSTRING
+<script src="https://saveourshores.org/js/app2.js"></script>     
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=
 AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
 <script>
+	//alert("Your message goes here 1");
 	function initialise() {
-		
 		var myLatlng = new google.maps.LatLng(36.962,-122.001); // Add the coordinates
 		var mapOptions = {
 			zoom: 10, // The initial zoom level when your map loads (0-20)
@@ -80,25 +83,48 @@ AIzaSyAUAzdEbG4JtsNuNhq30xqqGpV7QRW7_hE&sensor=false"></script>
 			streetViewControl:false, // Set to disable to hide street view
 			overviewMapControl:false, // Set to false to remove overview control
 			rotateControl:false // Set to false to disable rotate control
-	  	}
+	  	};
 		var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions); // Render our map within the empty div
-<?php 
-	$sql = "SELECT Places.name, Places.lat, Places.lon, COALESCE(PN.Max, 0 ) AS Maxdate FROM Places
-LEFT JOIN (SELECT C.cid AS cid,C.lat, C.lon, C.tdate, MAX(C.tdate) AS Max,
-(   SELECT DISTINCT Places.name AS pname
-                FROM Places
-		ORDER BY 
-		( 3959 * acos( cos( radians(C.lat) ) * 
-                cos( radians( Places.lat ) ) * 
-                cos( radians( Places.lon ) - radians(C.lon) ) + 
-                     sin( radians(C.lat) ) * 
-                sin( radians( Places.lat ) ) ) ) 
-		LIMIT 1 ) AS pname
-                FROM Collector AS C
-                GROUP BY pname) AS PN
-ON Places.name=pname
-GROUP by Places.name";
+
+RSTRING;
+
+	$sql = "
+SELECT
+    Places.name,
+    Places.lat,
+    Places.lon,
+    COALESCE(PN.Max, 0 ) AS Maxdate
+FROM Places
+LEFT JOIN (
+    SELECT
+    	MAX(C.tdate) AS Max,
+		(
+            SELECT Places.name AS pname
+            FROM Places
+			ORDER BY 
+            	( 3959 * acos( cos( radians(C.lat) ) * 
+                          cos( radians( Places.lat ) ) * 
+                          cos( radians( Places.lon ) - radians(C.lon) ) + 
+                          sin( radians(C.lat) ) * 
+                          sin( radians( Places.lat ) ) )
+                ) 
+			LIMIT 1
+        ) AS pname
+        FROM Collector AS C
+        GROUP BY pname
+) AS PN
+ON Places.name=pname;
+";
+/*
+   $sql= "SELECT Places.name, Places.lat, Places.lon, Collector.tdate AS Maxdate FROM Places, Collector
+WHERE Places.pid = 1 AND Collector.cid = 2
+GROUP by Places.name" ;
+*/
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
+//  echo "DB is not null";
+
   $result = $this->db->query($sql);
+
   $tdate = time(); // current Unix Time
   $t4week = $tdate - (4 * 7 * 24 * 60 * 60);
   $t8week = $tdate - (8 * 7 * 24 * 60 * 60);
@@ -108,57 +134,62 @@ GROUP by Places.name";
 		$plat  = $row['lat'];
 		$plon  = $row['lon'];
 		$pdate  = strtotime($row['Maxdate']);
-		echo "myLatlng = new google.maps.LatLng(" . $plat . "," . $plon . ");\n";
-		echo "var marker" . $n . "= new google.maps.Marker({ \n" ;
-		echo "position: myLatlng, \n";
-		echo "map: map, \n" ;
+//		echo "myLatlng = new google.maps.LatLng(" . $plat . "," . $plon . ");\n";
+		$rstring.= "myLatlng = new google.maps.LatLng(" . $plat . "," . $plon . ");\n";
+//		echo "var marker" . $n . "= new google.maps.Marker({ \n" ;
+//		echo "position: myLatlng, \n";
+//		echo "map: map, \n" ;
+		$rstring.= "var marker" . $n . "= new google.maps.Marker({ \n" ;
+		$rstring.= "position: myLatlng, \n";
+		$rstring.= "map: map, \n" ;
 		if ( $pdate <= $t8week ) 
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
+//			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
+			$rstring.= "icon: 'https://maps.google.com/mapfiles/ms/icons/red.png',\n" ;
 		else if ( $pdate <= $t4week )
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
+//			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
+			$rstring.= "icon: 'https://maps.google.com/mapfiles/ms/icons/yellow.png',\n" ;
 		else 
-			echo "icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
-		echo 'title: "' . $pname . '" });' . "\n" ;
+//			echo "icon: 'https://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
+			$rstring.= "icon: 'https://maps.google.com/mapfiles/ms/icons/green.png',\n" ;
+//		echo 'title: "' . $pname . '" });' . "\n" ;
+		$rstring.= 'title: "' . $pname . '" });' . "\n" ;
 	}
-?>
-/*		var marker = new google.maps.Marker({ // Set the marker
-			position: myLatlng, // Position marker to coordinates
-			map: map, // assign the marker to our map variable
-			icon: 'http://maps.google.com/mapfiles/ms/icons/green.png',
-			title: 'Twin Lakes State Beach' // Marker ALT Text
-		}); */
-		
-		// 	google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker 
-		//		window.location='http://www.snowdonrailway.co.uk/shop_and_cafe.php'; // URL to Link Marker to (i.e Google Places Listing)
-		// 	});
-		
+ }
+$rstring.= <<<RSTRING
+
 		var infowindow = new google.maps.InfoWindow({ // Create a new InfoWindow
   			content:"<h3>Snowdown Summit Cafe</h3><p>Railway Drive-through available.</p>" // HTML contents of the InfoWindow
   		});
 		google.maps.event.addListener(marker, 'click', function() { // Add a Click Listener to our marker
   			infowindow.open(map,marker); // Open our InfoWindow
   		});
-		
 		google.maps.event.addDomListener(window, 'resize', function() { map.setCenter(myLatlng); }); // Keeps the Pin Central when resizing the browser on responsive sites
-	}
-	google.maps.event.addDomListener(window, 'load', initialise); // Execute our 'initialise' function once the page has loaded. 
+}
+google.maps.event.addDomListener(window, 'load', initialise); // Execute our 'initialise' function once the page has loaded. 
 </script>
 <div class="preamble" id="SOS-preamble" role="article">
-<?php
-	echo $this->formL->reportErrors();
-	echo $this->formL->start('POST', "", 'name="databasesort"');
-?>
+RSTRING;
+/*
+//	echo $this->formL->reportErrors();
+//	echo $this->formL->start('POST', "", 'name="databasesort"');
+
+	$rstring.= $this->formL->reportErrors();
+	$rstring.= $this->formL->start('POST', "", 'name="databasesort"');
+$rstring.= <<<RSTRING
 <fieldset>
 <legend>Please select how you would like to sort the data.</legend>
 <br>
-<?php
+RSTRING;
   $radiolist = array("Total Amount"=>0,"Date"=>1,"Item"=>2,"Location"=>3);
-  echo $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");?>
+//  echo $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");
+  $rstring.= $this->formL->makeSelect('cat', $radiolist, "", "id='mainsort' onchange='newSort()'");
+$rstring.= <<<RSTRING
 <input class="subbutton" type="submit" name="Submit" value="Submit">
 </fieldset>
-</form>
 <script> newSort(); </script>
-<?php
+RSTRING;
+$this->formL->finish();
+/*
   if ( $uid[0] >= 0 ) {
     switch ($uid[0]) {
       case $radiolist["Name"]: // Name
@@ -180,24 +211,26 @@ GROUP by Places.name";
          $this->locationTable($uid[1],$uid[2]);
        break;
       default:
-        echo $uid[0];
+//        echo $uid[0];
+        $rstring.= $uid[0];
     }
   }
-  else echo "No sort selected.";
-  echo ($this->formL->getValue("getFile")[0]);
-?>
+//  else echo "No sort selected.";
+//  echo ($this->formL->getValue("getFile")[0]);
+  else $rstring.= "No sort selected.";
 
-<?php
-$this->formL->finish();
-?>
+  $rstring.= ($this->formL->getValue("getFile")[0]);
+*/
+$rstring.= <<<RSTRING
 <h3>Beach Status Map</h3>
 <div id="map-canvas" style="height:400px; width:600px;"></div>
 <div> Legend:<br><span style="color:green;">Green</span> beaches cleaned in the last 4 weeks, <br>
 <span style="color:yellow;background:rgb(153, 204, 255)">Yellow</span> beaches cleaned 4 to 8 weeks ago,<br>
 <span style="color:red;">Red</span> beaches have not been cleaned in over 8 weeks.</div>
 
-<?php
+RSTRING;
 //mysql_free_result($result);
+return $rstring;
 }
 
 /**
@@ -205,6 +238,7 @@ $this->formL->finish();
  *
  */
 function nameTable($sub,$subsub) {
+global $rstring;
 
 $sort_string = "" ;
 // "Top Names"=>1,"Most Recent Date"=>2,"Category"=>3,"Top Items"=>4,"Top Locations"
@@ -212,29 +246,39 @@ $sort_string = "" ;
 	if ( $sub == "By Category" ) {
 	  $sort_string = " AND Categories.name = '$subsub' 
 						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
+//	  echo "Sorted by Category '$subsub'<br><br>";
+	  $rstring .= "Sorted by Category '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Date" ) {
 	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
+//	  echo "Sorted by Date '$subsub'<br><br>";
+	  $rstring .= "Sorted by Date '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Item" ) {
 	  $sort_string = " AND items.item = '$subsub'";
-	  echo "Sorted by Item '$subsub'<br><br>";
+//	  echo "Sorted by Item '$subsub'<br><br>";
+	  $rstring .= "Sorted by Item '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Location" ) {
 	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
+//	  echo "Sorted by Location '$subsub'<br><br>";
+//	  echo "Not implemented yet.<br><br>";
+	  $rstring .= "Sorted by Location '$subsub'<br><br>";
+	  $rstring .= "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
+//  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
+  $rstring .= '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT DISTINCT name FROM Collector ORDER BY tdate DESC";
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
-    echo "<tr><td>" . $name . "</td>";
+//    echo "<tr><td>" . $name . "</td>";
+    $rstring .= "<tr><td>" . $name . "</td>";
     $sql = "SELECT SUM(number*weight)
                     FROM tally, items, Collector, Categories
                     WHERE (Collector.name = '$name') AND
@@ -246,7 +290,8 @@ $sort_string = "" ;
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $trash = is_null($row2["SUM(number*weight)"]) ?
       0 : $row2["SUM(number*weight)"] ;
-    echo '<td class="right">' . round($trash,2) . "</td>";
+//    echo '<td class="right">' . round($trash,2) . "</td>";
+    $rstring .= '<td class="right">' . round($trash,2) . "</td>";
     $sql = "SELECT SUM(number*weight)
                     FROM tally, items, Collector, Categories
                     WHERE (Collector.name = '$name') AND
@@ -258,10 +303,13 @@ $sort_string = "" ;
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $recycle = is_null($row2["SUM(number*weight)"]) ?
       0 : $row2["SUM(number*weight)"] ;
-    echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+//    echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+    $rstring .= '<td class="right">' . round($recycle,2) . "</td></tr>";
 	$plot_data[] = array($name,round($trash,2),round($recycle,2));
   } 
-  echo "</table><br>";
+ }
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
@@ -297,32 +345,42 @@ $sort_string = "" ;
  *
  */
 function dateTable($sub,$subsub) {
+global $rstring;
 
 $sort_string = "" ;
   if ( $subsub != "" ) {
 	if ( $sub == "By Category" ) {
 	  $sort_string = " AND Categories.name = '$subsub' 
 						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
+//	  echo "Sorted by Category '$subsub'<br><br>";
+	  $rstring .= "Sorted by Category '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Name" ) {
 	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
+//	  echo "Sorted by Name '$subsub'<br><br>";
+	  $rstring .= "Sorted by Name '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Item" ) {
 	  $sort_string = " AND items.item = '$subsub'";
-	  echo "Sorted by Item '$subsub'<br><br>";
+//	  echo "Sorted by Item '$subsub'<br><br>";
+	  $rstring .= "Sorted by Item '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Location" ) {
 	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
+//	  echo "Sorted by Location '$subsub'<br><br>";
+//	  echo "Not implemented yet.<br><br>";
+	  $rstring .= "Sorted by Location '$subsub'<br><br>";
+	  $rstring .= "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Date</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Date</th>';
+//  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Date</th>';
+  $rstring .= '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT DISTINCT CAST(`tdate` AS DATE) AS dateonly 
              FROM Collector ORDER BY date DESC";
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $date = $row["dateonly"];
@@ -351,13 +409,18 @@ $sort_string = "" ;
 	
 	if (round($trash,2) > 0 || round($recycle,2) > 0 ) {
 		$date = date("F j, Y", strtotime($date));
-		echo "<tr><td>" . $date . "</td>";
-		echo '<td class="right">' . round($trash,2) . "</td>";
-		echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+//		echo "<tr><td>" . $date . "</td>";
+//		echo '<td class="right">' . round($trash,2) . "</td>";
+//		echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+		$rstring .= "<tr><td>" . $date . "</td>";
+		$rstring .= '<td class="right">' . round($trash,2) . "</td>";
+		$rstring .= '<td class="right">' . round($recycle,2) . "</td></tr>";
 		$plot_data[] = array($date,round($trash,2),round($recycle,2));
 	}
   } 
-  echo "</table><br>";
+ }
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
@@ -393,36 +456,47 @@ $sort_string = "" ;
  *
  */
 function categoryTable($sub,$subsub) {
+	global $rstring ;
 
 $sort_string = "" ;
   if ( $subsub != "" ) {
 	if ( $sub == "By Date" ) {
 	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
+//	  echo "Sorted by Date '$subsub'<br><br>";
+	  $rstring .= "Sorted by Date '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Name" ) {
 	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
+//	  echo "Sorted by Name '$subsub'<br><br>";
+	  $rstring .= "Sorted by Name '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Item" ) {
 	  $sort_string = " AND items.item = '$subsub'";
-	  echo "Sorted by Item '$subsub'<br><br>";
+//	  echo "Sorted by Item '$subsub'<br><br>";
+	  $rstring .= "Sorted by Item '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Location" ) {
 	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
+//	  echo "Sorted by Location '$subsub'<br><br>";
+//	  echo "Not implemented yet.<br><br>";
+	  $rstring .= "Sorted by Location '$subsub'<br><br>";
+	  $rstring .= "Not implemented yet.<br><br>";
 	}
   }
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Category</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Category</th>';
+//  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Category</th>';
+  $rstring .= '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT name, catid 
              FROM Categories ";
+             
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
     $catid = $row["catid"];
-    echo "<tr><td>" . $name . "</td>";
+//    echo "<tr><td>" . $name . "</td>";
+    $rstring .= "<tr><td>" . $name . "</td>";
     $sql = "SELECT SUM(number*weight)
                     FROM tally, items, Collector
                     WHERE (items.category = '$catid') AND
@@ -433,7 +507,8 @@ $sort_string = "" ;
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $trash = is_null($row2["SUM(number*weight)"]) ?
       0 : $row2["SUM(number*weight)"] ;
-    echo '<td class="right">' . round($trash,2) . "</td>";
+//    echo '<td class="right">' . round($trash,2) . "</td>";
+    $rstring .= '<td class="right">' . round($trash,2) . "</td>";
     $sql = "SELECT SUM(number*weight)
                     FROM tally, items, Collector
                     WHERE (items.category = '$catid') AND
@@ -444,10 +519,13 @@ $sort_string = "" ;
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $recycle = is_null($row2["SUM(number*weight)"]) ?
       0 : $row2["SUM(number*weight)"] ;
-    echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+//    echo '<td class="right">' . round($recycle,2) . "</td></tr>";
+    $rstring .= '<td class="right">' . round($recycle,2) . "</td></tr>";
 	$plot_data[] = array($name,round($trash,2),round($recycle,2));
   } 
-  echo "</table><br>";
+ }
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
@@ -483,30 +561,38 @@ $sort_string = "" ;
  *
  */
 function itemTable($sub,$subsub) {
+	global $rstring ;
 
   if ( $subsub != "" ) {
 	if ( $sub == "By Category" ) {
 	  $sort_string = " AND Categories.name = '$subsub' 
 						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
+//	  echo "Sorted by Category '$subsub'<br><br>";
+	  $rstring .= "Sorted by Category '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Date" ) {
 	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
+//	  echo "Sorted by Date '$subsub'<br><br>";
+	  $rstring .= "Sorted by Date '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Name" ) {
 	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
+//	  echo "Sorted by Name '$subsub'<br><br>";
+	  $rstring .= "Sorted by Name '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Location" ) {
 	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
+//	  echo "Sorted by Location '$subsub'<br><br>";
+//	  echo "Not implemented yet.<br><br>";
+	  $rstring .= "Sorted by Location '$subsub'<br><br>";
+	  $rstring .= "Not implemented yet.<br><br>";
 	}
   }
   global $plot_data ;
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Item</th>';
-  echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Item</th>';
+//  echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Item</th>';
+  $rstring .= '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $sql = "SELECT SUM(number*weight) AS Total,
 			SUM(number*weight*(items.recycle)) AS Recycling,
 			SUM(number*weight*(1-items.recycle)) AS Trash, 
@@ -516,16 +602,24 @@ function itemTable($sub,$subsub) {
 					items.Iid = tally.Iid
 			GROUP BY items.Item
 			ORDER BY Trash DESC LIMIT 10";
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $res2 = $this->db->query($sql);
   $row2 = $res2->fetch(PDO::FETCH_ASSOC);
   while ($row2 = $res2->fetch(PDO::FETCH_ASSOC)) {
-	echo "<tr><td>" . $row2['Item'] . "</td>";
-		echo '<td class="right">' . round($row2['Total'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
+//	echo "<tr><td>" . $row2['Item'] . "</td>";
+//	echo '<td class="right">' . round($row2['Total'],2) . "</td>";
+//	echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
+//	echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
+	$rstring .= "<tr><td>" . $row2['Item'] . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Total'],2) . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Trash'],2) . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
 		$plot_data[] = array($row2['Item'],round($row2['Total'],2),round($row2['Trash'],2),round($row2['Recycling'],2));
   } 
-  echo "</table><br>";
+ }
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
@@ -563,38 +657,49 @@ function itemTable($sub,$subsub) {
 function locationTable($sub,$subsub) {
 
   global $plot_data ;
+  global $rstring;
+
   $sort_string = "" ;
   if ( $subsub != "" ) {
 	if ( $sub == "By Date" ) {
 	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
+//	  echo "Sorted by Date '$subsub'<br><br>";
+	  $rstring .= "Sorted by Date '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Name" ) {
 	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
+//	  echo "Sorted by Name '$subsub'<br><br>";
+	  $rstring .= "Sorted by Name '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Item" ) {
 	  $sort_string = " AND items.item = '$subsub'";
-	  echo "Sorted by Item '$subsub'<br><br>";
+//	  echo "Sorted by Item '$subsub'<br><br>";
+	  $rstring .= "Sorted by Item '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Category" ) {
 	  $sort_string = " AND Categories.name = '$subsub' 
-						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
+				AND Categories.catid = items.category";
+//	  echo "Sorted by Category '$subsub'<br><br>";
+	  $rstring .= "Sorted by Category '$subsub'<br><br>";
 	}
   }
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Location</th>';
-  echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Location</th>';
+//echo '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Location</th>';
+  $rstring .= '<th>Total Weight</th><th>Trash Weight</th><th>Recycle Weight</th></tr>';
   // Create an associative array with entries for items weight
   // Last entry is "Other"
 
   $Places = array();
   $sql = "SELECT name FROM Places";
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     $name = $row["name"];
     $Places["$name"] = array("Total" =>0, "Trash" => 0, "Recycle" => 0);
   }
+ }
   $Places["Other"] = array("Total" =>0, "Trash" => 0, "Recycle" => 0);
 	$sql = "SELECT Collector.cid as CID, lat, lon, 
 				SUM(number*weight) AS Total,
@@ -607,6 +712,8 @@ function locationTable($sub,$subsub) {
 	$sql .= " GROUP BY Collector.cid"; 
 /*  $sql = "SELECT name, lat, lon
              FROM Places";*/
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $result = $this->db->query($sql);
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 //    $name = $row["name"];
@@ -678,18 +785,25 @@ function locationTable($sub,$subsub) {
       0 : $row2["SUM(total_weight)"] ;
     echo '<td class="right">' . round($recycle,2) . "</td></tr>"; */
   }
+ }
   ksort($Places);
   foreach ($Places as $name => $results) {
 	  if ($results["Trash"] > 0 || $results["Recycle"]>0 ) {
-		echo "<tr><td>" . $name . "</td>";
-		echo "<td>" . round($results["Total"],2) . "</td>";
-		echo "<td>" . round($results["Trash"],2) . "</td>";
-		echo "<td>" . round($results["Recycle"],2) . "</td>";
-		echo "</tr>";
+//		echo "<tr><td>" . $name . "</td>";
+//		echo "<td>" . round($results["Total"],2) . "</td>";
+//		echo "<td>" . round($results["Trash"],2) . "</td>";
+//		echo "<td>" . round($results["Recycle"],2) . "</td>";
+//		echo "</tr>";
+		$rstring .= "<tr><td>" . $name . "</td>";
+		$rstring .= "<td>" . round($results["Total"],2) . "</td>";
+		$rstring .= "<td>" . round($results["Trash"],2) . "</td>";
+		$rstring .= "<td>" . round($results["Recycle"],2) . "</td>";
+		$rstring .= "</tr>";
 		$plot_data[] = array($name,round($results["Total"],2),round($results["Trash"],2),round($results["Recycle"],2));
 	  }
   } 
-  echo "</table><br>";
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*
   $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
@@ -726,30 +840,38 @@ function locationTable($sub,$subsub) {
  *
  */
 function amountTable($sub,$subsub) {
+	global $rstring; 
 
   if ( $subsub != "" ) {
 	if ( $sub == "By Category" ) {
 	  $sort_string = " AND Categories.name = '$subsub' 
 						AND Categories.catid = items.category";
-	  echo "Sorted by Category '$subsub'<br><br>";
+//	  echo "Sorted by Category '$subsub'<br><br>";
+	  $rstring .= "Sorted by Category '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Date" ) {
 	  $sort_string = " AND Collector.tdate = '$subsub'";
-	  echo "Sorted by Date '$subsub'<br><br>";
+//	  echo "Sorted by Date '$subsub'<br><br>";
+	  $rstring .= "Sorted by Date '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Name" ) {
 	  $sort_string = " AND Collector.name = '$subsub'";
-	  echo "Sorted by Name '$subsub'<br><br>";
+//	  echo "Sorted by Name '$subsub'<br><br>";
+	  $rstring .= "Sorted by Name '$subsub'<br><br>";
 	}
 	else if ( $sub == "By Location" ) {
 	  $sort_string = "";
-	  echo "Sorted by Location '$subsub'<br><br>";
-	  echo "Not implemented yet.<br><br>";
+//	  echo "Sorted by Location '$subsub'<br><br>";
+//	  echo "Not implemented yet.<br><br>";
+	  $rstring .= "Sorted by Location '$subsub'<br><br>";
+	  $rstring .= "Not implemented yet.<br><br>";
 	}
   }
   global $plot_data ;
-  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
-  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+//  echo '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
+//  echo '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
+  $rstring .= '<table style="border-collapse: separate; border-spacing: 20px 0px;"> <tr> <th>Name</th>';
+  $rstring .= '<th>Trash Weight</th><th>Recycle Weight</th></tr>';
   $name = $row["item"];
   $iid = $row["iid"];
   $sql = "SELECT SUM(number*weight) AS Total,
@@ -761,16 +883,24 @@ function amountTable($sub,$subsub) {
 					tally.cid = Collector.cid
 			GROUP BY Collector.name
 			ORDER BY Trash DESC";
+
+ if (!is_null($this->db) ) { // added to allow wordpress to edit page with shortcode
   $res2 = $this->db->query($sql);
   $row2 = $res2->fetch(PDO::FETCH_ASSOC);
   while ($row2 = $res2->fetch(PDO::FETCH_ASSOC)) {
-	echo "<tr><td>" . $row2['UserName'] . "</td>";
-		echo '<td class="right">' . round($row2['Total'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
-		echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
+//	echo "<tr><td>" . $row2['UserName'] . "</td>";
+//	echo '<td class="right">' . round($row2['Total'],2) . "</td>";
+//	echo '<td class="right">' . round($row2['Trash'],2) . "</td>";
+//	echo '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
+	$rstring .= "<tr><td>" . $row2['UserName'] . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Total'],2) . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Trash'],2) . "</td>";
+	$rstring .= '<td class="right">' . round($row2['Recycling'],2) . "</td></tr>";
 		$plot_data[] = array($row2['UserName'],round($row2['Total'],2),round($row2['Trash'],2),round($row2['Recycling'],2));
   } 
-  echo "</table><br>";
+ }
+//  echo "</table><br>";
+  $rstring .= "</table><br>";
 /*  $plot = new PHPlot();
   $plot->SetImageBorderType('plain');
 
